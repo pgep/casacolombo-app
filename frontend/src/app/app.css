@@ -255,3 +255,9 @@
     font-size: 12px;
   }
 }
+
+.menu a.active {
+  background: #007bff;
+  border-radius: 4px;
+  font-weight: bold;
+}

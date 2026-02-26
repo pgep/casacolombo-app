@@ -1,137 +1,18 @@
 <div class="container">
-  <h1 class="titulo-principal">{{ title }}</h1>
-
-  <!-- FORMULÁRIO DE CADASTRO -->
-  <div class="card">
-    <h2 class="card-titulo">📝 Novo Cliente</h2>
-    
-    <div class="form-grid">
-      <div class="form-group">
-        <label class="form-label">Nome *</label>
-        <input type="text" 
-               class="form-input"
-               [(ngModel)]="novoCliente.nome" 
-               placeholder="Digite o nome">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Email *</label>
-        <input type="email" 
-               class="form-input"
-               [(ngModel)]="novoCliente.email" 
-               placeholder="Digite o email">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Telefone</label>
-        <input type="text" 
-               class="form-input"
-               [(ngModel)]="novoCliente.telefone" 
-               placeholder="(11) 99999-9999">
-      </div>
-      
-      <div class="form-group checkbox-group">
-        <label class="form-label">Ativo:</label>
-        <input type="checkbox" 
-               class="form-checkbox"
-               [(ngModel)]="novoCliente.ativo">
-      </div>
-      
-      <div class="form-actions">
-        <button class="btn btn-success" (click)="criarCliente()">
-          ➕ Cadastrar Cliente
-        </button>
-      </div>
-    </div>
+  <!-- MENU (única coisa fixa) -->
+  <div class="menu" style="background: #333; padding: 10px; margin-bottom: 20px;">
+    <a routerLink="/clientes" 
+       routerLinkActive="active"
+       style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+      👥 Clientes
+    </a>
+    <a routerLink="/ferramentas"
+       routerLinkActive="active"
+       style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+      🔧 Ferramentas
+    </a>
   </div>
 
-  <!-- FORMULÁRIO DE EDIÇÃO -->
-  <div *ngIf="editando" class="card card-edit">
-    <h2 class="card-titulo card-titulo-edit">✏️ Editando Cliente #{{ clienteEditando?.id }}</h2>
-    
-    <div class="form-grid">
-      <div class="form-group">
-        <label class="form-label">Nome *</label>
-        <input type="text" 
-               class="form-input"
-               [(ngModel)]="clienteEditando!.nome">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Email *</label>
-        <input type="email" 
-               class="form-input"
-               [(ngModel)]="clienteEditando!.email">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Telefone</label>
-        <input type="text" 
-               class="form-input"
-               [(ngModel)]="clienteEditando!.telefone">
-      </div>
-      
-      <div class="form-group checkbox-group">
-        <label class="form-label">Ativo:</label>
-        <input type="checkbox" 
-               class="form-checkbox"
-               [(ngModel)]="clienteEditando!.ativo">
-      </div>
-      
-      <div class="form-actions">
-        <button class="btn btn-warning" (click)="atualizarCliente()">
-          💾 Salvar Alterações
-        </button>
-        <button class="btn btn-secondary" (click)="cancelarEdicao()">
-          ❌ Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LISTA DE CLIENTES -->
-  <div class="card">
-    <h2 class="card-titulo lista-titulo">
-      📋 Lista de Clientes
-      <span class="total-badge">Total: {{ clientes.length }}</span>
-    </h2>
-    
-    <table class="tabela">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Telefone</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of clientes">
-          <td>{{ c.id }}</td>
-          <td>{{ c.nome }}</td>
-          <td>{{ c.email }}</td>
-          <td>{{ c.telefone || '-' }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="c.ativo ? 'status-ativo' : 'status-inativo'">
-              {{ c.ativo ? 'Ativo' : 'Inativo' }}
-            </span>
-          </td>
-          <td class="acoes">
-            <button class="btn btn-sm btn-primary" (click)="editarCliente(c)">
-              ✏️ Editar
-            </button>
-            <button class="btn btn-sm btn-danger" (click)="deletarCliente(c.id!)">
-              🗑️ Excluir
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <div *ngIf="clientes.length === 0" class="empty-state">
-      Nenhum cliente cadastrado. Use o formulário acima para começar!
-    </div>
-  </div>
+  <!-- Área DINÂMICA - cada rota carrega seu componente aqui -->
+  <router-outlet></router-outlet>
 </div>
