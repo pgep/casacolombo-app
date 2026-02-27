@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router, NavigationEnd } from '@angular/router'; // ← ADICIONE
+import { RouterModule } from '@angular/router';
 import { FerramentaService, Ferramenta } from '../../services/ferramenta';
-import { filter } from 'rxjs/operators'; // ← ADICIONE
 
 @Component({
   selector: 'app-ferramenta-list',
@@ -16,38 +15,54 @@ export class FerramentaListComponent implements OnInit {
 
   constructor(
     private ferramentaService: FerramentaService,
-    private router: Router  // ← INJETE
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // 1. Carrega na primeira vez
+    console.log('🔄 Inicializando lista de ferramentas');
     this.carregarFerramentas();
-
-    // 2. Recarrega quando VOLTAR para a rota /ferramentas
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd && event.url === '/ferramentas'))
-      .subscribe(() => {
-        console.log('🔄 Recarregando lista de ferramentas');
-        this.carregarFerramentas();
-      });
   }
 
   carregarFerramentas() {
     console.log('🔧 Carregando ferramentas...');
     this.ferramentaService.getFerramentas().subscribe({
-      next: (data) => {
-        this.ferramentas = data;
-        console.log('✅ Ferramentas carregadas:', this.ferramentas.length);
+      next: (data: any[]) => {
+        console.log('✅ Dados brutos do backend:', data);
+        
+        // MAPEAMENTO DOS CAMPOS
+        this.ferramentas = data.map(item => ({
+          id: item.id,
+          nome: item.nome || '',
+          unidadeMedida: item.unidademedida || '',
+          quantidadeEmEstoque: Number(item.quantidadeemestoque || 0),
+          created_at: item.created_at,
+          updated_at: item.updated_at
+        }));
+        
+        console.log('✅ Ferramentas mapeadas:', this.ferramentas);
+        console.log('📊 Total:', this.ferramentas.length);
+        
+        // Forçar atualização da view
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('❌ Erro:', err)
+      error: (err) => {
+        console.error('❌ Erro ao carregar ferramentas:', err);
+        alert('Erro ao carregar lista de ferramentas');
+      }
     });
   }
 
   deletar(id: number) {
-    if (confirm('Tem certeza?')) {
+    if (confirm('Tem certeza que deseja excluir esta ferramenta?')) {
       this.ferramentaService.deleteFerramenta(id).subscribe({
-        next: () => this.carregarFerramentas(),
-        error: (err) => console.error('Erro ao deletar:', err)
+        next: () => {
+          console.log('🗑️ Ferramenta deletada');
+          this.carregarFerramentas(); // Recarrega a lista
+        },
+        error: (err) => {
+          console.error('❌ Erro ao deletar:', err);
+          alert('Erro ao deletar ferramenta');
+        }
       });
     }
   }

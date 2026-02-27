@@ -1,32 +1,63 @@
 <div class="container">
   <h2>{{ editando ? '✏️ Editar' : '➕ Novo' }} Cliente</h2>
 
-  <form (ngSubmit)="salvar()">
+  <!-- INDICADOR DE CARREGAMENTO -->
+  <div *ngIf="loading" style="text-align: center; padding: 40px;">
+    <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+    <div>Carregando dados do cliente...</div>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <form *ngIf="!loading" (ngSubmit)="salvar()">
     <div class="form-group">
-      <label>Nome:</label>
-      <input type="text" [(ngModel)]="cliente.nome" name="nome" required>
+      <label>Nome *</label>
+      <input 
+        type="text" 
+        class="form-control"
+        [(ngModel)]="cliente.nome" 
+        name="nome"
+        required
+        placeholder="Digite o nome completo">
     </div>
 
     <div class="form-group">
-      <label>Email:</label>
-      <input type="email" [(ngModel)]="cliente.email" name="email" required>
+      <label>Email *</label>
+      <input 
+        type="email" 
+        class="form-control"
+        [(ngModel)]="cliente.email" 
+        name="email"
+        required
+        placeholder="email@exemplo.com">
     </div>
 
     <div class="form-group">
-      <label>Telefone:</label>
-      <input type="text" [(ngModel)]="cliente.telefone" name="telefone">
+      <label>Telefone</label>
+      <input 
+        type="text" 
+        class="form-control"
+        [(ngModel)]="cliente.telefone" 
+        name="telefone"
+        placeholder="(11) 99999-9999">
     </div>
 
-    <div class="form-group">
+    <div class="form-group checkbox">
       <label>
-        <input type="checkbox" [(ngModel)]="cliente.ativo" name="ativo">
-        Ativo
+        <input 
+          type="checkbox" 
+          [(ngModel)]="cliente.ativo" 
+          name="ativo">
+          Cliente Ativo
       </label>
     </div>
 
     <div class="actions">
-      <button type="submit" class="btn btn-success">💾 Salvar</button>
-      <button type="button" class="btn btn-secondary" routerLink="/clientes">❌ Cancelar</button>
+      <button type="submit" class="btn btn-success" [disabled]="loading">
+        {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+      </button>
+      <button type="button" class="btn btn-secondary" routerLink="/clientes">
+        ❌ Cancelar
+      </button>
     </div>
   </form>
 </div>

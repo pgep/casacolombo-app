@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router, NavigationEnd } from '@angular/router'; // ← ADICIONE NavigationEnd
+import { RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente';
-import { filter } from 'rxjs/operators'; // ← ADICIONE filter
 
 @Component({
   selector: 'app-cliente-list',
@@ -16,38 +15,56 @@ export class ClienteListComponent implements OnInit {
 
   constructor(
     private clienteService: ClienteService,
-    private router: Router  // ← INJETE O Router
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // 1. Carrega na primeira vez
+    console.log('🔄 Inicializando lista de clientes');
     this.carregarClientes();
-
-    // 2. Recarrega quando VOLTAR para a rota /clientes
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd && event.url === '/clientes'))
-      .subscribe(() => {
-        console.log('🔄 Recarregando lista de clientes');
-        this.carregarClientes();
-      });
   }
 
   carregarClientes() {
-    console.log('📊 Carregando clientes...');
+    console.log('👥 Carregando clientes...');
     this.clienteService.getClientes().subscribe({
-      next: (data) => {
-        this.clientes = data;
-        console.log('✅ Clientes carregados:', this.clientes.length);
+      next: (data: any[]) => {
+        console.log('✅ Dados brutos do backend:', data);
+        
+        // MAPEAMENTO DOS CAMPOS (caso necessário)
+        this.clientes = data.map(item => ({
+          id: item.id,
+          nome: item.nome || '',
+          email: item.email || '',
+          telefone: item.telefone || '',
+          ativo: item.ativo === true || item.ativo === 'true', // Garante booleano
+          data_cadastro: item.data_cadastro || item.created_at,
+          created_at: item.created_at,
+          updated_at: item.updated_at
+        }));
+        
+        console.log('✅ Clientes mapeados:', this.clientes);
+        console.log('📊 Total:', this.clientes.length);
+        
+        // Forçar atualização da view
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('❌ Erro:', err)
+      error: (err) => {
+        console.error('❌ Erro ao carregar clientes:', err);
+        alert('Erro ao carregar lista de clientes');
+      }
     });
   }
 
   deletar(id: number) {
-    if (confirm('Tem certeza?')) {
+    if (confirm('Tem certeza que deseja excluir este cliente?')) {
       this.clienteService.deleteCliente(id).subscribe({
-        next: () => this.carregarClientes(),
-        error: (err) => console.error('Erro ao deletar:', err)
+        next: () => {
+          console.log('🗑️ Cliente deletado');
+          this.carregarClientes(); // Recarrega a lista
+        },
+        error: (err) => {
+          console.error('❌ Erro ao deletar:', err);
+          alert('Erro ao deletar cliente');
+        }
       });
     }
   }

@@ -1,10 +1,15 @@
 <div class="card">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2 class="card-titulo">📋 Lista de Clientes</h2>
+    <h2 class="card-titulo">👥 Lista de Clientes</h2>
     <a routerLink="/clientes/novo" class="btn btn-success">➕ Novo Cliente</a>
   </div>
+
+  <!-- DEBUG (opcional) -->
+  <div style="background: #e3f2fd; padding: 10px; margin-bottom: 20px; border-radius: 4px;" *ngIf="clientes.length === 0">
+    <strong>📌 Nenhum cliente cadastrado ainda.</strong>
+  </div>
   
-  <table class="tabela">
+  <table class="tabela" *ngIf="clientes.length > 0">
     <thead>
       <tr>
         <th>ID</th>
@@ -35,6 +40,6 @@
   </table>
   
   <div *ngIf="clientes.length === 0" class="empty-state">
-    Nenhum cliente cadastrado.
+    Nenhum cliente cadastrado. Clique em "Novo Cliente" para começar!
   </div>
 </div>

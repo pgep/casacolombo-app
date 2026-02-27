@@ -1,6 +1,6 @@
 import {
   PlatformLocation
-} from "./chunk-MIMLRFOH.js";
+} from "./chunk-262NXHVJ.js";
 import {
   ApplicationRef,
   Attribute,
@@ -31,9 +31,12 @@ import {
   Renderer2,
   RendererStyleFlags2,
   RuntimeError,
+  Subject,
   TemplateRef,
   Version,
   ViewContainerRef,
+  __spreadProps,
+  __spreadValues,
   booleanAttribute,
   createNgModule,
   findLocaleData,
@@ -60,12 +63,7 @@ import {
   ɵɵinject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-NW2YC2V3.js";
-import {
-  Subject,
-  __spreadProps,
-  __spreadValues
-} from "./chunk-QCVGHOGP.js";
+} from "./chunk-UXJAXTXK.js";
 
 // node_modules/@angular/common/fesm2022/_location-chunk.mjs
 function joinWithSlash(start, end) {
@@ -4523,4 +4521,4 @@ export {
   PRECONNECT_CHECK_BLOCKLIST,
   NgOptimizedImage
 };
-//# sourceMappingURL=chunk-5K63K75G.js.map
+//# sourceMappingURL=chunk-RXCIRVZ7.js.map

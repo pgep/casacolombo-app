@@ -9,6 +9,8 @@ export interface Cliente {
   telefone: string;
   ativo: boolean;
   data_cadastro?: string;
+  created_at: Date,
+  updated_at: Date
 }
 
 @Injectable({
