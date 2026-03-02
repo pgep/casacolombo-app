@@ -1,39 +1,49 @@
-<div class="card">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2 class="card-titulo">🔧 Lista de Ferramentas</h2>
-    <a routerLink="/ferramentas/novo" class="btn btn-success">➕ Nova Ferramenta</a>
-  </div>
-  
-  <!-- DEBUG (opcional) -->
-  <div style="background: #e7f3ff; padding: 10px; margin-bottom: 10px; border-radius: 4px;" *ngIf="ferramentas.length === 0">
-    <strong>📌 Nenhuma ferramenta cadastrada ainda.</strong>
-  </div>
-  
-  <table class="tabela" *ngIf="ferramentas.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Unidade</th>
-        <th>Quantidade</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let f of ferramentas">
-        <td>{{ f.id }}</td>
-        <td>{{ f.nome }}</td>
-        <td>{{ f.unidadeMedida || '-' }}</td>
-        <td>{{ f.quantidadeEmEstoque }}</td>
-        <td>
-          <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">✏️ Editar</button>
-          <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">🗑️ Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <div *ngIf="ferramentas.length === 0" class="empty-state">
-    Nenhuma ferramenta cadastrada. Clique em "Nova Ferramenta" para começar!
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">🔧 Lista de Ferramentas</h2>
+      <a routerLink="/ferramentas/novo" class="btn btn-success">➕ Nova Ferramenta</a>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="!ferramentas" class="loading-spinner">
+      Carregando ferramentas...
+    </div>
+
+    <!-- Tabela de ferramentas -->
+    <div class="table-container" *ngIf="ferramentas && ferramentas.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of ferramentas">
+            <td>{{ f.id }}</td>
+            <td>{{ f.nome }}</td>
+            <td>{{ f.unidadeMedida || '-' }}</td>
+            <td>{{ f.quantidadeEmEstoque }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
+                ✏️ Editar
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">
+                🗑️ Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="ferramentas && ferramentas.length === 0" class="empty-state">
+      Nenhuma ferramenta cadastrada. Clique em "Nova Ferramenta" para começar!
+    </div>
   </div>
 </div>

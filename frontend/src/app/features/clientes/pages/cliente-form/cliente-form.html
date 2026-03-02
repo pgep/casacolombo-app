@@ -1,63 +1,63 @@
 <div class="container">
-  <h2>{{ editando ? '✏️ Editar' : '➕ Novo' }} Cliente</h2>
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Novo' }} Cliente</h2>
 
-  <!-- INDICADOR DE CARREGAMENTO -->
-  <div *ngIf="loading" style="text-align: center; padding: 40px;">
-    <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
-    <div>Carregando dados do cliente...</div>
-  </div>
-
-  <!-- FORMULÁRIO -->
-  <form *ngIf="!loading" (ngSubmit)="salvar()">
-    <div class="form-group">
-      <label>Nome *</label>
-      <input 
-        type="text" 
-        class="form-control"
-        [(ngModel)]="cliente.nome" 
-        name="nome"
-        required
-        placeholder="Digite o nome completo">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-spinner">
+      Carregando dados do cliente...
     </div>
 
-    <div class="form-group">
-      <label>Email *</label>
-      <input 
-        type="email" 
-        class="form-control"
-        [(ngModel)]="cliente.email" 
-        name="email"
-        required
-        placeholder="email@exemplo.com">
-    </div>
+    <!-- Formulário -->
+    <form *ngIf="!loading" (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label class="form-label">Nome *</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="cliente.nome" 
+          name="nome"
+          required
+          placeholder="Digite o nome completo">
+      </div>
 
-    <div class="form-group">
-      <label>Telefone</label>
-      <input 
-        type="text" 
-        class="form-control"
-        [(ngModel)]="cliente.telefone" 
-        name="telefone"
-        placeholder="(11) 99999-9999">
-    </div>
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input 
+          type="email" 
+          class="form-control"
+          [(ngModel)]="cliente.email" 
+          name="email"
+          required
+          placeholder="email@exemplo.com">
+      </div>
 
-    <div class="form-group checkbox">
-      <label>
+      <div class="form-group">
+        <label class="form-label">Telefone</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="cliente.telefone" 
+          name="telefone"
+          placeholder="(11) 99999-9999">
+      </div>
+
+      <div class="form-checkbox mb-4">
         <input 
           type="checkbox" 
           [(ngModel)]="cliente.ativo" 
-          name="ativo">
-          Cliente Ativo
-      </label>
-    </div>
+          name="ativo"
+          id="ativo">
+        <label for="ativo">Cliente Ativo</label>
+      </div>
 
-    <div class="actions">
-      <button type="submit" class="btn btn-success" [disabled]="loading">
-        {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
-      </button>
-      <button type="button" class="btn btn-secondary" routerLink="/clientes">
-        ❌ Cancelar
-      </button>
-    </div>
-  </form>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/clientes">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

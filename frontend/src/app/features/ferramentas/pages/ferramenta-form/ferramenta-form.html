@@ -1,56 +1,55 @@
 <div class="container">
-  <h2>{{ editando ? '✏️ Editar' : '➕ Nova' }} Ferramenta</h2>
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Ferramenta</h2>
 
-  <!-- INDICADOR DE CARREGAMENTO -->
-  <div *ngIf="loading" style="text-align: center; padding: 20px;">
-    ⏳ Carregando dados...
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-spinner">
+      Carregando dados da ferramenta...
+    </div>
+
+    <!-- Formulário -->
+    <form *ngIf="!loading" (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label class="form-label">Nome *</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="ferramenta.nome" 
+          name="nome"
+          required
+          placeholder="Ex: Martelo, Serra, Alicate">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Unidade de Medida</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="ferramenta.unidadeMedida" 
+          name="unidadeMedida"
+          placeholder="Ex: unidade, kg, metro">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Quantidade em Estoque</label>
+        <input 
+          type="number" 
+          class="form-control"
+          [(ngModel)]="ferramenta.quantidadeEmEstoque" 
+          name="quantidadeEmEstoque"
+          min="0"
+          step="0.01"
+          placeholder="0">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/ferramentas">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
   </div>
-
-  <!-- FORMULÁRIO (SÓ APARECE QUANDO NÃO ESTIVER CARREGANDO) -->
-  <form *ngIf="!loading" (ngSubmit)="salvar()">
-    <div class="form-group">
-      <label>Nome *</label>
-      <input 
-        type="text" 
-        class="form-control"
-        [(ngModel)]="ferramenta.nome" 
-        name="nome"
-        required
-        placeholder="Ex: Martelo, Serra, Alicate">
-      <!-- VALOR ATUAL: {{ ferramenta.nome }} -->
-    </div>
-
-    <div class="form-group">
-      <label>Unidade de Medida</label>
-      <input 
-        type="text" 
-        class="form-control"
-        [(ngModel)]="ferramenta.unidadeMedida" 
-        name="unidadeMedida"
-        placeholder="Ex: unidade, kg, metro">
-      <!-- VALOR ATUAL: {{ ferramenta.unidadeMedida }} -->
-    </div>
-
-    <div class="form-group">
-      <label>Quantidade em Estoque</label>
-      <input 
-        type="number" 
-        class="form-control"
-        [(ngModel)]="ferramenta.quantidadeEmEstoque" 
-        name="quantidadeEmEstoque"
-        min="0"
-        step="0.01"
-        placeholder="0">
-      <!-- VALOR ATUAL: {{ ferramenta.quantidadeEmEstoque }} -->
-    </div>
-
-    <div class="actions">
-      <button type="submit" class="btn btn-success" [disabled]="loading">
-        {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
-      </button>
-      <button type="button" class="btn btn-secondary" routerLink="/ferramentas">
-        ❌ Cancelar
-      </button>
-    </div>
-  </form>
 </div>
