@@ -29,12 +29,14 @@
             <td>{{ f.unidadeMedida || '-' }}</td>
             <td>{{ f.quantidadeEmEstoque }}</td>
             <td>
+              <div class="flex gap-2">
               <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
                 ✏️ Editar
               </button>
               <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">
                 🗑️ Excluir
               </button>
+              </div>
             </td>
           </tr>
         </tbody>
