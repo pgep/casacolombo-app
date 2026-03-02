@@ -1,45 +1,55 @@
-<div class="card">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2 class="card-titulo">👥 Lista de Clientes</h2>
-    <a routerLink="/clientes/novo" class="btn btn-success">➕ Novo Cliente</a>
-  </div>
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">👥 Lista de Clientes</h2>
+      <a routerLink="/clientes/novo" class="btn btn-success">➕ Novo Cliente</a>
+    </div>
 
-  <!-- DEBUG (opcional) -->
-  <div style="background: #e3f2fd; padding: 10px; margin-bottom: 20px; border-radius: 4px;" *ngIf="clientes.length === 0">
-    <strong>📌 Nenhum cliente cadastrado ainda.</strong>
-  </div>
-  
-  <table class="tabela" *ngIf="clientes.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Telefone</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let c of clientes">
-        <td>{{ c.id }}</td>
-        <td>{{ c.nome }}</td>
-        <td>{{ c.email }}</td>
-        <td>{{ c.telefone || '-' }}</td>
-        <td>
-          <span class="status-badge" [ngClass]="c.ativo ? 'status-ativo' : 'status-inativo'">
-            {{ c.ativo ? 'Ativo' : 'Inativo' }}
-          </span>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-primary" [routerLink]="['/clientes/editar', c.id]">✏️ Editar</button>
-          <button class="btn btn-sm btn-danger" (click)="deletar(c.id!)">🗑️ Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <div *ngIf="clientes.length === 0" class="empty-state">
-    Nenhum cliente cadastrado. Clique em "Novo Cliente" para começar!
+    <!-- Loading state -->
+    <div *ngIf="!clientes" class="loading-spinner">
+      Carregando clientes...
+    </div>
+
+    <!-- Tabela de clientes -->
+    <div class="table-container" *ngIf="clientes && clientes.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clientes">
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{ c.telefone || '-' }}</td>
+            <td>
+              <span class="badge" [ngClass]="c.ativo ? 'badge-success' : 'badge-danger'">
+                {{ c.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary" [routerLink]="['/clientes/editar', c.id]">
+                ✏️ Editar
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deletar(c.id!)">
+                🗑️ Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="clientes && clientes.length === 0" class="empty-state">
+      Nenhum cliente cadastrado. Clique em "Novo Cliente" para começar!
+    </div>
   </div>
 </div>
