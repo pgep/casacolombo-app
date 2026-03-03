@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// ⚠️ EXPORTANDO A INTERFACE CORRETAMENTE
 export interface Ferramenta {
   id?: number;
   nome: string;

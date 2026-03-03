@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Novo' }} Tipo de Produto</h2>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-spinner">
+      Carregando dados do tipo de produto...
+    </div>
+
+    <!-- Formulário -->
+    <form *ngIf="!loading" (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label class="form-label">Nome *</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="tipo.nome" 
+          name="nome"
+          required
+          placeholder="Ex: Vela Aromática, Vela Decorativa">
+      </div>
+
+      <div class="form-checkbox mb-4">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="tipo.ativo" 
+          name="ativo"
+          id="ativo">
+        <label for="ativo">Tipo Ativo</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/tipos-produto">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

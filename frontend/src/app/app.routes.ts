@@ -9,5 +9,9 @@ export const routes: Routes = [
   { 
     path: 'ferramentas', 
     loadChildren: () => import('./features/ferramentas/ferramenta.routes').then(m => m.ferramentaRoutes)
+  },
+  { 
+    path: 'tipos-produto', 
+    loadChildren: () => import('./features/tipos-produto/tipo-produto.routes').then(m => m.tipoProdutoRoutes)
   }
 ];
