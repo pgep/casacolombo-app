@@ -5,7 +5,8 @@ const db = require('./config/database');
 
 // ========== IMPORTAÇÃO DOS MODELS ==========
 const Cliente = require('./models/cliente.model');
-const Ferramenta = require('./models/ferramenta.model'); // ← NOVO
+const Ferramenta = require('./models/ferramenta.model'); 
+const TipoProduto = require('./models/tipo-produto.model');
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.use(express.json());
 async function initTables() {
   try {
     await Cliente.initTable();
-    await Ferramenta.initTable(); // ← NOVO
+    await Ferramenta.initTable();
+    await TipoProduto.initTable();
     console.log('✅ Todas as tabelas inicializadas com sucesso');
   } catch (error) {
     console.error('❌ Erro ao inicializar tabelas:', error);
@@ -185,6 +187,37 @@ app.delete('/api/ferramentas/:id', async (req, res) => {
   }
 });
 
+// ========== ROTAS CRUD - TIPO PRODUTO ==========
+
+// GET todos os tipos de produtos
+app.get('/api/tipo-produto',async (req,res) => {
+  try {
+    const tipoproduto = await TipoProduto.findAll();
+    res.json(tipoproduto);
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
+  
+});
+
+// GET Tipo produto por Id
+app.get('/api/tipo-produto/:id', async (req, res) => {
+  try {
+    const tipoproduto = await TipoProduto.findById(req.params.id);
+    if (!tipoproduto) {
+      return res.status(400).json({message: 'Tipo produto não encontrado'});
+    }
+    res.json(tipoproduto);
+  }catch(error){
+    res.status(500).json({error:error.message});
+  }
+});
+
+// // POST criar novo
+// app.post('/api/tipo-produto', async(req,res) =>{
+
+// });
+
 // ========== TRATAMENTO DE ERROS 404 ==========
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada' });
@@ -203,4 +236,5 @@ app.listen(PORT, () => {
   console.log(`📝 Health: http://localhost:${PORT}/api/health`);
   console.log(`👥 Clientes: http://localhost:${PORT}/api/clientes`);
   console.log(`🔧 Ferramentas: http://localhost:${PORT}/api/ferramentas`);
+  console.log(`🔧 Ferramentas: http://localhost:${PORT}/api/tipo-produto`);
 });
