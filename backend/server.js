@@ -213,10 +213,48 @@ app.get('/api/tipo-produto/:id', async (req, res) => {
   }
 });
 
-// // POST criar novo
-// app.post('/api/tipo-produto', async(req,res) =>{
+// POST criar novo
+app.post('/api/tipo-produto', async(req,res) => {
+  try {
+    const { nome } = req.body;
+    if (!nome) {
+      return res.status(400).json({ erro: 'Nome é obrigatório'});
+    }
+    const tipoproduto = await TipoProduto.create({
+      nome
+    });
+    res.status(201).json(tipoproduto);
+  } catch (error) {
+    res.status(500).json({ erro: erro.message});
+  }
+});
 
-// });
+// PUT atualizar ferramenta
+app.put('/api/tipo-produto/:id', async (req,res) => {
+ try {
+  const tipoproduto = await TipoProduto.update(req.params.id, req.body);
+  if (!tipoproduto) {
+    return res.status(400).json({ message: 'Tipo produti não encontrado'})
+  }
+  res.json(tipoproduto);
+ } catch (error) {
+  res.status(500).json({error:error.message});
+ } 
+});
+
+// DELETE  remover Tipo Produto
+
+app.delete('/api/tipo-produto/:id', async (req,res) => {
+  try {
+    const tipoproduto = await TipoProduto.delete(req.params.id);
+    if (!tipoproduto) {
+      return res.status(404).json({message: 'Tipo produto não encontrado'});
+    }
+    res.json({ message: 'Tipo produto excluído com sucesso'});
+  } catch (error) {
+    res.status(500).json({erro:erro.message});
+  }
+});
 
 // ========== TRATAMENTO DE ERROS 404 ==========
 app.use((req, res) => {
