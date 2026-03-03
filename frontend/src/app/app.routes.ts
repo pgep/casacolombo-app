@@ -13,5 +13,9 @@ export const routes: Routes = [
   { 
     path: 'tipos-produto', 
     loadChildren: () => import('./features/tipos-produto/tipo-produto.routes').then(m => m.tipoProdutoRoutes)
-  }
+  },
+  { 
+  path: 'produtos', 
+  loadChildren: () => import('./features/produtos/produto.routes').then(m => m.produtoRoutes)
+}
 ];

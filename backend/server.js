@@ -7,6 +7,7 @@ const db = require('./config/database');
 const Cliente = require('./models/cliente.model');
 const Ferramenta = require('./models/ferramenta.model'); 
 const TipoProduto = require('./models/tipo-produto.model');
+const Produto = require('./models/produto.model');
 
 const app = express();
 
@@ -20,6 +21,7 @@ async function initTables() {
     await Cliente.initTable();
     await Ferramenta.initTable();
     await TipoProduto.initTable();
+    await Produto.initTable();
     console.log('✅ Todas as tabelas inicializadas com sucesso');
   } catch (error) {
     console.error('❌ Erro ao inicializar tabelas:', error);
@@ -256,6 +258,66 @@ app.delete('/api/tipo-produto/:id', async (req,res) => {
   }
 });
 
+// GET todos os produtos
+app.get('/api/produtos', async (req, res) => {
+  try {
+    const { apenasAtivos } = req.query;
+    const produtos = await Produto.findAll(apenasAtivos !== 'false');
+    res.json(produtos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET produto por ID
+app.get('/api/produtos/:id', async (req, res) => {
+  try {
+    const produto = await Produto.findById(req.params.id);
+    if (!produto) {
+      return res.status(404).json({ message: 'Produto não encontrado' });
+    }
+    res.json(produto);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST criar novo produto
+app.post('/api/produtos', async (req, res) => {
+  try {
+    const produto = await Produto.create(req.body);
+    res.status(201).json(produto);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT atualizar produto
+app.put('/api/produtos/:id', async (req, res) => {
+  try {
+    const produto = await Produto.update(req.params.id, req.body);
+    if (!produto) {
+      return res.status(404).json({ message: 'Produto não encontrado' });
+    }
+    res.json(produto);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// DELETE remover produto
+app.delete('/api/produtos/:id', async (req, res) => {
+  try {
+    const produto = await Produto.delete(req.params.id);
+    if (!produto) {
+      return res.status(404).json({ message: 'Produto não encontrado' });
+    }
+    res.json({ message: 'Produto removido com sucesso' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ========== TRATAMENTO DE ERROS 404 ==========
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada' });
@@ -275,4 +337,5 @@ app.listen(PORT, () => {
   console.log(`👥 Clientes: http://localhost:${PORT}/api/clientes`);
   console.log(`🔧 Ferramentas: http://localhost:${PORT}/api/ferramentas`);
   console.log(`🔧 Ferramentas: http://localhost:${PORT}/api/tipo-produto`);
+  console.log(`🔧 Ferramentas: http://localhost:${PORT}/api/produto`);
 });

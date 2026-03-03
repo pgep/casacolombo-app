@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">📦 Lista de Produtos</h2>
+      <a routerLink="/produtos/novo" class="btn btn-success">➕ Novo Produto</a>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-spinner">Carregando produtos...</div>
+
+    <!-- Tabela -->
+    <div class="table-container" *ngIf="!loading && produtos.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of produtos">
+            <td>{{ p.id }}</td>
+            <td>{{ p.nome }}</td>
+            <td>{{ p.tipo_nome || '-' }}</td>
+            <td>R$ {{ p.preco_venda | number:'1.2-2' }}</td>
+            <td>
+              <span class="badge" [ngClass]="p.ativo ? 'badge-success' : 'badge-danger'">
+                {{ p.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+            <td>
+              <div class="flex gap-2">
+                <button class="btn btn-sm btn-primary" [routerLink]="['/produtos/editar', p.id]">
+                  ✏️ Editar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deletar(p.id!)">
+                  🗑️ Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="!loading && produtos.length === 0" class="empty-state">
+      Nenhum produto cadastrado. Clique em "Novo Produto" para começar!
+    </div>
+  </div>
+</div>
