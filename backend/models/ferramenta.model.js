@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../scr/config/database');
 
 class Ferramenta {
   // Método para criar a tabela

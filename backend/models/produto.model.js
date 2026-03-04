@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../scr/config/database');
 
 class Produto {
   static async initTable() {

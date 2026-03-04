@@ -2,17 +2,19 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// Middlewares globais
+// Rotas
+const clienteRoutes = require('./modules/clientes/cliente.routes');
+const ferramentaRoutes = require('./modules/ferramentas/ferramenta.routes');
+const tipoProdutoRoutes = require('./modules/tipos-produto/tipo-produto.routes');
+const produtoRoutes = require('./modules/produto/produto.routes');
+
 app.use(cors());
 app.use(express.json());
 
-// Importação das rotas
-const clienteRoutes = require('./modules/clientes/cliente.routes');
-const ferramentaRoutes = require('./modules/ferramentas/ferramenta.routes');
-
-// Registro das rotas
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/ferramentas', ferramentaRoutes);
+app.use('/api/tipo-produto', tipoProdutoRoutes);
+app.use('/api/produtos', produtoRoutes);
 
 // Rota de saúde
 app.get('/api/health', (req, res) => {
