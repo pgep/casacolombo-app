@@ -17,7 +17,43 @@ class Produto {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
+
+    // 2. 🗑️ REMOVER campo imagem (se existir)
+    try {
+      await db.query(`
+        ALTER TABLE produtos 
+        DROP COLUMN IF EXISTS imagem
+      `);
+      console.log('✅ Campo "imagem" removido (se existia)');
+    } catch (error) {
+      console.log('Campo imagem não existia ou já foi removido');
+    }
     
+    // 3. ➕ ADICIONAR campo imagem_id (se não existir)
+    try {
+      await db.query(`
+        ALTER TABLE produtos 
+        ADD COLUMN IF NOT EXISTS imagem_id INTEGER
+      `);
+      console.log('✅ Campo "imagem_id" adicionado/verificado');
+    } catch (error) {
+      console.log('Erro ao adicionar imagem_id:', error.message);
+    }
+    
+    // 4. 🔗 ADICIONAR FK (se não existir)
+    try {
+      await db.query(`
+        ALTER TABLE produtos 
+        ADD CONSTRAINT fk_produto_imagem 
+        FOREIGN KEY (imagem_id) 
+        REFERENCES imagens(id)
+        ON DELETE SET NULL
+      `);
+      console.log('✅ FK produto_imagem adicionada/verificada');
+    } catch (error) {
+      console.log('FK já existe:', error.message);
+    }
+
     try {
       await db.query(query);
       console.log('✅ Tabela "produtos" verificada/criada');
@@ -26,12 +62,15 @@ class Produto {
     }
   }
 
-  // Buscar todos (com join para trazer nome do tipo)
   static async findAll(apenasAtivos = true) {
     let query = `
-      SELECT p.*, tp.nome as tipo_nome 
+      SELECT p.*, 
+            tp.nome as tipo_nome,
+            i.nome as imagem_nome,
+            i.imagem_base64
       FROM produtos p
       LEFT JOIN tipoproduto tp ON p.tipo_produto_id = tp.id
+      LEFT JOIN imagens i ON p.imagem_id = i.id
     `;
     
     if (apenasAtivos) {
@@ -44,12 +83,15 @@ class Produto {
     return result.rows;
   }
 
-  // Buscar por ID
   static async findById(id) {
     const query = `
-      SELECT p.*, tp.nome as tipo_nome 
+      SELECT p.*, 
+            tp.nome as tipo_nome,
+            i.nome as imagem_nome,
+            i.imagem_base64
       FROM produtos p
       LEFT JOIN tipoproduto tp ON p.tipo_produto_id = tp.id
+      LEFT JOIN imagens i ON p.imagem_id = i.id
       WHERE p.id = $1
     `;
     const result = await db.query(query, [id]);
