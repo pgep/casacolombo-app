@@ -13,13 +13,12 @@
       <table class="table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Tipo</th>
-            <th>Preço</th>
-            <th>Status</th>
-            <th>Ações</th>
-            <th>Ver imagem</th>
+            <th style="width: 5%;">ID</th>
+            <th style="width: 35%;">Nome</th>
+            <th style="width: 20%;">Tipo</th>
+            <th style="width: 10%;">Preço</th>
+            <th style="width: 5%;">Status</th>
+            <th style="width: 35%; text-align: center;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -41,10 +40,7 @@
                 <button class="btn btn-sm btn-danger" (click)="deletar(p.id!)">
                   🗑️ Excluir
                 </button>
-              </div>
-            </td>
-            <td>
-              <div *ngIf="p.imagem_id; else semImagem">
+                <div *ngIf="p.imagem_id; else semImagem">
                 <button class="btn btn-sm btn-info" (click)="verImagem(p)">
                   👁️ Ver
                 </button>
@@ -52,6 +48,7 @@
               <ng-template #semImagem>
                 <span class="text-muted">-</span>
               </ng-template>
+              </div>
             </td>
           </tr>
         </tbody>
