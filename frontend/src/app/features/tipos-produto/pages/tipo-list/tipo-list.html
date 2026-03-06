@@ -1,8 +1,9 @@
 <div class="container">
   <div class="card">
-    <div class="flex justify-between items-center mb-4">
+    <!-- Cabeçalho responsivo -->
+    <div class="list-header">
       <h2 class="card-titulo">🏷️ Lista de Tipos de Produto</h2>
-      <a routerLink="/tipos-produto/novo" class="btn btn-success">➕ Novo Tipo</a>
+      <a routerLink="/tipos-produto/novo" class="btn btn-success btn-novo">➕ Novo Tipo</a>
     </div>
 
     <!-- Loading state -->
@@ -10,8 +11,8 @@
       Carregando tipos de produto...
     </div>
 
-    <!-- Tabela -->
-    <div class="table-container" *ngIf="!loading && tipos.length > 0">
+    <!-- Tabela Responsiva -->
+    <div class="table-responsive" *ngIf="!loading && tipos.length > 0">
       <table class="table">
         <thead>
           <tr>
@@ -23,20 +24,20 @@
         </thead>
         <tbody>
           <tr *ngFor="let t of tipos">
-            <td>{{ t.id }}</td>
-            <td>{{ t.nome }}</td>
-            <td>
+            <td data-label="ID">{{ t.id }}</td>
+            <td data-label="Nome">{{ t.nome }}</td>
+            <td data-label="Status">
               <span class="badge" [ngClass]="t.ativo ? 'badge-success' : 'badge-danger'">
                 {{ t.ativo ? 'Ativo' : 'Inativo' }}
               </span>
             </td>
-            <td>
-              <div class="flex gap-2">
+            <td data-label="Ações" class="acoes-cell">
+              <div class="acoes-container">
                 <button class="btn btn-sm btn-primary" [routerLink]="['/tipos-produto/editar', t.id]">
-                  ✏️ Editar
+                  ✏️
                 </button>
                 <button class="btn btn-sm btn-danger" (click)="deletar(t.id!)">
-                  🗑️ Excluir
+                  🗑️
                 </button>
               </div>
             </td>
@@ -47,7 +48,8 @@
     
     <!-- Empty state -->
     <div *ngIf="!loading && tipos.length === 0" class="empty-state">
-      Nenhum tipo de produto cadastrado. Clique em "Novo Tipo" para começar!
+      <p>Nenhum tipo de produto cadastrado.</p>
+      <a routerLink="/tipos-produto/novo" class="btn btn-success">➕ Cadastrar Primeiro Tipo</a>
     </div>
   </div>
 </div>

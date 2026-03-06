@@ -2,11 +2,13 @@
   <div class="card">
     <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Imagem</h2>
 
+    <!-- Loading state -->
     <div *ngIf="loading" class="loading-spinner">
       Carregando...
     </div>
 
-    <form *ngIf="!loading" (ngSubmit)="salvar()">
+    <!-- Formulário -->
+    <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
       <div class="form-group">
         <label class="form-label">Nome *</label>
         <input 
@@ -18,15 +20,25 @@
           placeholder="Ex: Foto do produto, Logo, etc.">
       </div>
 
+      <!-- Área de upload de arquivo -->
       <div class="form-group">
         <label class="form-label">Arquivo de Imagem *</label>
-        <input 
-          type="file" 
-          class="form-control"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-          [disabled]="editando && !arquivoSelecionado">
-        <small class="text-muted">Formatos aceitos: JPG, PNG, GIF</small>
+        <div class="file-upload-wrapper">
+          <input 
+            type="file" 
+            class="file-upload-input"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            [disabled]="editando && !arquivoSelecionado"
+            id="fileInput">
+          <label for="fileInput" class="file-upload-button">
+            📁 Escolher arquivo
+          </label>
+          <span class="file-upload-name">
+            {{ arquivoSelecionado?.name || 'Nenhum arquivo selecionado' }}
+          </span>
+        </div>
+        <small class="text-muted">Formatos aceitos: JPG, PNG, GIF (max 5MB)</small>
       </div>
 
       <!-- Preview da imagem -->
@@ -35,6 +47,7 @@
         <img [src]="previewUrl" class="preview-image">
       </div>
 
+      <!-- Ações responsivas -->
       <div class="form-actions">
         <button type="submit" class="btn btn-success" [disabled]="loading">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}

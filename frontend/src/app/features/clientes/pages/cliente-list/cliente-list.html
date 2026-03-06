@@ -10,44 +10,37 @@
       Carregando clientes...
     </div>
 
-    <!-- Tabela de clientes -->
-    <div class="table-container" *ngIf="clientes && clientes.length > 0">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of clientes">
-            <td>{{ c.id }}</td>
-            <td>{{ c.nome }}</td>
-            <td>{{ c.email }}</td>
-            <td>{{ c.telefone || '-' }}</td>
-            <td>
-              <span class="badge" [ngClass]="c.ativo ? 'badge-success' : 'badge-danger'">
-                {{ c.ativo ? 'Ativo' : 'Inativo' }}
-              </span>
-            </td>
-            <td>
-              <div class="flex gap-2">
-              <button class="btn btn-sm btn-primary" [routerLink]="['/clientes/editar', c.id]">
-                ✏️ Editar
-              </button>
-              <button class="btn btn-sm btn-danger" (click)="deletar(c.id!)">
-                🗑️ Excluir
-              </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of clientes">
+        <td data-label="ID">{{ c.id }}</td>
+        <td data-label="Nome">{{ c.nome }}</td>
+        <td data-label="Email">{{ c.email }}</td>
+        <td data-label="Telefone">{{ c.telefone || '-' }}</td>
+        <td data-label="Status">
+          <span class="badge" [ngClass]="c.ativo ? 'badge-success' : 'badge-danger'">
+            {{ c.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+        <td data-label="Ações" class="acoes">
+          <button class="btn btn-sm btn-primary" [routerLink]="['/clientes/editar', c.id]">✏️</button>
+          <button class="btn btn-sm btn-danger" (click)="deletar(c.id!)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
     
     <!-- Empty state -->
     <div *ngIf="clientes && clientes.length === 0" class="empty-state">

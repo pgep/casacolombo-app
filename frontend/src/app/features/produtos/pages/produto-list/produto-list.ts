@@ -41,7 +41,6 @@ export class ProdutoListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erro ao carregar produtos:', err);
         this.loading = false;
         this.cdr.detectChanges();
       }
@@ -53,9 +52,7 @@ verImagem(produto: Produto) {
     alert('Este produto não possui imagem');
     return;
   }
-  
-  console.log('🔍 Ver imagem clicado para produto:', produto.nome, 'ID imagem:', produto.imagem_id);
-  
+    
   // Desabilitar o botão temporariamente (opcional, mas bom)
   const botao = event?.target as HTMLElement;
   if (botao) {
@@ -65,11 +62,9 @@ verImagem(produto: Produto) {
   
   this.imagemService.getImagemCompleta(produto.imagem_id).subscribe({
     next: (imagem) => {
-      console.log('✅ Imagem carregada, chamando modal');
       this.modalService.abrirImagem(imagem);
     },
     error: (err) => {
-      console.error('❌ Erro ao carregar imagem:', err);
       alert('Erro ao carregar imagem');
     }
   });
@@ -79,11 +74,9 @@ verImagem(produto: Produto) {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       this.produtoService.deleteProduto(id).subscribe({
         next: () => {
-          console.log('🗑️ Produto deletado');
           this.carregarProdutos();
         },
         error: (err) => {
-          console.error('❌ Erro ao deletar:', err);
           alert('Erro ao deletar produto');
         }
       });

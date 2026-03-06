@@ -8,7 +8,7 @@
     </div>
 
     <!-- Formulário -->
-    <form *ngIf="!loading" (ngSubmit)="salvar()">
+    <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
       <div class="form-group">
         <label class="form-label">Nome *</label>
         <input 
@@ -29,6 +29,7 @@
         <label for="ativo">Tipo Ativo</label>
       </div>
 
+      <!-- Ações responsivas -->
       <div class="form-actions">
         <button type="submit" class="btn btn-success" [disabled]="loading">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}

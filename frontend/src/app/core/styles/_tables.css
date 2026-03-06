@@ -1,16 +1,15 @@
 /* ===== TABELAS ===== */
+/* ===== TABELAS RESPONSIVAS ===== */
 .table-container {
+  width: 100%;
   overflow-x: auto;
-  margin-top: var(--spacing-lg);
+  -webkit-overflow-scrolling: touch;
+  margin: 10px 0;
 }
 
 .table {
-  width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 
 .table thead tr {
@@ -58,4 +57,64 @@
 
 .badge-info {
   background: var(--primary);
+}
+
+/* Para telas muito pequenas, transforma tabela em cards */
+@media (max-width: 600px) {
+  .table-container {
+    overflow-x: visible;
+  }
+  
+  .table, 
+  .table thead, 
+  .table tbody, 
+  .table tr, 
+  .table th, 
+  .table td {
+    display: block;
+  }
+  
+  .table thead {
+    display: none; /* Esconde cabeçalho */
+  }
+  
+  .table tr {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .table td:last-child {
+    border-bottom: none;
+  }
+  
+  .table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    width: 40%;
+    color: var(--dark);
+  }
+  
+  .table td .btn {
+    width: auto;
+    margin: 0 2px;
+  }
+  
+  .acoes {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+  }
 }

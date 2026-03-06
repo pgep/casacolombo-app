@@ -1,8 +1,9 @@
 <div class="container">
   <div class="card">
-    <div class="flex justify-between items-center mb-4">
+    <!-- Cabeçalho responsivo -->
+    <div class="list-header">
       <h2 class="card-titulo">🖼️ Lista de Imagens</h2>
-      <a routerLink="/imagens/novo" class="btn btn-success">➕ Nova Imagem</a>
+      <a routerLink="/imagens/novo" class="btn btn-success btn-novo">➕ Nova Imagem</a>
     </div>
 
     <!-- Loading -->
@@ -10,7 +11,7 @@
       Carregando imagens...
     </div>
 
-    <!-- Grid de imagens -->
+    <!-- Grid de imagens responsivo -->
     <div *ngIf="!loading && imagens.length > 0" class="imagens-grid">
       <div *ngFor="let img of imagens" class="imagem-card">
         <div class="imagem-preview">
@@ -18,14 +19,14 @@
         </div>
         <div class="imagem-info">
           <h3>{{ img.nome }}</h3>
-          <small>ID: {{ img.id }} | {{ img.created_at | date:'dd/MM/yyyy' }}</small>
+          <small>{{ img.created_at | date:'dd/MM/yyyy' }}</small>
         </div>
         <div class="imagem-actions">
           <button class="btn btn-sm btn-primary" [routerLink]="['/imagens/editar', img.id]">
-            ✏️ Editar
+            ✏️
           </button>
           <button class="btn btn-sm btn-danger" (click)="deletar(img.id!)">
-            🗑️ Excluir
+            🗑️
           </button>
         </div>
       </div>
@@ -33,7 +34,8 @@
 
     <!-- Empty state -->
     <div *ngIf="!loading && imagens.length === 0" class="empty-state">
-      Nenhuma imagem cadastrada. Clique em "Nova Imagem" para começar!
+      <p>Nenhuma imagem cadastrada.</p>
+      <a routerLink="/imagens/novo" class="btn btn-success">➕ Cadastrar Primeira Imagem</a>
     </div>
   </div>
 </div>

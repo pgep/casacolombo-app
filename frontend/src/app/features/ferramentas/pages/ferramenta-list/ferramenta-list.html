@@ -1,8 +1,10 @@
+<!-- Container principal -->
 <div class="container">
+  <!-- Cabeçalho da lista -->
   <div class="card">
-    <div class="flex justify-between items-center mb-4">
+    <div class="list-header">
       <h2 class="card-titulo">🔧 Lista de Ferramentas</h2>
-      <a routerLink="/ferramentas/novo" class="btn btn-success">➕ Nova Ferramenta</a>
+      <a routerLink="/ferramentas/novo" class="btn btn-success btn-novo">➕ Nova Ferramenta</a>
     </div>
 
     <!-- Loading state -->
@@ -10,8 +12,8 @@
       Carregando ferramentas...
     </div>
 
-    <!-- Tabela de ferramentas -->
-    <div class="table-container" *ngIf="ferramentas && ferramentas.length > 0">
+    <!-- Tabela de ferramentas (responsiva) -->
+    <div class="table-responsive" *ngIf="ferramentas && ferramentas.length > 0">
       <table class="table">
         <thead>
           <tr>
@@ -24,18 +26,18 @@
         </thead>
         <tbody>
           <tr *ngFor="let f of ferramentas">
-            <td>{{ f.id }}</td>
-            <td>{{ f.nome }}</td>
-            <td>{{ f.unidadeMedida || '-' }}</td>
-            <td>{{ f.quantidadeEmEstoque }}</td>
-            <td>
-              <div class="flex gap-2">
-              <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
-                ✏️ Editar
-              </button>
-              <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">
-                🗑️ Excluir
-              </button>
+            <td data-label="ID">{{ f.id }}</td>
+            <td data-label="Nome">{{ f.nome }}</td>
+            <td data-label="Unidade">{{ f.unidadeMedida || '-' }}</td>
+            <td data-label="Quantidade">{{ f.quantidadeEmEstoque }}</td>
+            <td data-label="Ações" class="acoes-cell">
+              <div class="acoes-container">
+                <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
+                  ✏️
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">
+                  🗑️
+                </button>
               </div>
             </td>
           </tr>
@@ -45,7 +47,8 @@
     
     <!-- Empty state -->
     <div *ngIf="ferramentas && ferramentas.length === 0" class="empty-state">
-      Nenhuma ferramenta cadastrada. Clique em "Nova Ferramenta" para começar!
+      <p>Nenhuma ferramenta cadastrada.</p>
+      <a routerLink="/ferramentas/novo" class="btn btn-success">➕ Cadastrar Primeira Ferramenta</a>
     </div>
   </div>
 </div>

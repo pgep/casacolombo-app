@@ -1,53 +1,50 @@
 <div class="container">
   <div class="card">
-    <div class="flex justify-between items-center mb-4">
+    <!-- Cabeçalho responsivo -->
+    <div class="list-header">
       <h2 class="card-titulo">📦 Lista de Produtos</h2>
-      <a routerLink="/produtos/novo" class="btn btn-success">➕ Novo Produto</a>
+      <a routerLink="/produtos/novo" class="btn btn-success btn-novo">➕ Novo Produto</a>
     </div>
 
     <!-- Loading -->
     <div *ngIf="loading" class="loading-spinner">Carregando produtos...</div>
 
-    <!-- Tabela -->
-    <div class="table-container" *ngIf="!loading && produtos.length > 0">
+    <!-- Tabela Responsiva -->
+    <div class="table-responsive" *ngIf="!loading && produtos.length > 0">
       <table class="table">
         <thead>
           <tr>
-            <th style="width: 5%;">ID</th>
-            <th style="width: 35%;">Nome</th>
-            <th style="width: 20%;">Tipo</th>
-            <th style="width: 10%;">Preço</th>
-            <th style="width: 5%;">Status</th>
-            <th style="width: 35%; text-align: center;">Ações</th>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let p of produtos">
-            <td>{{ p.id }}</td>
-            <td>{{ p.nome }}</td>
-            <td>{{ p.tipo_nome || '-' }}</td>
-            <td>R$ {{ p.preco_venda | number:'1.2-2' }}</td>
-            <td>
+            <td data-label="ID">{{ p.id }}</td>
+            <td data-label="Nome">{{ p.nome }}</td>
+            <td data-label="Tipo">{{ p.tipo_nome || '-' }}</td>
+            <td data-label="Preço">R$ {{ p.preco_venda | number:'1.2-2' }}</td>
+            <td data-label="Status">
               <span class="badge" [ngClass]="p.ativo ? 'badge-success' : 'badge-danger'">
                 {{ p.ativo ? 'Ativo' : 'Inativo' }}
               </span>
             </td>
-            <td>
-              <div class="flex gap-2">
+            <td data-label="Ações" class="acoes-cell">
+              <div class="acoes-container">
                 <button class="btn btn-sm btn-primary" [routerLink]="['/produtos/editar', p.id]">
-                  ✏️ Editar
+                  ✏️
                 </button>
                 <button class="btn btn-sm btn-danger" (click)="deletar(p.id!)">
-                  🗑️ Excluir
+                  🗑️
                 </button>
-                <div *ngIf="p.imagem_id; else semImagem">
-                <button class="btn btn-sm btn-info" (click)="verImagem(p)">
-                  👁️ Ver
+                <button *ngIf="p.imagem_id" class="btn btn-sm btn-info" (click)="verImagem(p)">
+                  👁️
                 </button>
-              </div>
-              <ng-template #semImagem>
-                <span class="text-muted">-</span>
-              </ng-template>
+                <span *ngIf="!p.imagem_id" class="text-muted btn-placeholder">-</span>
               </div>
             </td>
           </tr>
@@ -57,7 +54,8 @@
     
     <!-- Empty state -->
     <div *ngIf="!loading && produtos.length === 0" class="empty-state">
-      Nenhum produto cadastrado. Clique em "Novo Produto" para começar!
+      <p>Nenhum produto cadastrado.</p>
+      <a routerLink="/produtos/novo" class="btn btn-success">➕ Cadastrar Primeiro Produto</a>
     </div>
   </div>
 </div>

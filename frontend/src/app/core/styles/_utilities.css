@@ -68,3 +68,48 @@
   color: #999;
   font-style: italic;
 }
+
+/* ===== MEDIA QUERIES GLOBAIS ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+  }
+  
+  /* Botões ocupam toda largura */
+  .btn {
+    width: 100%;
+    margin: 5px 0;
+    text-align: center;
+  }
+  
+  /* Flex em coluna */
+  .flex {
+    flex-direction: column;
+  }
+  
+  .flex .btn {
+    margin: 5px 0;
+  }
+  
+  /* Formulários */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .form-actions {
+    grid-column: span 1 !important;
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}

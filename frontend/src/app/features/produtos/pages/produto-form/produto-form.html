@@ -4,60 +4,71 @@
 
     <div *ngIf="loading" class="loading-spinner">Carregando...</div>
 
-    <form *ngIf="!loading" (ngSubmit)="salvar()">
-      <div class="form-group">
-        <label class="form-label">Nome *</label>
-        <input type="text" class="form-control" [(ngModel)]="produto.nome" name="nome" required>
+    <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
+      <!-- Grid responsivo para os campos -->
+      <div class="form-grid">
+        <!-- Coluna 1 -->
+        <div class="form-grid-col">
+          <div class="form-group">
+            <label class="form-label">Nome *</label>
+            <input type="text" class="form-control" [(ngModel)]="produto.nome" name="nome" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" [(ngModel)]="produto.descricao" name="descricao" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de Produto *</label>
+            <select class="form-control" [(ngModel)]="produto.tipo_produto_id" name="tipo_produto_id" required>
+              <option [value]="0">Selecione um tipo</option>
+              <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Coluna 2 -->
+        <div class="form-grid-col">
+          <div class="form-group">
+            <label class="form-label">Imagem</label>
+            <select 
+              class="form-control" 
+              [(ngModel)]="produto.imagem_id" 
+              name="imagem_id"
+              (change)="onImagemSelecionada($event)">
+              <option [value]="null">Nenhuma imagem</option>
+              <option *ngFor="let img of imagensSelect" [value]="img.id">
+                {{ img.nome }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Preview da imagem selecionada -->
+          <div *ngIf="imagemPreview" class="preview-container">
+            <h4>Preview:</h4>
+            <img [src]="imagemPreview" class="preview-image">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Custo Total (R$)</label>
+            <input type="number" class="form-control" [(ngModel)]="produto.custo_total" name="custo_total" step="0.01" min="0">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preço de Venda (R$) *</label>
+            <input type="number" class="form-control" [(ngModel)]="produto.preco_venda" name="preco_venda" step="0.01" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preço Final</label>
+            <input type="number" class="form-control" [(ngModel)]="produto.preco_final" name="preco_final" step="0.01" min="0">
+            <small class="text-muted">Se diferente do preço de venda</small>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Descrição</label>
-        <textarea class="form-control" [(ngModel)]="produto.descricao" name="descricao" rows="3"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Tipo de Produto *</label>
-        <select class="form-control" [(ngModel)]="produto.tipo_produto_id" name="tipo_produto_id" required>
-          <option [value]="0">Selecione um tipo</option>
-          <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Imagem</label>
-        <select 
-          class="form-control" 
-          [(ngModel)]="produto.imagem_id" 
-          name="imagem_id"
-          (change)="onImagemSelecionada($event)">
-          <option [value]="null">Nenhuma imagem</option>
-          <option *ngFor="let img of imagensSelect" [value]="img.id">  <!-- ← MUDAR AQUI -->
-            {{ img.nome }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Preview da imagem selecionada -->
-      <div *ngIf="imagemPreview" class="preview-container">
-        <h4>Preview da Imagem:</h4>
-        <img [src]="imagemPreview" class="preview-image">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Custo Total (R$)</label>
-        <input type="number" class="form-control" [(ngModel)]="produto.custo_total" name="custo_total" step="0.01" min="0">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Preço de Venda (R$) *</label>
-        <input type="number" class="form-control" [(ngModel)]="produto.preco_venda" name="preco_venda" step="0.01" min="0" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Preço Final (R$) (se diferente do preço de venda)</label>
-        <input type="number" class="form-control" [(ngModel)]="produto.preco_final" name="preco_final" step="0.01" min="0">
-      </div>
-
+      <!-- Checkbox e ações -->
       <div class="form-checkbox mb-4">
         <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo">
         <label for="ativo">Produto Ativo</label>
