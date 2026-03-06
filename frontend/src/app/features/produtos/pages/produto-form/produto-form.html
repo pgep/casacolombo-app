@@ -18,9 +18,24 @@
       <div class="form-group">
         <label class="form-label">Tipo de Produto *</label>
         <select class="form-control" [(ngModel)]="produto.tipo_produto_id" name="tipo_produto_id" required>
-          <option value="0">Selecione um tipo</option>
+          <option [value]="0">Selecione um tipo</option>
           <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
         </select>
+      </div>
+
+      <!-- NOVO: Select de Imagens -->
+      <div class="form-group">
+        <label class="form-label">Imagem (opcional)</label>
+        <select class="form-control" [(ngModel)]="produto.imagem_id" name="imagem_id" (change)="onImagemSelecionada($event)">
+          <option [value]="null">Nenhuma imagem</option>
+          <option *ngFor="let img of imagens" [value]="img.id">{{ img.nome }}</option>
+        </select>
+      </div>
+
+      <!-- Preview da imagem selecionada -->
+      <div *ngIf="imagemPreview" class="preview-container">
+        <h4>Preview da Imagem:</h4>
+        <img [src]="imagemPreview" class="preview-image">
       </div>
 
       <div class="form-group">
@@ -38,18 +53,15 @@
         <input type="number" class="form-control" [(ngModel)]="produto.preco_final" name="preco_final" step="0.01" min="0">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">URL da Imagem</label>
-        <input type="text" class="form-control" [(ngModel)]="produto.imagem" name="imagem" placeholder="https://exemplo.com/imagem.jpg">
-      </div>
-
       <div class="form-checkbox mb-4">
         <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo">
         <label for="ativo">Produto Ativo</label>
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-success">{{ editando ? '💾 Atualizar' : '💾 Salvar' }}</button>
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
         <button type="button" class="btn btn-secondary" routerLink="/produtos">❌ Cancelar</button>
       </div>
     </form>
