@@ -1,4 +1,8 @@
 <div class="container">
+
+  <!-- Modal global - aparece em qualquer lugar -->
+  <app-imagem-modal></app-imagem-modal>
+
   <!-- MENU (única coisa fixa) -->
   <div class="menu" style="background: #333; padding: 10px; margin-bottom: 20px;">
     <a routerLink="/clientes" 
@@ -30,4 +34,5 @@
 
   <!-- Área DINÂMICA - cada rota carrega seu componente aqui -->
   <router-outlet></router-outlet>
+  
 </div>

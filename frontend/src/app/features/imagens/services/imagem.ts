@@ -3,6 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Imagem } from '../models/imagem.model';
 
+export interface ImagemSelect {
+  id: number;
+  nome: string;
+}
+
+export interface ImagemCompleta extends ImagemSelect {
+  imagem_base64: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ImagemService {
   private apiUrl = 'http://localhost:3001/api';
@@ -43,4 +52,15 @@ export class ImagemService {
       reader.onerror = error => reject(error);
     });
   }
+
+  // Para listas suspensas (selects) - só id e nome
+  getImagensParaSelect(): Observable<ImagemSelect[]> {
+    return this.http.get<ImagemSelect[]>(`${this.apiUrl}/imagens/select`);
+  }
+
+  // Para modal/visualização - com base64
+  getImagemCompleta(id: number): Observable<ImagemCompleta> {
+    return this.http.get<ImagemCompleta>(`${this.apiUrl}/imagens/${id}/completa`);
+  }
+
 }

@@ -19,6 +19,7 @@
             <th>Preço</th>
             <th>Status</th>
             <th>Ações</th>
+            <th>Ver imagem</th>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +42,16 @@
                   🗑️ Excluir
                 </button>
               </div>
+            </td>
+            <td>
+              <div *ngIf="p.imagem_id; else semImagem">
+                <button class="btn btn-sm btn-info" (click)="verImagem(p)">
+                  👁️ Ver
+                </button>
+              </div>
+              <ng-template #semImagem>
+                <span class="text-muted">-</span>
+              </ng-template>
             </td>
           </tr>
         </tbody>

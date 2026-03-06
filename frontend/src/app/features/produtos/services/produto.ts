@@ -54,11 +54,5 @@ export class ProdutoService {
   getTiposProduto(apenasAtivos: boolean = true): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/tipo-produto?apenasAtivos=${apenasAtivos}`);
   }
-
-    // ========== NOVO MÉTODO ==========
-  // GET imagens disponíveis
-  getImagens(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/imagens`);
-  }
   
 }

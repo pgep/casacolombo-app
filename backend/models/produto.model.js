@@ -68,8 +68,7 @@ class Produto {
     let query = `
       SELECT p.*, 
             tp.nome as tipo_nome,
-            i.nome as imagem_nome,
-            i.imagem_base64
+            i.nome as imagem_nome
       FROM produtos p
       LEFT JOIN tipoproduto tp ON p.tipo_produto_id = tp.id
       LEFT JOIN imagens i ON p.imagem_id = i.id
@@ -89,8 +88,7 @@ class Produto {
     const query = `
       SELECT p.*, 
             tp.nome as tipo_nome,
-            i.nome as imagem_nome,
-            i.imagem_base64
+            i.nome as imagem_nome
       FROM produtos p
       LEFT JOIN tipoproduto tp ON p.tipo_produto_id = tp.id
       LEFT JOIN imagens i ON p.imagem_id = i.id

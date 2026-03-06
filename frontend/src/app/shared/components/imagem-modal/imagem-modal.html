@@ -1,0 +1,21 @@
+<div class="modal-overlay" [class.visible]="visible" (click)="fechar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ imagem?.nome || 'Imagem' }}</h3>
+      <button class="btn-close" (click)="fechar()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Loading só aparece se não tem imagem -->
+      <div *ngIf="!imagemUrl" class="loading">
+        <div class="spinner"></div>
+        <p>Carregando imagem...</p>
+      </div>
+      
+      <!-- Imagem quando carregada -->
+      <img *ngIf="imagemUrl" [src]="imagemUrl" [alt]="imagem?.nome" class="modal-imagem">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="fechar()">Fechar</button>
+    </div>
+  </div>
+</div>

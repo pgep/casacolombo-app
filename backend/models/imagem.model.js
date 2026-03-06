@@ -47,6 +47,28 @@ class Imagem {
     const result = await db.query('DELETE FROM imagens WHERE id = $1 RETURNING id', [id]);
     return result.rows[0];
   }
+
+  // Para listar imagens no select (só id e nome)
+  static async listarParaSelect() {
+    const query = `
+      SELECT id, nome 
+      FROM imagens 
+      ORDER BY nome ASC
+    `;
+    const result = await db.query(query);
+    return result.rows;
+  }
+
+  // Para buscar imagem COMPLETA (com base64) - usado pelo modal
+  static async buscarCompleta(id) {
+    const query = `
+      SELECT id, nome, imagem_base64 
+      FROM imagens 
+      WHERE id = $1
+    `;
+    const result = await db.query(query, [id]);
+    return result.rows[0];
+  }
 }
 
 module.exports = Imagem;

@@ -23,12 +23,17 @@
         </select>
       </div>
 
-      <!-- NOVO: Select de Imagens -->
       <div class="form-group">
-        <label class="form-label">Imagem (opcional)</label>
-        <select class="form-control" [(ngModel)]="produto.imagem_id" name="imagem_id" (change)="onImagemSelecionada($event)">
+        <label class="form-label">Imagem</label>
+        <select 
+          class="form-control" 
+          [(ngModel)]="produto.imagem_id" 
+          name="imagem_id"
+          (change)="onImagemSelecionada($event)">
           <option [value]="null">Nenhuma imagem</option>
-          <option *ngFor="let img of imagens" [value]="img.id">{{ img.nome }}</option>
+          <option *ngFor="let img of imagensSelect" [value]="img.id">  <!-- ← MUDAR AQUI -->
+            {{ img.nome }}
+          </option>
         </select>
       </div>
 

@@ -71,7 +71,31 @@ const imagemController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  },
+
+  // GET /api/imagens/select - para listas suspensas (só id e nome)
+  async listarParaSelect(req, res) {
+    try {
+      const imagens = await Imagem.listarParaSelect();
+      res.json(imagens);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // GET /api/imagens/:id/completa - para o modal (com base64)
+  async buscarCompleta(req, res) {
+    try {
+      const imagem = await Imagem.buscarCompleta(req.params.id);
+      if (!imagem) {
+        return res.status(404).json({ message: 'Imagem não encontrada' });
+      }
+      res.json(imagem); // Retorna { id, nome, imagem_base64 }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
+
 };
 
 module.exports = imagemController;

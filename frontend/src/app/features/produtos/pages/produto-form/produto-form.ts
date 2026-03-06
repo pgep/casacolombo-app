@@ -3,7 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProdutoService } from '../../services/produto';
-import { Produto, Imagem } from '../../models/produto.model';
+import { ImagemService } from '../../../imagens/services/imagem';
+import { Produto } from '../../models/produto.model';
+
+export interface TipoProduto {
+  id: number;
+  nome: string;
+}
+
+export interface ImagemSelect {
+  id: number;
+  nome: string;
+}
 
 @Component({
   selector: 'app-produto-form',
@@ -24,21 +35,25 @@ export class ProdutoFormComponent implements OnInit {
     ativo: true
   };
   
-  tipos: any[] = [];
-  imagens: Imagem[] = [];
+  tipos: TipoProduto[] = [];
+  imagensSelect: ImagemSelect[] = [];
   editando = false;
   loading = false;
-  imagemPreview: string | null = null;
+  
+  // 🔥 NOVA PROPRIEDADE PARA O PREVIEW
+  imagemPreview: string | null = null;  // ← ADICIONADO
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private produtoService: ProdutoService,
+    private imagemService: ImagemService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.carregarDados();
+    this.carregarTipos();
+    this.carregarImagensParaSelect();
     
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -47,38 +62,44 @@ export class ProdutoFormComponent implements OnInit {
     }
   }
 
-  carregarDados() {
-    // Carrega tipos de produto para o select
+  carregarTipos() {
     this.produtoService.getTiposProduto().subscribe({
-      next: (data) => this.tipos = data,
-      error: (err) => console.error('Erro ao carregar tipos:', err)
-    });
-
-    // Carrega imagens para o select
-    this.produtoService.getImagens().subscribe({
-      next: (data) => {
-        this.imagens = data;
-        console.log('Imagens carregadas:', this.imagens);
+      next: (data: TipoProduto[]) => {
+        this.tipos = data;
       },
-      error: (err) => console.error('Erro ao carregar imagens:', err)
+      error: (err: any) => {
+        console.error('Erro ao carregar tipos:', err);
+      }
+    });
+  }
+
+  carregarImagensParaSelect() {
+    this.imagemService.getImagensParaSelect().subscribe({
+      next: (data: ImagemSelect[]) => {
+        this.imagensSelect = data;
+        console.log('Imagens carregadas:', this.imagensSelect);
+      },
+      error: (err: any) => {
+        console.error('Erro ao carregar imagens:', err);
+      }
     });
   }
 
   carregarProduto(id: number) {
     this.loading = true;
     this.produtoService.getProduto(id).subscribe({
-      next: (data) => {
+      next: (data: Produto) => {
         this.produto = data;
         
-        // Se tiver imagem, carrega o preview
-        if (data.imagem_base64) {
-          this.imagemPreview = this.getBase64Image(data.imagem_base64);
+        // Se o produto já tem uma imagem, carregar o preview
+        if (data.imagem_id) {
+          this.carregarPreviewImagem(data.imagem_id);
         }
         
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao carregar produto:', err);
         this.loading = false;
         alert('Erro ao carregar produto');
@@ -87,20 +108,29 @@ export class ProdutoFormComponent implements OnInit {
     });
   }
 
+  // 🔥 NOVO MÉTODO PARA CARREGAR PREVIEW DA IMAGEM
+  carregarPreviewImagem(imagemId: number) {
+    this.imagemService.getImagemCompleta(imagemId).subscribe({
+      next: (imagem) => {
+        this.imagemPreview = imagem.imagem_base64.startsWith('data:image')
+          ? imagem.imagem_base64
+          : `data:image/jpeg;base64,${imagem.imagem_base64}`;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar preview da imagem:', err);
+      }
+    });
+  }
+
+  // 🔥 MÉTODO PARA QUANDO SELECIONAR UMA IMAGEM NO SELECT
   onImagemSelecionada(event: any) {
     const imagemId = Number(event.target.value);
-    const imagem = this.imagens.find(i => i.id === imagemId);
-    
-    if (imagem) {
-      this.imagemPreview = this.getBase64Image(imagem.imagem_base64);
+    if (imagemId) {
+      this.carregarPreviewImagem(imagemId);
     } else {
       this.imagemPreview = null;
     }
-  }
-
-  getBase64Image(base64: string): string {
-    if (!base64) return '';
-    return base64.startsWith('data:image') ? base64 : `data:image/jpeg;base64,${base64}`;
   }
 
   salvar() {
@@ -109,7 +139,6 @@ export class ProdutoFormComponent implements OnInit {
       return;
     }
 
-    // Se preco_final não foi preenchido, usa preco_venda
     if (!this.produto.preco_final) {
       this.produto.preco_final = this.produto.preco_venda;
     }
@@ -122,7 +151,7 @@ export class ProdutoFormComponent implements OnInit {
           alert('Produto atualizado com sucesso!');
           this.router.navigate(['/produtos']);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erro ao atualizar:', err);
           alert('Erro ao atualizar produto');
           this.loading = false;
@@ -134,16 +163,12 @@ export class ProdutoFormComponent implements OnInit {
           alert('Produto criado com sucesso!');
           this.router.navigate(['/produtos']);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erro ao criar:', err);
           alert('Erro ao criar produto');
           this.loading = false;
         }
       });
     }
-  }
-
-  compararImagem(imagem1: any, imagem2: any): boolean {
-    return imagem1 && imagem2 ? imagem1.id === imagem2.id : imagem1 === imagem2;
   }
 }
