@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Novo' }} Tipo de Insumo</h2>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-spinner">
+      Carregando...
+    </div>
+
+    <!-- Formulário -->
+    <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
+      <div class="form-group">
+        <label class="form-label">Nome *</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="tipo.nome" 
+          name="nome"
+          required
+          placeholder="Ex: Essência, Corante, Cera, Pavio">
+      </div>
+
+      <div class="form-checkbox mb-4">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="tipo.ativo" 
+          name="ativo"
+          id="ativo">
+        <label for="ativo">Tipo Ativo</label>
+      </div>
+
+      <!-- Ações -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/tipos-insumo">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

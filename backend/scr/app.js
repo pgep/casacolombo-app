@@ -18,7 +18,7 @@ app.use('/api/ferramentas', ferramentaRoutes);
 app.use('/api/tipo-produto', tipoProdutoRoutes);
 app.use('/api/produtos', produtoRoutes);
 app.use('/api/imagens', imagemRoutes);
-app.use('/api/tipo-insumo',tipoInsumoRoutes)
+app.use('/api/tipos-insumo',tipoInsumoRoutes)
 
 // Rota de saúde
 app.get('/api/health', (req, res) => {
