@@ -226,6 +226,50 @@
   font-style: italic;
 }
 
+/* Estilo Base (Desktop) */
+.menu-container {
+  /* background: #333; */
+  background-color: #333;
+  padding: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between; /* Separa botão dos links */
+  align-items: center;
+}
+
+.menu-list {
+  background-color: #333;
+  display: flex; /* Links lado a lado no PC */
+  gap: 15px;
+
+  border-radius: 5px;
+}
+
+.menu-list a {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.menu-list a:hover, 
+.menu-list a.active-link {
+  background-color: #555;
+  font-weight: bold;
+  color: #f5f5f5;
+}
+
+/* Esconde o botão hambúrguer no PC */
+.hamburger-btn {
+  display: none; 
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .form-grid {
@@ -253,6 +297,35 @@
   .btn-sm {
     padding: 4px 6px;
     font-size: 12px;
+  }
+  /* Mostra o botão hambúrguer */
+  .hamburger-btn {
+    display: block;
+  }
+
+  /* Transforma o menu em uma coluna vertical */
+  .menu-list {
+    display: none; /* Escondido por padrão */
+    flex-direction: column;
+    width: 100%;
+    position: absolute; /* Faz o menu flutuar sobre o conteúdo */
+    top: 100%; /* Logo abaixo do header */
+    left: 0;
+    background: #333;
+    padding: 10px 0;
+    z-index: 1000;
+  position: relative; 
+  }
+
+  /* Quando a classe 'show-menu' é adicionada pelo Angular, mostramos o menu */
+  .menu-list.show-menu {
+    display: flex;
+  }
+  
+  .menu-list a {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #444;
   }
 }
 

@@ -12,4 +12,11 @@ import { ImagemModalComponent } from './shared/components/imagem-modal/imagem-mo
 })
 export class AppComponent {
   title = 'Casacolombo App';
+      // 1. Crie esta variável
+  isMenuOpen: boolean = false;
+
+  // 2. Crie esta função
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }

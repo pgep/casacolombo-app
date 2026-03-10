@@ -12,6 +12,7 @@
   justify-content: center;
   gap: var(--spacing-xs);
   text-decoration: none;
+  margin: 3px;
 }
 
 .btn:hover {

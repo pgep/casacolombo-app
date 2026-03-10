@@ -3,33 +3,31 @@
   <!-- Modal global - aparece em qualquer lugar -->
   <app-imagem-modal></app-imagem-modal>
 
-  <!-- MENU (única coisa fixa) -->
-  <div class="menu" style="background: #333; padding: 10px; margin-bottom: 20px;">
-    <a routerLink="/clientes" 
-       routerLinkActive="active"
-       style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+  <!-- 1. O Botão Hambúrguer (Só aparece no celular) -->
+  <button class="hamburger-btn" (click)="toggleMenu()">
+    ☰ Menu
+  </button>
+
+  <!-- 2. A Lista de Links (O Menu em si) -->
+  <!-- A classe 'menu-list' controla o estilo, e 'show-menu' controla se aparece ou não -->
+  <div class="menu-list" [class.show-menu]="isMenuOpen">
+    
+    <a routerLink="/clientes" routerLinkActive="active-link" (click)="toggleMenu()">
       👥 Clientes
     </a>
-    <a routerLink="/ferramentas"
-       routerLinkActive="active"
-       style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+    <a routerLink="/ferramentas" routerLinkActive="active-link"  (click)="toggleMenu()">
       🔧 Ferramentas
     </a>
-    <a routerLink="/tipos-produto" 
-      routerLinkActive="active"
-      style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+    <a routerLink="/tipos-produto" routerLinkActive="active-link" (click)="toggleMenu()">
       🏷️ Tipos de Produto
     </a>
-    <a routerLink="/produtos" 
-      routerLinkActive="active"
-      style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">
+    <a routerLink="/produtos" routerLinkActive="active-link" (click)="toggleMenu()">
       📦 Produtos
     </a>
-    <a routerLink="/imagens" 
-      routerLinkActive="active"
-      style="color: white; margin-right: 15px; text-decoration: none; padding: 5px;">      
+    <a routerLink="/imagens" routerLinkActive="active-link" (click)="toggleMenu()">
       🖼️ Imagens
     </a>
+
   </div>
 
   <!-- Área DINÂMICA - cada rota carrega seu componente aqui -->
