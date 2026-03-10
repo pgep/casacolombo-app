@@ -7,7 +7,6 @@ const Ferramenta = require('./models/ferramenta.model');
 const TipoProduto = require('./models/tipo-produto.model');
 const Produto = require('./models/produto.model');
 const Imagem = require('./models/imagem.model');
-const Essencias = require('./scr/modules/essencias/essencia.model');
 
 const PORT = process.env.PORT || 3001;
 
@@ -18,7 +17,6 @@ async function initTables() {
     await TipoProduto.initTable();
     await Imagem.initTable(); 
     await Produto.initTable();
-    await Essencias.initTable();
     console.log('✅ Tabelas inicializadas');
   } catch (error) {
     console.error('❌ Erro:', error);
