@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FerramentaService, Ferramenta } from '../../services/ferramenta';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-ferramenta-list',
@@ -15,21 +17,18 @@ export class FerramentaListComponent implements OnInit {
 
   constructor(
     private ferramentaService: FerramentaService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
-    console.log('🔄 Inicializando lista de ferramentas');
     this.carregarFerramentas();
   }
 
   carregarFerramentas() {
-    console.log('🔧 Carregando ferramentas...');
     this.ferramentaService.getFerramentas().subscribe({
       next: (data: any[]) => {
-        console.log('✅ Dados brutos do backend:', data);
-        
-        // MAPEAMENTO DOS CAMPOS
         this.ferramentas = data.map(item => ({
           id: item.id,
           nome: item.nome || '',
@@ -38,32 +37,33 @@ export class FerramentaListComponent implements OnInit {
           created_at: item.created_at,
           updated_at: item.updated_at
         }));
-        
-        console.log('✅ Ferramentas mapeadas:', this.ferramentas);
-        console.log('📊 Total:', this.ferramentas.length);
-        
-        // Forçar atualização da view
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar ferramentas:', err);
-        alert('Erro ao carregar lista de ferramentas');
+        this.toastService.error('Erro ao carregar lista de ferramentas');
       }
     });
   }
 
-  deletar(id: number) {
-    if (confirm('Tem certeza que deseja excluir esta ferramenta?')) {
-      this.ferramentaService.deleteFerramenta(id).subscribe({
-        next: () => {
-          console.log('🗑️ Ferramenta deletada');
-          this.carregarFerramentas(); // Recarrega a lista
-        },
-        error: (err) => {
-          console.error('❌ Erro ao deletar:', err);
-          alert('Erro ao deletar ferramenta');
-        }
-      });
-    }
+  async deletar(id: number) {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Confirmar exclusão',
+      message: 'Tem certeza que deseja excluir esta ferramenta?',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    });
+
+    if (!confirmed) return;
+    
+    this.ferramentaService.deleteFerramenta(id).subscribe({
+      next: () => {
+        this.toastService.success('Ferramenta excluida com sucesso!');
+        this.carregarFerramentas();
+      },
+      error: (err) => {
+        this.toastService.error('Erro ao deletar ferramenta');
+      }
+    });
+
   }
 }

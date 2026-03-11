@@ -8,16 +8,24 @@
     </div>
 
     <!-- Formulário -->
-    <form *ngIf="!loading" (ngSubmit)="salvar()">
+    <form *ngIf="!loading" (ngSubmit)="salvar()" #ferramentaForm="ngForm">
       <div class="form-group">
-        <label class="form-label">Nome *</label>
+        <label class="form-label">
+          Nome *
+          <span class="text-muted">(obrigatório e único)</span>
+        </label>
         <input 
           type="text" 
           class="form-control"
+          [class.error]="nomeInput.invalid && nomeInput.touched"
           [(ngModel)]="ferramenta.nome" 
           name="nome"
+          #nomeInput="ngModel"
           required
           placeholder="Ex: Martelo, Serra, Alicate">
+        <div *ngIf="nomeInput.invalid && nomeInput.touched" class="error-message">
+          Nome é obrigatório
+        </div>
       </div>
 
       <div class="form-group">
@@ -35,16 +43,25 @@
         <input 
           type="number" 
           class="form-control"
+          [class.error]="quantidadeInput.invalid && quantidadeInput.touched"
           [(ngModel)]="ferramenta.quantidadeEmEstoque" 
           name="quantidadeEmEstoque"
+          #quantidadeInput="ngModel"
           min="0"
           step="0.01"
-          placeholder="0">
+          placeholder="0"
+          required>
+        <div *ngIf="quantidadeInput.invalid && quantidadeInput.touched" class="error-message">
+          <div *ngIf="quantidadeInput.errors?.['required']">Quantidade é obrigatória</div>
+          <div *ngIf="quantidadeInput.errors?.['min']">Quantidade não pode ser negativa</div>
+        </div>
       </div>
 
-      <!-- Form actions - responsivo -->
       <div class="form-actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading">
+        <button 
+          type="submit" 
+          class="btn btn-success" 
+          [disabled]="loading || ferramentaForm.invalid">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
         </button>
         <button type="button" class="btn btn-secondary" routerLink="/ferramentas">
