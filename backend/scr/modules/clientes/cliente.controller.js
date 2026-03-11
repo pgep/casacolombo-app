@@ -20,12 +20,16 @@ const clienteController = {
     }
   },
 
+  // POST criar novo cliente
   async criar(req, res) {
     try {
       const cliente = await Cliente.create(req.body);
       res.status(201).json(cliente);
     } catch (error) {
-      if (error.code === '23505') return res.status(409).json({ error: 'Email já cadastrado' });
+      // Código 23505 é violação de chave única no PostgreSQL
+      if (error.code === '23505') {
+        return res.status(409).json({ error: 'Email já cadastrado' });
+      }
       res.status(500).json({ error: error.message });
     }
   },

@@ -8,27 +8,45 @@
     </div>
 
     <!-- Formulário -->
-    <form *ngIf="!loading" (ngSubmit)="salvar()">
+    <form *ngIf="!loading" (ngSubmit)="salvar()" #clienteForm="ngForm">
       <div class="form-group">
-        <label class="form-label">Nome *</label>
+        <label class="form-label">
+          Nome *
+          <span class="text-muted">(obrigatório)</span>
+        </label>
         <input 
           type="text" 
           class="form-control"
+          [class.error]="nomeInput.invalid && nomeInput.touched"
           [(ngModel)]="cliente.nome" 
           name="nome"
+          #nomeInput="ngModel"
           required
           placeholder="Digite o nome completo">
+        <div *ngIf="nomeInput.invalid && nomeInput.touched" class="error-message">
+          Nome é obrigatório
+        </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Email *</label>
+        <label class="form-label">
+          Email *
+          <span class="text-muted">(obrigatório e único)</span>
+        </label>
         <input 
           type="email" 
           class="form-control"
+          [class.error]="emailInput.invalid && emailInput.touched"
           [(ngModel)]="cliente.email" 
           name="email"
+          #emailInput="ngModel"
           required
+          email
           placeholder="email@exemplo.com">
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="error-message">
+          <div *ngIf="emailInput.errors?.['required']">Email é obrigatório</div>
+          <div *ngIf="emailInput.errors?.['email']">Email inválido</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -51,7 +69,10 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading">
+        <button 
+          type="submit" 
+          class="btn btn-success" 
+          [disabled]="loading || clienteForm.invalid">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
         </button>
         <button type="button" class="btn btn-secondary" routerLink="/clientes">

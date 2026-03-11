@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -27,13 +28,12 @@ export class ClienteFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private clienteService: ClienteService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log('🔍 ID do cliente na rota:', id);
-    
+    const id = this.route.snapshot.paramMap.get('id');    
     if (id) {
       this.editando = true;
       this.carregarCliente(Number(id));
@@ -42,14 +42,10 @@ export class ClienteFormComponent implements OnInit {
 
   carregarCliente(id: number) {
     this.loading = true;
-    console.log('🔄 Carregando cliente ID:', id);
-    this.cdr.detectChanges(); // Mostra "Carregando..." imediatamente
+    this.cdr.detectChanges();
     
     this.clienteService.getCliente(id).subscribe({
       next: (data: any) => {
-        console.log('✅ Dados brutos do backend:', data);
-        
-        // MAPEAMENTO DOS DADOS
         this.cliente = {
           id: data.id,
           nome: data.nome || '',
@@ -60,48 +56,96 @@ export class ClienteFormComponent implements OnInit {
           created_at: data.created_at,
           updated_at: data.updated_at
         };
-        
-        console.log('✅ Dados mapeados:', this.cliente);
-        
-        // Finalizar carregamento e atualizar template
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar cliente:', err);
         this.loading = false;
         this.cdr.detectChanges();
-        alert('Erro ao carregar dados do cliente');
+        this.toastService.error('Erro ao carregar Cliente!');
         this.router.navigate(['/clientes']);
       }
     });
   }
 
   salvar() {
+    // ========== VALIDAÇÕES ==========
+    
+    // Validar nome
+    if (!this.cliente.nome || this.cliente.nome.trim() === '') {
+      this.toastService.warning('Nome é obrigatório!');
+      return;
+    }
+
+    // Validar email
+    if (!this.cliente.email || this.cliente.email.trim() === '') {
+      this.toastService.warning('Email é obrigatório!');
+      return;
+    }
+
+    // Validar formato do email (opcional, mas recomendado)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.cliente.email)) {
+      this.toastService.warning('Email inválido! Digite um email válido.');
+      return;
+    }
+
+    // Validar telefone (opcional)
+    if (this.cliente.telefone && this.cliente.telefone.trim() === '') {
+      this.cliente.telefone = ''; // Garantir que não seja espaço em branco
+    }
+
+    this.loading = true;
+
     if (this.editando) {
-      console.log('📝 Atualizando cliente:', this.cliente);
+      // ========== ATUALIZAR ==========
       this.clienteService.updateCliente(this.cliente.id!, this.cliente).subscribe({
         next: () => {
-          console.log('✅ Cliente atualizado');
+          this.toastService.success('Cliente atualizado com sucesso!');
           this.router.navigate(['/clientes']);
         },
         error: (err) => {
-          console.error('❌ Erro ao atualizar:', err);
-          alert('Erro ao atualizar cliente');
+          console.error('Erro ao atualizar:', err);
+          this.tratarErro(err, 'atualizar');
+          this.loading = false;
+          this.cdr.detectChanges();
         }
       });
     } else {
-      console.log('📝 Criando cliente:', this.cliente);
+      // ========== CRIAR ==========
       this.clienteService.createCliente(this.cliente).subscribe({
         next: () => {
-          console.log('✅ Cliente criado');
+          this.toastService.success('Cliente cadastrado com sucesso!');
           this.router.navigate(['/clientes']);
         },
         error: (err) => {
-          console.error('❌ Erro ao criar:', err);
-          alert('Erro ao criar cliente');
+          console.error('Erro ao criar:', err);
+          this.tratarErro(err, 'criar');
+          this.loading = false;
+          this.cdr.detectChanges();
         }
       });
     }
   }
+
+  // ========== MÉTODO PARA TRATAR ERROS ==========
+  private tratarErro(err: any, operacao: string) {
+    // Erro de email duplicado (código 23505 no PostgreSQL)
+    if (err.status === 409 || err.error?.error?.includes('duplicate') || err.error?.error?.includes('já cadastrado')) {
+      this.toastService.error('Este email já está cadastrado!', 'Email duplicado');
+    }
+    // Erro de validação do banco
+    else if (err.status === 400) {
+      this.toastService.error('Dados inválidos: ' + (err.error?.error || 'Verifique os campos'));
+    }
+    // Erro de conexão
+    else if (err.status === 0) {
+      this.toastService.error('Erro de conexão com o servidor');
+    }
+    // Outros erros
+    else {
+      this.toastService.error(`Erro ao ${operacao} cliente: ${err.error?.error || err.message || 'Erro desconhecido'}`);
+    }
+  }
+  
 }

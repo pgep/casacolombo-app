@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -15,21 +17,18 @@ export class ClienteListComponent implements OnInit {
 
   constructor(
     private clienteService: ClienteService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
-    console.log('🔄 Inicializando lista de clientes');
     this.carregarClientes();
   }
 
   carregarClientes() {
-    console.log('👥 Carregando clientes...');
     this.clienteService.getClientes().subscribe({
-      next: (data: any[]) => {
-        console.log('✅ Dados brutos do backend:', data);
-        
-        // MAPEAMENTO DOS CAMPOS (caso necessário)
+      next: (data: any[]) => {        
         this.clientes = data.map(item => ({
           id: item.id,
           nome: item.nome || '',
@@ -39,33 +38,36 @@ export class ClienteListComponent implements OnInit {
           data_cadastro: item.data_cadastro || item.created_at,
           created_at: item.created_at,
           updated_at: item.updated_at
-        }));
+        }));        
         
-        console.log('✅ Clientes mapeados:', this.clientes);
-        console.log('📊 Total:', this.clientes.length);
-        
-        // Forçar atualização da view
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar clientes:', err);
-        alert('Erro ao carregar lista de clientes');
+        this.toastService.error('Erro ao carregar lista de clientes');
       }
     });
   }
 
-  deletar(id: number) {
-    if (confirm('Tem certeza que deseja excluir este cliente?')) {
-      this.clienteService.deleteCliente(id).subscribe({
-        next: () => {
-          console.log('🗑️ Cliente deletado');
-          this.carregarClientes(); // Recarrega a lista
-        },
-        error: (err) => {
-          console.error('❌ Erro ao deletar:', err);
-          alert('Erro ao deletar cliente');
-        }
-      });
-    }
+  async deletar(id: number) {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Confirmar exclusão',
+      message: 'Tem certeza que deseja excluir este tipo de insumo?',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    });
+
+    if (!confirmed) return;
+
+    
+    this.clienteService.deleteCliente(id).subscribe({
+      next: () => {
+        this.toastService.success('Cliente excluido com sucesso!');
+        this.carregarClientes();
+      },
+      error: (err) => {
+        this.toastService.error(err,'Erro ao deletar cliente');
+      }
+    });
+    
   }
 }
