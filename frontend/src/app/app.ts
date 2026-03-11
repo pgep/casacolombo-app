@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ImagemModalComponent } from './shared/components/imagem-modal/imagem-modal'; // ← IMPORT DO MODAL
+import { ToastComponent } from './shared/components/toast/toast';
+import { ConfirmModalComponent } from './shared/components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,9 @@ import { ImagemModalComponent } from './shared/components/imagem-modal/imagem-mo
     RouterOutlet,      // ← para o <router-outlet>
     RouterModule,      // ← para routerLink
     HttpClientModule,
-    ImagemModalComponent    // ← para chamadas HTTP
+    ImagemModalComponent,    // ← para chamadas HTTP
+    ToastComponent,
+    ConfirmModalComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']

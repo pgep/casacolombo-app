@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TipoInsumoService } from '../../services/tipo-insumo';
 import { TipoInsumo } from '../../models/tipo-insumo.model';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-tipo-insumo-form',
@@ -24,7 +26,9 @@ export class TipoInsumoFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private tipoInsumoService: TipoInsumoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
@@ -46,7 +50,7 @@ export class TipoInsumoFormComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar tipo de insumo:', err);
         this.loading = false;
-        alert('Erro ao carregar dados');
+        this.toastService.error('Erro ao carregar tipo de insumo');
         this.router.navigate(['/tipos-insumo']);
       }
     });
@@ -54,7 +58,7 @@ export class TipoInsumoFormComponent implements OnInit {
 
   salvar() {
     if (!this.tipo.nome) {
-      alert('Nome é obrigatório!');
+      this.toastService.info('O nome é obrigatório');
       return;
     }
 
@@ -63,24 +67,22 @@ export class TipoInsumoFormComponent implements OnInit {
     if (this.editando) {
       this.tipoInsumoService.updateTipo(this.tipo.id!, this.tipo).subscribe({
         next: () => {
-          alert('Tipo de insumo atualizado com sucesso!');
+          this.toastService.success('Tipo de insumo atualizado com sucesso!');
           this.router.navigate(['/tipos-insumo']);
         },
         error: (err) => {
-          console.error('Erro ao atualizar:', err);
-          alert('Erro ao atualizar');
+          this.toastService.error(err,'Erro ao atualizar');
           this.loading = false;
         }
       });
     } else {
       this.tipoInsumoService.createTipo(this.tipo).subscribe({
         next: () => {
-          alert('Tipo de insumo criado com sucesso!');
+          this.toastService.success('Tipo de insumo criado com sucesso!');
           this.router.navigate(['/tipos-insumo']);
         },
         error: (err) => {
-          console.error('Erro ao criar:', err);
-          alert('Erro ao criar');
+          this.toastService.error('Erro ao criar Tipo Insumo!');
           this.loading = false;
         }
       });
