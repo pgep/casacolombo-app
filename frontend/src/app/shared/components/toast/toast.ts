@@ -17,7 +17,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 
   constructor(
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef  // ← ADICIONADO
+    private cdr: ChangeDetectorRef
   ) {
     console.log('✅ ToastComponent inicializado');
     
@@ -40,12 +40,8 @@ export class ToastComponent implements OnInit, OnDestroy {
     const id = ++this.counter;
     const newToast = { ...toast, id };
     
-    // FORÇA CRIAÇÃO DE NOVO ARRAY (IMUTABILIDADE)
     this.toasts = [...this.toasts, newToast];
     
-    console.log('📦 Array de toasts após adicionar:', this.toasts.length);
-    
-    // FORÇA DETECÇÃO DE MUDANÇAS
     this.cdr.detectChanges();
 
     if (toast.duration) {
@@ -54,10 +50,8 @@ export class ToastComponent implements OnInit, OnDestroy {
   }
 
   remove(id: number) {
-    // FORÇA CRIAÇÃO DE NOVO ARRAY (IMUTABILIDADE)
     this.toasts = this.toasts.filter(t => t.id !== id);
-    this.cdr.detectChanges(); // FORÇA DETECÇÃO DE MUDANÇAS
-    console.log('🗑️ Toast removido, restam:', this.toasts.length);
+    this.cdr.detectChanges();
   }
 
   getIcon(type: string): string {

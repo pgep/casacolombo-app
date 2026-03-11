@@ -1,9 +1,8 @@
 const db = require('../../config/database');
 const Ferramenta = require('./ferramenta.model');
 
-const ferramentaController = {
   // Método auxiliar para verificar nome duplicado
-  async verificarNomeDuplicado(nome, idIgnorar = null) {
+  async  function verificarNomeDuplicado(nome, idIgnorar = null) {
     let query = 'SELECT id FROM ferramentas WHERE LOWER(nome) = LOWER($1)';
     const params = [nome];
     
@@ -14,8 +13,9 @@ const ferramentaController = {
     
     const result = await db.query(query, params);
     return result.rows.length > 0;
-  },
+  }
 
+const ferramentaController = {
   // GET todas as ferramentas
   async listar(req, res) {
     try {
@@ -50,7 +50,7 @@ const ferramentaController = {
       }
       
       // VERIFICAR SE JÁ EXISTE FERRAMENTA COM ESTE NOME
-      const existe = await this.verificarNomeDuplicado(nome);
+      const existe = await verificarNomeDuplicado(nome);
       
       if (existe) {
         return res.status(409).json({ 
@@ -84,7 +84,7 @@ const ferramentaController = {
       }
       
       // VERIFICAR SE JÁ EXISTE OUTRA FERRAMENTA COM ESTE NOME (ignorando a atual)
-      const existe = await this.verificarNomeDuplicado(nome, id);
+      const existe = await verificarNomeDuplicado(nome, id);
       
       if (existe) {
         return res.status(409).json({ 
