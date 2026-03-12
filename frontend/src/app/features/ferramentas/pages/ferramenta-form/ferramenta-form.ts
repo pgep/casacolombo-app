@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FerramentaService, Ferramenta } from '../../services/ferramenta';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
 
 @Component({
   selector: 'app-ferramenta-form',
@@ -26,7 +27,8 @@ export class FerramentaFormComponent implements OnInit {
     private router: Router,
     private ferramentaService: FerramentaService,
     private cdr: ChangeDetectorRef,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit() {
@@ -85,7 +87,7 @@ export class FerramentaFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Erro ao atualizar:', err);
-          this.tratarErro(err, 'atualizar');
+          this.errorHandler.tratarErro(err,'Atualizar', 'Ferramenta');
           this.loading = false;
           this.cdr.detectChanges();
         }
@@ -99,7 +101,7 @@ export class FerramentaFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Erro ao criar:', err);
-          this.tratarErro(err, 'criar');
+          this.errorHandler.tratarErro(err,'Criar', 'Produto');
           this.loading = false;
           this.cdr.detectChanges();
         }
@@ -107,23 +109,4 @@ export class FerramentaFormComponent implements OnInit {
     }
   }
 
-  // ========== MÉTODO PARA TRATAR ERROS ==========
-  private tratarErro(err: any, operacao: string) {
-    // Erro de nome duplicado (código 23505 no PostgreSQL - unique violation)
-    if (err.status === 409 || err.error?.error?.includes('duplicate') || err.error?.error?.includes('já existe')) {
-      this.toastService.error('Já existe uma ferramenta com este nome!', 'Nome duplicado');
-    }
-    // Erro de validação do banco
-    else if (err.status === 400) {
-      this.toastService.error('Dados inválidos: ' + (err.error?.error || 'Verifique os campos'));
-    }
-    // Erro de conexão
-    else if (err.status === 0) {
-      this.toastService.error('Erro de conexão com o servidor');
-    }
-    // Outros erros
-    else {
-      this.toastService.error(`Erro ao ${operacao} ferramenta: ${err.error?.error || err.message || 'Erro desconhecido'}`);
-    }
-  }
 }

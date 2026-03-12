@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -29,7 +30,8 @@ export class ClienteFormComponent implements OnInit {
     private router: Router,
     private clienteService: ClienteService,
     private cdr: ChangeDetectorRef,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit() {
@@ -106,7 +108,7 @@ export class ClienteFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
-          this.tratarErro(err, 'atualizar');
+          this.errorHandler.tratarErro(err,'Atualizar','Cliente');
           this.loading = false;
           this.cdr.detectChanges();
         }
@@ -120,31 +122,11 @@ export class ClienteFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao criar:', err);
-          this.tratarErro(err, 'criar');
+          this.errorHandler.tratarErro(err,'Criar','Cliente');
           this.loading = false;
           this.cdr.detectChanges();
         }
       });
-    }
-  }
-
-  // ========== MÉTODO PARA TRATAR ERROS ==========
-  private tratarErro(err: any, operacao: string) {
-    // Erro de email duplicado (código 23505 no PostgreSQL)
-    if (err.status === 409 || err.error?.error?.includes('duplicate') || err.error?.error?.includes('já cadastrado')) {
-      this.toastService.error('Este email já está cadastrado!', 'Email duplicado');
-    }
-    // Erro de validação do banco
-    else if (err.status === 400) {
-      this.toastService.error('Dados inválidos: ' + (err.error?.error || 'Verifique os campos'));
-    }
-    // Erro de conexão
-    else if (err.status === 0) {
-      this.toastService.error('Erro de conexão com o servidor');
-    }
-    // Outros erros
-    else {
-      this.toastService.error(`Erro ao ${operacao} cliente: ${err.error?.error || err.message || 'Erro desconhecido'}`);
     }
   }
   

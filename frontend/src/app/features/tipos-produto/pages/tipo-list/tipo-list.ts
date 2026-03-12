@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TipoProdutoService, TipoProduto } from '../../services/tipo-produto';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-tipo-list',
@@ -16,23 +18,19 @@ export class TipoListComponent implements OnInit {
 
   constructor(
     private tipoService: TipoProdutoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
-    console.log('🔄 Inicializando lista de tipos de produto');
     this.carregarTipos();
   }
 
   carregarTipos() {
-    this.loading = true;
-    console.log('🏷️ Carregando tipos de produto...');
-    
+    this.loading = true;    
     this.tipoService.getTodos().subscribe({
       next: (data: any[]) => {
-        console.log('✅ Dados brutos:', data);
-        
-        // Mapeamento dos dados
         this.tipos = data.map(item => ({
           id: item.id,
           nome: item.nome || '',
@@ -40,32 +38,37 @@ export class TipoListComponent implements OnInit {
           data_cadastro: item.data_cadastro,
           created_at: item.created_at,
           updated_at: item.updated_at
-        }));
-        
-        console.log('✅ Tipos mapeados:', this.tipos);
+        }));        
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar tipos:', err);
+        this.toastService.error('❌ Erro ao carregar tipos:');
         this.loading = false;
         this.cdr.detectChanges();
       }
     });
   }
 
-  deletar(id: number) {
-    if (confirm('Tem certeza que deseja excluir este tipo de produto?')) {
-      this.tipoService.deleteTipo(id).subscribe({
-        next: () => {
-          console.log('🗑️ Tipo deletado');
-          this.carregarTipos(); // Recarrega a lista
-        },
-        error: (err) => {
-          console.error('❌ Erro ao deletar:', err);
-          alert('Erro ao deletar tipo de produto');
-        }
-      });
-    }
+  async deletar(id: number) {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Confirmar exclusão',
+      message: 'Tem certeza que deseja excluir este Tipo Produto?',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    });
+
+    if (!confirmed) return;
+   
+    this.tipoService.deleteTipo(id).subscribe({
+      next: () => {
+        this.toastService.success('Tipo Produto excluído com sucesso !');
+        this.carregarTipos();
+      },
+      error: (err) => {
+        this.toastService.error('Erro ao deletar Tipo de Produto');
+      }
+    });
+    
   }
 }

@@ -18,9 +18,7 @@ export class ToastComponent implements OnInit, OnDestroy {
   constructor(
     private toastService: ToastService,
     private cdr: ChangeDetectorRef
-  ) {
-    console.log('✅ ToastComponent inicializado');
-    
+  ) {    
     this.subscription = this.toastService.toast$.subscribe((toast) => {
       if (toast) {
         this.show(toast);
@@ -34,9 +32,7 @@ export class ToastComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private show(toast: ToastMessage) {
-    console.log('📢 ToastComponent.show chamado:', toast);
-    
+  private show(toast: ToastMessage) {    
     const id = ++this.counter;
     const newToast = { ...toast, id };
     

@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TipoProdutoService, TipoProduto } from '../../services/tipo-produto';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
 
 @Component({
   selector: 'app-tipo-form',
@@ -23,7 +25,9 @@ export class TipoFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private tipoService: TipoProdutoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private errorHandler: ErrorHandlerService
   ) {}
 
   ngOnInit() {
@@ -69,33 +73,43 @@ export class TipoFormComponent implements OnInit {
   }
 
   salvar() {
+
+      console.log(this.tipo.nome);
     if (!this.tipo.nome) {
-      alert('Nome é obrigatório!');
+      this.toastService.error('Nome é obrigatório!');
       return;
     }
 
+      // PREPARAR DADOS PARA ENVIO (sem campos extras)
+    const dadosParaEnvio = {
+      nome: this.tipo.nome,
+      ativo: this.tipo.ativo
+    };
+
     if (this.editando) {
-      console.log('📝 Atualizando tipo:', this.tipo);
-      this.tipoService.updateTipo(this.tipo.id!, this.tipo).subscribe({
+      console.log('📝 Atualizando tipo:', dadosParaEnvio);
+      this.tipoService.updateTipo(this.tipo.id!, dadosParaEnvio).subscribe({
         next: () => {
-          console.log('✅ Tipo atualizado');
           this.router.navigate(['/tipos-produto']);
         },
         error: (err) => {
-          console.error('❌ Erro ao atualizar:', err);
-          alert('Erro ao atualizar tipo de produto');
+          this.errorHandler.tratarErro(err,'Atualizar','Tipo Produto');
+          this.loading = false;
+          this.cdr.detectChanges();
         }
       });
     } else {
-      console.log('📝 Criando tipo:', this.tipo);
-      this.tipoService.createTipo(this.tipo).subscribe({
+      console.log('📝 Criando tipo:', dadosParaEnvio);
+      this.tipoService.createTipo(dadosParaEnvio).subscribe({
         next: () => {
           console.log('✅ Tipo criado');
           this.router.navigate(['/tipos-produto']);
         },
         error: (err) => {
-          console.error('❌ Erro ao criar:', err);
-          alert('Erro ao criar tipo de produto');
+          console.log('Errop ao criar Tipo Produto',err);
+          this.errorHandler.tratarErro(err,'Criar','Tipo Produto');
+          this.loading = false;
+          this.cdr.detectChanges();
         }
       });
     }
