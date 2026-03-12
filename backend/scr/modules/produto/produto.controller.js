@@ -1,4 +1,18 @@
+const db = require('../../config/database');
 const Produto = require('../../../models/produto.model');
+
+async function verificarNomeDuplicado(nome,idIgnorar = null) {
+  let query = 'select id from produtos where lower(nome) - lower($1)';
+  const prams = [nome];
+
+  if(idIgnorar){
+    query += ' and id != $2';
+    params.push(idIgnorar);
+  }
+
+  const result = await db.query(query,params);
+  return result.rows.length > 0;
+}
 
 const produtoController = {
   async listar(req, res) {
@@ -22,9 +36,12 @@ const produtoController = {
 
   async criar(req, res) {
     try {
+      const {nome,descricao,tipo_produto_id,imagem_id,custo_total,preco_venda,preco_final,ativo} = req.body;
+      // contnuar validações daqui, se não esrta preencido vou validar no front
       const produto = await Produto.create(req.body);
       res.status(201).json(produto);
     } catch (error) {
+      console.error('Erro ao criar produto:', error);
       res.status(500).json({ error: error.message });
     }
   },

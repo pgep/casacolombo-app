@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProdutoService } from '../../services/produto';
 import { ImagemService } from '../../../imagens/services/imagem';
 import { Produto } from '../../models/produto.model';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 export interface TipoProduto {
   id: number;
@@ -16,6 +17,18 @@ export interface ImagemSelect {
   nome: string;
 }
 
+function validaDadosEmBranco(p: Produto): string | false {
+  if (p.custo_total == 0) return "Insira o valor do custo toral!";
+  if (p.preco_final == 0) return "Insira o valor do preço final!";
+  if (p.preco_venda == 0) return "Insira o valor do preço de venda!";
+  if (p.descricao == '') return "Insira uma descrição!";
+  if (p.nome == '') return "O nome é obrigatório!";
+  if (p.tipo_produto_id == 0) return "Tipo produto obrigatório!";
+  if (p.imagem_id == undefined) return "selecione uma imagem!";  
+  
+  return false;
+}
+
 @Component({
   selector: 'app-produto-form',
   standalone: true,
@@ -23,6 +36,7 @@ export interface ImagemSelect {
   templateUrl: './produto-form.html',
   styleUrls: ['./produto-form.css']
 })
+
 export class ProdutoFormComponent implements OnInit {
   produto: Produto = {
     nome: '',
@@ -48,7 +62,8 @@ export class ProdutoFormComponent implements OnInit {
     private router: Router,
     private produtoService: ProdutoService,
     private imagemService: ImagemService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -134,13 +149,12 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   salvar() {
-    if (!this.produto.nome || !this.produto.tipo_produto_id) {
-      alert('Nome e Tipo são obrigatórios!');
+    console.log(validaDadosEmBranco(this.produto));
+    let temMensagem = validaDadosEmBranco(this.produto);
+    
+    if (temMensagem) {
+      this.toastService.error(temMensagem);      
       return;
-    }
-
-    if (!this.produto.preco_final) {
-      this.produto.preco_final = this.produto.preco_venda;
     }
 
     this.loading = true;
@@ -148,24 +162,24 @@ export class ProdutoFormComponent implements OnInit {
     if (this.editando) {
       this.produtoService.updateProduto(this.produto.id!, this.produto).subscribe({
         next: () => {
-          alert('Produto atualizado com sucesso!');
+          this.toastService.success('Produto atualizado com sucesso!');
           this.router.navigate(['/produtos']);
         },
         error: (err: any) => {
           console.error('Erro ao atualizar:', err);
-          alert('Erro ao atualizar produto');
+          this.toastService.error('Erro ao atualizar produto');
           this.loading = false;
         }
       });
     } else {
       this.produtoService.createProduto(this.produto).subscribe({
         next: () => {
-          alert('Produto criado com sucesso!');
+          this.toastService.success('Produto criado com sucesso!');
           this.router.navigate(['/produtos']);
         },
         error: (err: any) => {
           console.error('Erro ao criar:', err);
-          alert('Erro ao criar produto');
+          this.toastService.error('Erro ao criar produto');
           this.loading = false;
         }
       });

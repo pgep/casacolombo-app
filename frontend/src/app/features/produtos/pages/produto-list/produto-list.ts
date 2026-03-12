@@ -5,7 +5,8 @@ import { ProdutoService } from '../../services/produto';
 import { ImagemService } from '../../../imagens/services/imagem';  // ✅ OK
 import { ModalService } from '../../../../shared/services/modal.service';  // ✅ OK
 import { Produto } from '../../models/produto.model';
-import { ImagemCompleta } from '../../../imagens/services/imagem';  // ← IMPORTAR O TIPO
+import { ToastService } from '../../../../shared/services/toast.service';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-produto-list',
@@ -23,9 +24,11 @@ export class ProdutoListComponent implements OnInit {
 
   constructor(
     private produtoService: ProdutoService,
-    private imagemService: ImagemService,  // ← ADICIONADO
-    private modalService: ModalService,    // ← ADICIONADO
-    private cdr: ChangeDetectorRef
+    private imagemService: ImagemService,
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
@@ -49,7 +52,7 @@ export class ProdutoListComponent implements OnInit {
 
 verImagem(produto: Produto) {
   if (!produto.imagem_id) {
-    alert('Este produto não possui imagem');
+    this.toastService.info('Este produto não possui imagem');
     return;
   }
     
@@ -65,21 +68,30 @@ verImagem(produto: Produto) {
       this.modalService.abrirImagem(imagem);
     },
     error: (err) => {
-      alert('Erro ao carregar imagem');
+      this.toastService.error('Erro ao carregar imagem');
     }
   });
 }
 
-  deletar(id: number) {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-      this.produtoService.deleteProduto(id).subscribe({
-        next: () => {
-          this.carregarProdutos();
-        },
-        error: (err) => {
-          alert('Erro ao deletar produto');
-        }
-      });
-    }
+  async deletar(id: number) {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Confirmar exclusÃ£o',
+      message: 'Tem certeza que deseja excluir este produto?',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    });
+
+    if (!confirmed) return
+    
+    this.produtoService.deleteProduto(id).subscribe({
+      next: () => {
+        this.toastService.success('Produto excluido com sucesso!');
+        this.carregarProdutos();
+      },
+      error: (err) => {
+        this.toastService.error('Erro ao deletar produto');
+      }
+    });
+    
   }
 }
