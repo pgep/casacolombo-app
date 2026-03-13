@@ -1,8 +1,5 @@
-<div class="container">
-  <app-toast></app-toast>
-  <app-confirm-modal></app-confirm-modal>
-  <!-- Modal global - aparece em qualquer lugar -->
-  <app-imagem-modal></app-imagem-modal>
+<div class="content-wrapper" style="min-height: 100vh;">
+
 
   <!-- 1. O Botão Hambúrguer (Só aparece no celular) -->
   <button class="hamburger-btn" (click)="toggleMenu()">
@@ -37,4 +34,11 @@
   <!-- Área DINÂMICA - cada rota carrega seu componente aqui -->
   <router-outlet></router-outlet>
   
+</div>
+
+<!-- DEPOIS: Modais, em um container separado -->
+<div class="modal-container" style="position: relative; z-index: 9999;">
+  <app-toast></app-toast>
+  <app-confirm-modal></app-confirm-modal>
+  <app-imagem-modal></app-imagem-modal>
 </div>

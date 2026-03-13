@@ -14,7 +14,7 @@ export class ToastService {
   toast$ = this.toastSubject.asObservable();
 
   success(message: string, title: string = 'Sucesso') {
-    this.show({ type: 'success', title, message, duration: 3000 });
+    this.show({ type: 'success', title, message, duration: 4000 });
   }
 
   error(message: string, title: string = 'Erro') {
@@ -22,11 +22,11 @@ export class ToastService {
   }
 
   info(message: string, title: string = 'Informação') {
-    this.show({ type: 'info', title, message, duration: 3000 });
+    this.show({ type: 'info', title, message, duration: 4000 });
   }
 
   warning(message: string, title: string = 'Atenção') {
-    this.show({ type: 'warning', title, message, duration: 3500 });
+    this.show({ type: 'warning', title, message, duration: 4000 });
   }
 
   private show(toast: ToastMessage) {

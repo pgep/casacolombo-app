@@ -1,11 +1,3 @@
-/* ===== CONTAINER PRINCIPAL ===== */
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
 .titulo-principal {
   color: var(--dark);
   border-bottom: 2px solid var(--primary);
@@ -13,64 +5,7 @@
   margin-top: 0;
 }
 
-/* ===== CARDS ===== */
-.card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.card-edit {
-  background: #fff3cd;
-  border-color: var(--warning);
-}
-
-.card-titulo {
-  margin-top: 0;
-  color: var(--primary);
-}
-
-.card-titulo-edit {
-  color: #856404;
-}
-
 /* ===== FORMULÁRIOS ===== */
-.form-grid {
-  display: grid;
-  gap: 15px;
-  grid-template-columns: 1fr 1fr;
-}
-
-.form-group {
-  margin-bottom: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
-
-.form-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.3s;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-}
 
 .checkbox-group {
   display: flex;
@@ -78,75 +13,7 @@
   gap: 10px;
 }
 
-.form-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.form-actions {
-  grid-column: span 2;
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
 /* ===== BOTÕES - AGORA COM AS CORES CORRETAS ===== */
-.btn {
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-  font-weight: 500;
-}
-
-.btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-/* Botão de sucesso (VERDE) - usado no Cadastrar */
-.btn-success {
-  background: var(--success);  /* #28a745 - Verde */
-  color: white;
-}
-
-/* Botão de warning (AMARELO) - usado no Salvar */
-.btn-warning {
-  background: var(--warning);  /* #ffc107 - Amarelo */
-  color: #333;  /* texto escuro para contraste */
-}
-
-/* Botão secundário (CINZA) - usado no Cancelar */
-.btn-secondary {
-  background: var(--secondary);  /* #6c757d - Cinza */
-  color: white;
-}
-
-/* Botão primário (AZUL) - usado no Editar */
-.btn-primary {
-  background: var(--primary);  /* #007bff - Azul */
-  color: white;
-}
-
-/* Botão de perigo (VERMELHO) - usado no Excluir */
-.btn-danger {
-  background: var(--danger);  /* #dc3545 - Vermelho */
-  color: white;
-}
-
-/* Botão pequeno */
-.btn-sm {
-  padding: 5px 10px;
-  font-size: 14px;
-}
 
 /* ===== TABELA ===== */
 .tabela {
@@ -272,13 +139,6 @@
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .form-actions {
-    grid-column: span 1;
-  }
   
   .tabela {
     font-size: 14px;
@@ -293,11 +153,7 @@
     flex-direction: column;
     gap: 2px;
   }
-  
-  .btn-sm {
-    padding: 4px 6px;
-    font-size: 12px;
-  }
+
   /* Mostra o botão hambúrguer */
   .hamburger-btn {
     display: block;

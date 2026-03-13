@@ -3,6 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-lg);
+  font-family: Arial, sans-serif;
 }
 
 .card {
@@ -10,7 +11,22 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
+  margin: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
+}
+
+.card-edit {
+  background: #fff3cd;
+  border-color: var(--warning);
+}
+
+.card-titulo {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+.card-titulo-edit {
+  color: #856404;
 }
 
 /* ===== ESPAÇAMENTO ===== */
@@ -98,18 +114,9 @@
   .flex .btn {
     margin: 5px 0;
   }
-  
-  /* Formulários */
-  .form-grid {
-    grid-template-columns: 1fr !important;
+
+  .card {
+  padding: 15px;
   }
-  
-  .form-actions {
-    grid-column: span 1 !important;
-    flex-direction: column;
-  }
-  
-  .form-actions .btn {
-    width: 100%;
-  }
+
 }

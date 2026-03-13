@@ -1,6 +1,6 @@
 <div class="toast-container">
   <div 
-    *ngFor="let toast of toasts; let i = index" 
+    *ngFor="let toast of toasts" 
     class="toast" 
     [ngClass]="getClass(toast.type)"
     (click)="remove(toast.id)">

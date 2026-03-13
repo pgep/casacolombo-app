@@ -78,11 +78,21 @@
 
 /* ===== TAMANHOS ===== */
 .btn-sm {
-  font-size: 14px;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 4px 6px;
+  font-size: 12px;
 }
 
 .btn-lg {
   font-size: 18px;
   padding: var(--spacing-md) var(--spacing-xl);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+
+  .btn-sm {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  
 }

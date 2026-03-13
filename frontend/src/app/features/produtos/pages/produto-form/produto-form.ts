@@ -117,7 +117,7 @@ export class ProdutoFormComponent implements OnInit {
       error: (err: any) => {
         console.error('Erro ao carregar produto:', err);
         this.loading = false;
-        alert('Erro ao carregar produto');
+        this.toastService.error('Erro ao carregar produto');
         this.router.navigate(['/produtos']);
       }
     });

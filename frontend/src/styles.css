@@ -38,3 +38,40 @@ body {
   background: var(--primary);
   font-weight: bold;
 }
+
+
+/* CONTAINER DOS MODAIS - NÃO INTERFERE NO RESTO */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* APENAS O QUE PRECISA SER CLICÁVEL DENTRO DO MODAL */
+.modal-container app-toast,
+.modal-container app-confirm-modal,
+.modal-container app-imagem-modal {
+  pointer-events: none;
+}
+
+.modal-container .toast-container,
+.modal-container .modal-overlay {
+  pointer-events: auto;
+}
+
+/* TOAST - posicionamento */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+}
