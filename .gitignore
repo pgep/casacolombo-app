@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend específico
+backend/node_modules/
+backend/.env
+
+# Frontend específico
+frontend/node_modules/
+frontend/.env
+frontend/dist/
