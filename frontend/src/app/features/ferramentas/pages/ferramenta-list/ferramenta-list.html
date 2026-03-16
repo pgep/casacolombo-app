@@ -30,10 +30,10 @@
             <td data-label="Quantidade">{{ f.quantidadeEmEstoque }}</td>
             <td data-label="Ações" class="acoes-cell">
               <div class="acoes-container">
-                <button class="btn btn-sm btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
+                <button class="btn btn-md btn-primary" [routerLink]="['/ferramentas/editar', f.id]">
                   ✏️
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="deletar(f.id!)">
+                <button class="btn btn-md btn-danger" (click)="deletar(f.id!)">
                   🗑️
                 </button>
               </div>

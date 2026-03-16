@@ -87,6 +87,11 @@
   padding: var(--spacing-md) var(--spacing-xl);
 }
 
+.btn-md {
+  font-size: 14px;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
 

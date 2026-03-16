@@ -23,11 +23,27 @@ import { ConfirmModalComponent } from './shared/components/confirm-modal/confirm
 })
 export class App {
   title = 'Sistema Casa Colombo Artesanal';
-      // 1. Crie esta variável
-  isMenuOpen: boolean = false;
+  // Controles do menu
+  isMenuOpen = false;
+  isCadastroOpen = false;
+  isTiposOpen = false;
 
-  // 2. Crie esta função
-  toggleMenu() {
+    toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    if (!this.isMenuOpen) {
+      this.isCadastroOpen = false;
+      this.isTiposOpen = false;
+    }
   }
+
+  toggleCadastro() {
+    this.isCadastroOpen = !this.isCadastroOpen;
+    if (this.isCadastroOpen) this.isTiposOpen = false;
+  }
+  
+  toggleTipos() {
+    this.isTiposOpen = !this.isTiposOpen;
+    if (this.isTiposOpen) this.isCadastroOpen = false;
+  }
+
 }

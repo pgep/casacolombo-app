@@ -35,13 +35,13 @@
             </td>
             <td data-label="Ações" class="acoes-cell">
               <div class="acoes-container">
-                <button class="btn btn-sm btn-primary" [routerLink]="['/produtos/editar', p.id]">
+                <button class="btn btn-md btn-primary" [routerLink]="['/produtos/editar', p.id]">
                   ✏️
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="deletar(p.id!)">
+                <button class="btn btn-md btn-danger" (click)="deletar(p.id!)">
                   🗑️
                 </button>
-                <button *ngIf="p.imagem_id" class="btn btn-sm btn-info" (click)="verImagem(p)">
+                <button *ngIf="p.imagem_id" class="btn btn-md btn-info" (click)="verImagem(p)">
                   👁️
                 </button>
                 <span *ngIf="!p.imagem_id" class="text-muted btn-placeholder">-</span>

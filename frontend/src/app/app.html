@@ -1,42 +1,83 @@
+<!-- WRAPPER PRINCIPAL -->
 <div class="content-wrapper" style="min-height: 100vh;">
+  
+  <!-- ===== CABEÇALHO ===== -->
+  <div class="header-wrapper">  <!-- ← NOVO: wrapper para fundo -->
+    <header class="main-header">
+      <div class="container">  <!-- ← container limita a 1200px -->
+        <div class="header-content">
+          <!-- Logo e Nome da Empresa -->
+          <div class="logo-area">
+            <img src="/assets/logo.jpg" alt="Casacolombo" class="logo">
+            <h1 class="company-name">Casa Colombo Artesanal</h1>
+          </div>
 
+          <!-- Menu Desktop -->
+          <nav class="desktop-nav">
+            <a routerLink="/clientes" routerLinkActive="active-link" class="nav-item">👥 Clientes</a>
 
-  <!-- 1. O Botão Hambúrguer (Só aparece no celular) -->
-  <button class="hamburger-btn" (click)="toggleMenu()">
-    ☰ Menu
-  </button>
+            <div class="dropdown">
+              <button class="dropbtn">📋 Cadastro ▾</button>
+              <div class="dropdown-content">
+                <a routerLink="/produtos" routerLinkActive="active-link">📦 Produtos</a>
+                <a routerLink="/ferramentas" routerLinkActive="active-link">🔧 Ferramentas</a>
+                <a routerLink="/imagens" routerLinkActive="active-link">🖼️ Imagens</a>
+              </div>
+            </div>
 
-  <!-- 2. A Lista de Links (O Menu em si) -->
-  <!-- A classe 'menu-list' controla o estilo, e 'show-menu' controla se aparece ou não -->
-  <div class="menu-list" [class.show-menu]="isMenuOpen">
-    
-    <a routerLink="/clientes" routerLinkActive="active-link" (click)="toggleMenu()">
-      👥 Clientes
-    </a>
-    <a routerLink="/ferramentas" routerLinkActive="active-link"  (click)="toggleMenu()">
-      🔧 Ferramentas
-    </a>
-    <a routerLink="/tipos-produto" routerLinkActive="active-link" (click)="toggleMenu()">
-      🏷️ Tipos de Produto
-    </a>
-    <a routerLink="/produtos" routerLinkActive="active-link" (click)="toggleMenu()">
-      📦 Produtos
-    </a>
-    <a routerLink="/imagens" routerLinkActive="active-link" (click)="toggleMenu()">
-      🖼️ Imagens
-    </a>
-    <a routerLink="/tipos-insumo" routerLinkActive="active-link" (click)="toggleMenu()">
-      📦 Tipos Insumo
-    </a>
+            <div class="dropdown">
+              <button class="dropbtn">🏷️ Tipos ▾</button>
+              <div class="dropdown-content">
+                <a routerLink="/tipos-produto" routerLinkActive="active-link">Tipo Produto</a>
+                <a routerLink="/tipos-insumo" routerLinkActive="active-link">Tipo Insumo</a>
+              </div>
+            </div>
+          </nav>
 
+          <button class="hamburger-btn" (click)="toggleMenu()">☰</button>
+        </div>
+      </div>
+    </header>
   </div>
 
-  <!-- Área DINÂMICA - cada rota carrega seu componente aqui -->
-  <router-outlet></router-outlet>
-  
+  <!-- Menu Mobile (fora do container para ter fundo próprio) -->
+  <div class="mobile-menu" [class.show-menu]="isMenuOpen">
+    <!-- conteúdo do menu mobile... -->
+  </div>
+
+  <!-- Área de Conteúdo Principal -->
+  <main class="main-content">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- ===== RODAPÉ ===== -->
+  <div class="footer-wrapper">  <!-- ← NOVO: wrapper para fundo -->
+    <footer class="main-footer">
+      <div class="container">  <!-- ← container limita a 1200px -->
+        <div class="footer-content">
+          <div class="footer-info">
+            <p>&copy; 2026 Casacolombo Artesanal.</p>
+            <p>CNPJ: 12.345.678/0001-90</p>
+          </div>
+          <div class="footer-contact">
+            <p>📧 contato@casacolombo.com.br</p>
+            <p>📱 (11) 99999-9999</p>
+            <p>🕒 Seg-Sex: 9h às 18h</p>
+          </div>
+          <div class="footer-address">
+            <p>📍 Rua das Artes, 123 - São Paulo/SP</p>
+            <p>CEP: 01234-567</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
 </div>
 
-<!-- DEPOIS: Modais, em um container separado -->
+<!-- Container de Modais -->
 <div class="modal-container" style="position: relative; z-index: 9999;">
   <app-toast></app-toast>
   <app-confirm-modal></app-confirm-modal>

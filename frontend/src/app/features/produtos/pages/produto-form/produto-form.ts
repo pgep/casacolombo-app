@@ -54,8 +54,7 @@ export class ProdutoFormComponent implements OnInit {
   editando = false;
   loading = false;
   
-  // 🔥 NOVA PROPRIEDADE PARA O PREVIEW
-  imagemPreview: string | null = null;  // ← ADICIONADO
+  imagemPreview: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -92,7 +91,6 @@ export class ProdutoFormComponent implements OnInit {
     this.imagemService.getImagensParaSelect().subscribe({
       next: (data: ImagemSelect[]) => {
         this.imagensSelect = data;
-        console.log('Imagens carregadas:', this.imagensSelect);
       },
       error: (err: any) => {
         console.error('Erro ao carregar imagens:', err);
@@ -104,9 +102,7 @@ export class ProdutoFormComponent implements OnInit {
     this.loading = true;
     this.produtoService.getProduto(id).subscribe({
       next: (data: Produto) => {
-        this.produto = data;
-        
-        // Se o produto já tem uma imagem, carregar o preview
+        this.produto = data;        
         if (data.imagem_id) {
           this.carregarPreviewImagem(data.imagem_id);
         }
@@ -123,7 +119,6 @@ export class ProdutoFormComponent implements OnInit {
     });
   }
 
-  // 🔥 NOVO MÉTODO PARA CARREGAR PREVIEW DA IMAGEM
   carregarPreviewImagem(imagemId: number) {
     this.imagemService.getImagemCompleta(imagemId).subscribe({
       next: (imagem) => {
@@ -138,7 +133,6 @@ export class ProdutoFormComponent implements OnInit {
     });
   }
 
-  // 🔥 MÉTODO PARA QUANDO SELECIONAR UMA IMAGEM NO SELECT
   onImagemSelecionada(event: any) {
     const imagemId = Number(event.target.value);
     if (imagemId) {
@@ -149,7 +143,6 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   salvar() {
-    console.log(validaDadosEmBranco(this.produto));
     let temMensagem = validaDadosEmBranco(this.produto);
     
     if (temMensagem) {

@@ -21,12 +21,9 @@ export class ImagemModalComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private cdr: ChangeDetectorRef
-  ) {
-    console.log('✅ ImagemModalComponent construtor');
-    
+  ) {    
     this.subscription = this.modalService.modalState$.subscribe({
       next: (data) => {
-        console.log('📦 Modal recebeu dados:', data ? 'com imagem' : 'fechar');
         
         if (data) {
           // ABRIR MODAL
@@ -57,11 +54,9 @@ export class ImagemModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('✅ ImagemModalComponent ngOnInit');
   }
 
   ngOnDestroy() {
-    console.log('🗑️ Destruindo ImagemModalComponent');
     this.subscription.unsubscribe();
   }
 

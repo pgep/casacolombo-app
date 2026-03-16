@@ -59,6 +59,11 @@
   background: var(--primary);
 }
 
+.acoes {
+  display: flex;
+  gap: 5px;
+}
+
 /* Para telas muito pequenas, transforma tabela em cards */
 @media (max-width: 600px) {
   .table-container {

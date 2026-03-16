@@ -16,18 +16,14 @@ export class ModalService {
   private aberto = false; // Controle de estado
 
   constructor() {
-    console.log('✅ ModalService inicializado');
   }
 
   abrirImagem(imagem: ModalImagemData) {
     // Se já estiver aberto, não abre novamente
     if (this.aberto) {
-      console.log('⏳ Modal já está aberto, ignorando novo clique');
       return;
     }
-    
-    console.log('🖼️ Abrindo modal com imagem:', imagem.nome);
-    
+        
     this.aberto = true;
     
     const imagemParaModal = {
@@ -41,7 +37,6 @@ export class ModalService {
   }
 
   fechar() {
-    console.log('❌ Fechando modal');
     this.aberto = false;
     this.modalSubject.next(null);
   }

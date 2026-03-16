@@ -85,6 +85,43 @@
   font-style: italic;
 }
 
+.content-wrapper { min-height: 100vh; }
+
+
+/* Cabeçalho - agora com fundo limitado ao container */
+.header-wrapper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  display: flex;
+  justify-content: center;  /* ← centraliza o header */
+}
+
+.main-header {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.main-header .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+/* Rodapé - agora com fundo limitado ao container */
+.footer-wrapper {
+  background: #333;
+  width: 100%;
+  display: flex;
+  justify-content: center;  /* ← centraliza o footer */
+  margin-top: 50px;
+}
+
 /* ===== MEDIA QUERIES GLOBAIS ===== */
 @media (max-width: 768px) {
   .container {

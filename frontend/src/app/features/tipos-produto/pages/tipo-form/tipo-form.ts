@@ -32,7 +32,6 @@ export class TipoFormComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log('🔍 ID do tipo na rota:', id);
     
     if (id) {
       this.editando = true;
@@ -42,13 +41,10 @@ export class TipoFormComponent implements OnInit {
 
   carregarTipo(id: number) {
     this.loading = true;
-    console.log('🔄 Carregando tipo ID:', id);
     this.cdr.detectChanges();
     
     this.tipoService.getTipo(id).subscribe({
-      next: (data: any) => {
-        console.log('✅ Dados brutos:', data);
-        
+      next: (data: any) => {        
         this.tipo = {
           id: data.id,
           nome: data.nome || '',
@@ -57,8 +53,6 @@ export class TipoFormComponent implements OnInit {
           created_at: data.created_at,
           updated_at: data.updated_at
         };
-        
-        console.log('✅ Dados mapeados:', this.tipo);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -73,21 +67,16 @@ export class TipoFormComponent implements OnInit {
   }
 
   salvar() {
-
-      console.log(this.tipo.nome);
     if (!this.tipo.nome) {
       this.toastService.error('Nome é obrigatório!');
       return;
     }
-
-      // PREPARAR DADOS PARA ENVIO (sem campos extras)
     const dadosParaEnvio = {
       nome: this.tipo.nome,
       ativo: this.tipo.ativo
     };
 
     if (this.editando) {
-      console.log('📝 Atualizando tipo:', dadosParaEnvio);
       this.tipoService.updateTipo(this.tipo.id!, dadosParaEnvio).subscribe({
         next: () => {
           this.router.navigate(['/tipos-produto']);
@@ -99,14 +88,11 @@ export class TipoFormComponent implements OnInit {
         }
       });
     } else {
-      console.log('📝 Criando tipo:', dadosParaEnvio);
       this.tipoService.createTipo(dadosParaEnvio).subscribe({
         next: () => {
-          console.log('✅ Tipo criado');
           this.router.navigate(['/tipos-produto']);
         },
         error: (err) => {
-          console.log('Errop ao criar Tipo Produto',err);
           this.errorHandler.tratarErro(err,'Criar','Tipo Produto');
           this.loading = false;
           this.cdr.detectChanges();
