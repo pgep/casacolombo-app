@@ -1,9 +1,11 @@
-const Cliente = require('../../../models/cliente.model');
+const Cliente = require("../../../models/cliente.model");
 
 const clienteController = {
   async listar(req, res) {
     try {
-      const clientes = await Cliente.findAll(req.query.apenasAtivos !== 'false');
+      const clientes = await Cliente.findAll(
+        req.query.apenasAtivos !== "false",
+      );
       res.json(clientes);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -13,7 +15,8 @@ const clienteController = {
   async buscarPorId(req, res) {
     try {
       const cliente = await Cliente.findById(req.params.id);
-      if (!cliente) return res.status(404).json({ message: 'Cliente não encontrado' });
+      if (!cliente)
+        return res.status(404).json({ message: "Cliente não encontrado" });
       res.json(cliente);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -27,8 +30,8 @@ const clienteController = {
       res.status(201).json(cliente);
     } catch (error) {
       // Código 23505 é violação de chave única no PostgreSQL
-      if (error.code === '23505') {
-        return res.status(409).json({ error: 'Email já cadastrado' });
+      if (error.code === "23505") {
+        return res.status(409).json({ error: "Email já cadastrado" });
       }
       res.status(500).json({ error: error.message });
     }
@@ -37,7 +40,8 @@ const clienteController = {
   async atualizar(req, res) {
     try {
       const cliente = await Cliente.update(req.params.id, req.body);
-      if (!cliente) return res.status(404).json({ message: 'Cliente não encontrado' });
+      if (!cliente)
+        return res.status(404).json({ message: "Cliente não encontrado" });
       res.json(cliente);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -47,12 +51,13 @@ const clienteController = {
   async deletar(req, res) {
     try {
       const cliente = await Cliente.delete(req.params.id);
-      if (!cliente) return res.status(404).json({ message: 'Cliente não encontrado' });
-      res.json({ message: 'Cliente removido com sucesso' });
+      if (!cliente)
+        return res.status(404).json({ message: "Cliente não encontrado" });
+      res.json({ message: "Cliente removido com sucesso" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
+  },
 };
 
 module.exports = clienteController;
