@@ -3,3 +3,4 @@
 @import '../../app/core/styles/_forms.css';
 @import '../../app/core/styles/_tables.css';
 @import '../../app/core/styles/_utilities.css';
+@import '../../material-theme.scss';

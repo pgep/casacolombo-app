@@ -5,13 +5,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './cliente-form.html',
-  styleUrls: ['./cliente-form.css']
+  styleUrls: ['./cliente-form.css'],
 })
 export class ClienteFormComponent implements OnInit {
   cliente: Cliente = {
@@ -19,8 +20,8 @@ export class ClienteFormComponent implements OnInit {
     email: '',
     telefone: '',
     ativo: true,
-    created_at: new Date,
-    updated_at: new Date,
+    created_at: new Date(),
+    updated_at: new Date(),
   };
   editando = false;
   loading = false;
@@ -31,11 +32,11 @@ export class ClienteFormComponent implements OnInit {
     private clienteService: ClienteService,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');    
+    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editando = true;
       this.carregarCliente(Number(id));
@@ -45,7 +46,7 @@ export class ClienteFormComponent implements OnInit {
   carregarCliente(id: number) {
     this.loading = true;
     this.cdr.detectChanges();
-    
+
     this.clienteService.getCliente(id).subscribe({
       next: (data: any) => {
         this.cliente = {
@@ -56,7 +57,7 @@ export class ClienteFormComponent implements OnInit {
           ativo: data.ativo === true || data.ativo === 'true', // Garante booleano
           data_cadastro: data.data_cadastro || data.created_at,
           created_at: data.created_at,
-          updated_at: data.updated_at
+          updated_at: data.updated_at,
         };
         this.loading = false;
         this.cdr.detectChanges();
@@ -66,13 +67,13 @@ export class ClienteFormComponent implements OnInit {
         this.cdr.detectChanges();
         this.toastService.error('Erro ao carregar Cliente!');
         this.router.navigate(['/clientes']);
-      }
+      },
     });
   }
 
   salvar() {
     // ========== VALIDAÇÕES ==========
-    
+
     // Validar nome
     if (!this.cliente.nome || this.cliente.nome.trim() === '') {
       this.toastService.warning('Nome é obrigatório!');
@@ -108,10 +109,10 @@ export class ClienteFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
-          this.errorHandler.tratarErro(err,'Atualizar','Cliente');
+          this.errorHandler.tratarErro(err, 'Atualizar', 'Cliente');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       // ========== CRIAR ==========
@@ -122,12 +123,11 @@ export class ClienteFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao criar:', err);
-          this.errorHandler.tratarErro(err,'Criar','Cliente');
+          this.errorHandler.tratarErro(err, 'Criar', 'Cliente');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     }
   }
-  
 }
