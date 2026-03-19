@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Novo' }} Usuário</h2>
+
+    <div *ngIf="loading" class="loading-spinner">Carregando...</div>
+
+    <form *ngIf="!loading" (ngSubmit)="salvarUsuario()" #usuarioForm="ngForm">
+      <div class="form-group">
+        <label class="form-label">Nome *</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="usuario.nome"
+          name="nome"
+          #nomeInput="ngModel"
+          required
+          placeholder="Nome completo"
+        />
+        <div *ngIf="nomeInput.invalid && nomeInput.touched" class="error-message">
+          Nome é obrigatório
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input
+          type="email"
+          class="form-control"
+          [(ngModel)]="usuario.email"
+          name="email"
+          #emailInput="ngModel"
+          required
+          email
+          placeholder="email@exemplo.com"
+        />
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="error-message">
+          <div *ngIf="emailInput.errors?.['required']">Email é obrigatório</div>
+          <div *ngIf="emailInput.errors?.['email']">Email inválido</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{{
+          editando ? 'Senha (deixe em branco para manter)' : 'Senha *'
+        }}</label>
+        <input
+          type="password"
+          class="form-control"
+          [(ngModel)]="usuario.senha"
+          name="senha"
+          #senhaInput="ngModel"
+          [required]="!editando"
+          placeholder="********"
+        />
+        <div *ngIf="senhaInput.invalid && senhaInput.touched" class="error-message">
+          Senha é obrigatória
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nível</label>
+        <select class="form-control" [(ngModel)]="usuario.nivel" name="nivel">
+          <option *ngFor="let n of niveis" [value]="n">{{ n | titlecase }}</option>
+        </select>
+      </div>
+
+      <div class="form-checkbox mb-4">
+        <input type="checkbox" [(ngModel)]="usuario.ativo" name="ativo" id="ativo" />
+        <label for="ativo">Usuário Ativo</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading || usuarioForm.invalid">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/usuarios">❌ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

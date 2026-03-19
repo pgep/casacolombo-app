@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">🧑‍💻 Lista de Usuários</h2>
+      <a routerLink="/usuarios/novo" class="btn btn-success btn-novo">➕ Novo Usuário</a>
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner">Carregando usuários...</div>
+
+    <div class="table-responsive" *ngIf="!loading && usuarios.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Nível</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of usuarios">
+            <td data-label="ID">{{ u.id }}</td>
+            <td data-label="Nome">{{ u.nome }}</td>
+            <td data-label="Email">{{ u.email }}</td>
+            <td data-label="Nível">{{ u.nivel }}</td>
+            <td data-label="Status">
+              <span class="badge" [ngClass]="u.ativo ? 'badge-success' : 'badge-danger'">
+                {{ u.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+            <td data-label="Ações" class="acoes-cell">
+              <div class="acoes-container">
+                <button class="btn btn-md btn-primary" [routerLink]="['/usuarios/editar', u.id]">
+                  ✏️
+                </button>
+                <button class="btn btn-md btn-danger" (click)="deletarUsuario(u.id!)">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!loading && usuarios.length === 0" class="empty-state">
+      <p>Nenhum usuário cadastrado.</p>
+      <a routerLink="/usuarios/novo" class="btn btn-success">➕ Cadastrar Primeiro Usuário</a>
+    </div>
+  </div>
+</div>
