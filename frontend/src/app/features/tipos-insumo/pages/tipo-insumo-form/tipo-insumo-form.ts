@@ -5,19 +5,18 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TipoInsumoService } from '../../services/tipo-insumo';
 import { TipoInsumo } from '../../models/tipo-insumo.model';
 import { ToastService } from '../../../../shared/services/toast.service';
-import { ConfirmService } from '../../../../shared/services/confirm.service';
 
 @Component({
   selector: 'app-tipo-insumo-form',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './tipo-insumo-form.html',
-  styleUrls: ['./tipo-insumo-form.css']
+  styleUrls: ['./tipo-insumo-form.css'],
 })
 export class TipoInsumoFormComponent implements OnInit {
   tipo: TipoInsumo = {
     nome: '',
-    ativo: true
+    ativo: true,
   };
   editando = false;
   loading = false;
@@ -28,7 +27,6 @@ export class TipoInsumoFormComponent implements OnInit {
     private tipoInsumoService: TipoInsumoService,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
@@ -52,7 +50,7 @@ export class TipoInsumoFormComponent implements OnInit {
         this.loading = false;
         this.toastService.error('Erro ao carregar tipo de insumo');
         this.router.navigate(['/tipos-insumo']);
-      }
+      },
     });
   }
 
@@ -71,9 +69,9 @@ export class TipoInsumoFormComponent implements OnInit {
           this.router.navigate(['/tipos-insumo']);
         },
         error: (err) => {
-          this.toastService.error(err,'Erro ao atualizar');
+          this.toastService.error(err, 'Erro ao atualizar');
           this.loading = false;
-        }
+        },
       });
     } else {
       this.tipoInsumoService.createTipo(this.tipo).subscribe({
@@ -84,7 +82,7 @@ export class TipoInsumoFormComponent implements OnInit {
         error: (err) => {
           this.toastService.error('Erro ao criar Tipo Insumo!');
           this.loading = false;
-        }
+        },
       });
     }
   }

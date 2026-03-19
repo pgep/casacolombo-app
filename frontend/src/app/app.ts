@@ -11,15 +11,15 @@ import { ConfirmModalComponent } from './shared/components/confirm-modal/confirm
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,      // ← para o <router-outlet>
-    RouterModule,      // ← para routerLink
+    RouterOutlet, // ← para o <router-outlet>
+    RouterModule, // ← para routerLink
     HttpClientModule,
-    ImagemModalComponent,    // ← para chamadas HTTP
+    ImagemModalComponent, // ← para chamadas HTTP
     ToastComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
   ],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
 })
 export class App {
   title = 'Sistema Casa Colombo Artesanal';
@@ -28,7 +28,7 @@ export class App {
   isCadastroOpen = false;
   isTiposOpen = false;
 
-    toggleMenu() {
+  toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
     if (!this.isMenuOpen) {
       this.isCadastroOpen = false;
@@ -40,10 +40,9 @@ export class App {
     this.isCadastroOpen = !this.isCadastroOpen;
     if (this.isCadastroOpen) this.isTiposOpen = false;
   }
-  
+
   toggleTipos() {
     this.isTiposOpen = !this.isTiposOpen;
     if (this.isTiposOpen) this.isCadastroOpen = false;
   }
-
 }

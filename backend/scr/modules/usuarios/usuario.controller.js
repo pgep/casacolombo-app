@@ -26,36 +26,39 @@ const usuarioController = {
     }
   },
 
-// GET /api/usuarios/email/:email
-async buscarPorEmail(req, res) {
-  try {
-    const { email } = req.params;
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // GET /api/usuarios/email/:email
+  async buscarPorEmail(req, res) {
+    try {
+      const { email } = req.params;
 
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        error: 'Formato de e-mail inválido. Certifique-se de incluir @ e um domínio.' 
-      });
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          error:
+            'Formato de e-mail inválido. Certifique-se de incluir @ e um domínio.',
+        });
+      }
+
+      const usuario = await Usuario.findByEmail(email);
+
+      if (!usuario) {
+        return res
+          .status(404)
+          .json({ message: 'E-mail não cadastrado na base!' });
+      }
+      return res.json(usuario);
+    } catch (error) {
+      console.error('Erro detalhado:', error);
+      res.status(500).json({ error: error.message });
     }
-
-    const usuario = await Usuario.findByEmail(email);
-
-    if (!usuario) {
-      return res.status(404).json({ message: 'E-mail não cadastrado na base!' });
-    }
-    return res.json(usuario);
-  } catch (error) {
-    console.error('Erro detalhado:', error);        
-    res.status(500).json({ error: error.message }); 
-  }
-},
+  },
 
   // POST /api/usuarios
   async criar(req, res) {
     try {
       const { nome, email, senha, nivel, ativo } = req.body;
-      
+
       // Validações básicas
       if (!nome) return res.status(400).json({ error: 'Nome é obrigatório' });
       if (!email) return res.status(400).json({ error: 'Email é obrigatório' });
@@ -70,8 +73,14 @@ async buscarPorEmail(req, res) {
       if (nomeJaExiste) {
         return res.status(409).json({ error: 'Nome já cadastrado' });
       }
-      
-      const usuario = await Usuario.create({ nome, email, senha, nivel, ativo });
+
+      const usuario = await Usuario.create({
+        nome,
+        email,
+        senha,
+        nivel,
+        ativo,
+      });
       res.status(201).json(usuario);
     } catch (error) {
       console.error('Erro ao criar usuário:', error);
@@ -85,17 +94,24 @@ async buscarPorEmail(req, res) {
   // PUT /api/usuarios/:id
   async atualizar(req, res) {
     try {
-      // No método atualizar
+      const { nome, email, senha, nivel, ativo } = req.body;
+      const id = req.params.id;
       const emailJaExiste = await Usuario.emailExisteComExcecao(email, id);
       if (emailJaExiste) {
         return res.status(409).json({ error: 'Email já cadastrado' });
       }
-      
-      const usuario = await Usuario.update(req.params.id, req.body);
+      console.error(res.body);
+      const usuario = await Usuario.update(id, {
+        nome,
+        email,
+        senha,
+        nivel,
+        ativo,
+      });
       if (!usuario) {
         return res.status(404).json({ message: 'Usuário não encontrado' });
       }
-      
+
       res.json(usuario);
     } catch (error) {
       console.error('Erro ao atualizar usuário:', error);
@@ -118,7 +134,7 @@ async buscarPorEmail(req, res) {
       console.error('Erro ao deletar usuário:', error);
       res.status(500).json({ error: error.message });
     }
-  }
+  },
 };
 
 module.exports = usuarioController;

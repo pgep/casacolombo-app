@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ErrorHandler } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -11,12 +11,12 @@ import { ErrorHandlerService } from '../../../../shared/services/error-handler.s
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './tipo-form.html',
-  styleUrls: ['./tipo-form.css']
+  styleUrls: ['./tipo-form.css'],
 })
 export class TipoFormComponent implements OnInit {
   tipo: TipoProduto = {
     nome: '',
-    ativo: true
+    ativo: true,
   };
   editando = false;
   loading = false;
@@ -27,12 +27,12 @@ export class TipoFormComponent implements OnInit {
     private tipoService: TipoProdutoService,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    
+
     if (id) {
       this.editando = true;
       this.carregarTipo(Number(id));
@@ -42,16 +42,16 @@ export class TipoFormComponent implements OnInit {
   carregarTipo(id: number) {
     this.loading = true;
     this.cdr.detectChanges();
-    
+
     this.tipoService.getTipo(id).subscribe({
-      next: (data: any) => {        
+      next: (data: any) => {
         this.tipo = {
           id: data.id,
           nome: data.nome || '',
           ativo: data.ativo === true || data.ativo === 'true',
           data_cadastro: data.data_cadastro,
           created_at: data.created_at,
-          updated_at: data.updated_at
+          updated_at: data.updated_at,
         };
         this.loading = false;
         this.cdr.detectChanges();
@@ -62,7 +62,7 @@ export class TipoFormComponent implements OnInit {
         this.cdr.detectChanges();
         alert('Erro ao carregar dados do tipo de produto');
         this.router.navigate(['/tipos-produto']);
-      }
+      },
     });
   }
 
@@ -73,7 +73,7 @@ export class TipoFormComponent implements OnInit {
     }
     const dadosParaEnvio = {
       nome: this.tipo.nome,
-      ativo: this.tipo.ativo
+      ativo: this.tipo.ativo,
     };
 
     if (this.editando) {
@@ -82,10 +82,10 @@ export class TipoFormComponent implements OnInit {
           this.router.navigate(['/tipos-produto']);
         },
         error: (err) => {
-          this.errorHandler.tratarErro(err,'Atualizar','Tipo Produto');
+          this.errorHandler.tratarErro(err, 'Atualizar', 'Tipo Produto');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       this.tipoService.createTipo(dadosParaEnvio).subscribe({
@@ -93,10 +93,10 @@ export class TipoFormComponent implements OnInit {
           this.router.navigate(['/tipos-produto']);
         },
         error: (err) => {
-          this.errorHandler.tratarErro(err,'Criar','Tipo Produto');
+          this.errorHandler.tratarErro(err, 'Criar', 'Tipo Produto');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     }
   }
