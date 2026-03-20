@@ -1,0 +1,246 @@
+/* ===== ESTILOS GLOBAIS PARA TABELAS MATERIAL ===== */
+
+/* Container da tabela para overflow responsivo */
+.mat-table-container {
+  overflow-x: auto;
+  margin: 1rem 0;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Cabeçalho da tabela */
+.mat-mdc-table .mat-mdc-header-row {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: 600 !important;
+  height: 56px !important;
+}
+
+.mat-mdc-table .mat-mdc-header-cell {
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Linhas do corpo */
+.mat-mdc-row {
+  transition: background-color 0.2s ease;
+  height: 52px;
+}
+
+/* Linhas alternadas (zebra) */
+.mat-mdc-row:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* Efeito hover */
+.mat-mdc-row:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+/* Células */
+.mat-mdc-cell {
+  color: #495057;
+  font-size: 14px;
+  padding: 0 16px;
+}
+
+/* Primeira coluna */
+.mat-mdc-header-cell:first-of-type,
+.mat-mdc-cell:first-of-type {
+  padding-left: 20px;
+}
+
+/* Última coluna */
+.mat-mdc-header-cell:last-of-type,
+.mat-mdc-cell:last-of-type {
+  padding-right: 20px;
+}
+
+/* Badges de status */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 60px;
+}
+
+.status-badge.ativo {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.inativo {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Botões de ação */
+.mat-mdc-cell .mat-mdc-icon-button {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+}
+
+/* Paginador */
+.mat-mdc-paginator {
+  background: transparent;
+  margin-top: 1rem;
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6c757d;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* ===== FILTRO DA TABELA ===== */
+
+.filter-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.filter-field {
+  width: 300px;
+  max-width: 100%;
+}
+
+/* ===== RESPONSIVIDADE - TRANSFORMA EM CARDS NO CELULAR ===== */
+@media (max-width: 768px) {
+  /* Container permite scroll suave */
+  .mat-table-container {
+    overflow-x: visible;
+  }
+
+  /* Tabela vira block */
+  .mat-mdc-table {
+    display: block;
+    width: 100%;
+  }
+
+  /* Esconde cabeçalho */
+  .mat-mdc-header-row {
+    display: none !important;
+  }
+
+  /* Cada linha vira um card */
+  .mat-mdc-row {
+    display: block;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    height: auto !important;
+  }
+
+  /* Cada célula vira um item no card */
+  .mat-mdc-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 !important;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  .mat-mdc-cell:last-child {
+    border-bottom: none;
+    padding-bottom: 0 !important;
+  }
+
+  /* Label antes do valor */
+  .mat-mdc-cell::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #666;
+    width: 40%;
+    text-align: left;
+  }
+
+  /* Célula de ações sem label */
+  .mat-mdc-cell:last-child::before {
+    content: 'Ações';
+  }
+
+  /* Botões de ação no card */
+  .mat-mdc-cell .mat-mdc-icon-button {
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+  }
+
+  /* Badges */
+  .status-badge {
+    padding: 4px 12px;
+    font-size: 12px;
+    min-width: 60px;
+  }
+
+  /* Paginador responsivo */
+  .mat-mdc-paginator {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+/* Telas muito pequenas (até 480px) */
+@media (max-width: 480px) {
+  .mat-mdc-row {
+    padding: 12px;
+  }
+
+  .mat-mdc-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .mat-mdc-cell::before {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  .mat-mdc-cell:last-child {
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .mat-mdc-cell:last-child::before {
+    display: none;
+  }
+
+  .mat-mdc-cell .mat-mdc-icon-button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Desktop: ajustes finos */
+@media (min-width: 769px) {
+  .filter-container {
+    justify-content: flex-end;
+  }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    padding: 0 16px;
+  }
+}
