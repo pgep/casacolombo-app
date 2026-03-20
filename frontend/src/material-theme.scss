@@ -1,27 +1,24 @@
 @use '@angular/material' as mat;
 @include mat.core();
 
-// Paletas disponíveis
-$primary: mat.$blue-palette; // Verde
-$accent: mat.$cyan-palette; // ← CORRIGIDO: 'gray' com 'a'
-$warn: mat.$red-palette; // Vermelho
+$primary: mat.$blue-palette;
+$accent: mat.$cyan-palette;
+$warn: mat.$red-palette;
 
 $theme: mat.define-theme(
   (
     color: (
       theme-type: light,
       primary: $primary,
-      // tertiary: $accent,
-       // No Material 3, 'accent' vira 'tertiary'
     ),
   )
 );
 
 :root {
   @include mat.all-component-themes($theme);
+  @include mat.form-field-density(-4);
 }
 
-// Define a cor de warn manualmente (pois 'warn' não é automático)
 .mat-mdc-raised-button.mat-warn {
   background-color: #f44336 !important;
   color: white !important;
@@ -40,4 +37,10 @@ $theme: mat.define-theme(
 .mat-mdc-raised-button.mat-gray {
   background-color: #6c757d !important;
   color: white !important;
+}
+
+.mat-mdc-raised-button:disabled {
+  opacity: 0.5 !important; /* Ajuste de 0 a 1 (0.5 = 50% de transparência) */
+  cursor: not-allowed !important; /* Muda o cursor para indicar bloqueio */
+  filter: grayscale(0.5); /* Opcional: tira um pouco da cor para parecer mais "morto" */
 }

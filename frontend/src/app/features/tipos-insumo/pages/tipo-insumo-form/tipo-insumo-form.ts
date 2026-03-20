@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TipoInsumoService } from '../../services/tipo-insumo';
 import { TipoInsumo } from '../../models/tipo-insumo.model';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-tipo-insumo-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './tipo-insumo-form.html',
   styleUrls: ['./tipo-insumo-form.css'],
 })

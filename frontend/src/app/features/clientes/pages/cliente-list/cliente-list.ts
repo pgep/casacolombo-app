@@ -11,6 +11,7 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-cliente-list',
@@ -25,6 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
+    MatCardModule,
   ],
   templateUrl: './cliente-list.html',
   styleUrls: ['./cliente-list.css'],

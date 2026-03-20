@@ -1,0 +1,46 @@
+/* Badges para níveis de usuário */
+.nivel-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 100px;
+}
+
+.nivel-badge.admin {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.nivel-badge.operador {
+  background-color: #2196f3;
+  color: white;
+}
+
+.nivel-badge.visualizador {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 60px;
+}
+
+.status-badge.ativo {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.inativo {
+  background-color: #dc3545;
+  color: white;
+}

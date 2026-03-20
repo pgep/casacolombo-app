@@ -4,18 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ImagemService } from '../../services/imagem';
 import { Imagem } from '../../models/imagem.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-imagem-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './imagem-form.html',
-  styleUrls: ['./imagem-form.css']
+  styleUrls: ['./imagem-form.css'],
 })
 export class ImagemFormComponent implements OnInit {
   imagem: Imagem = {
     nome: '',
-    imagem_base64: ''
+    imagem_base64: '',
   };
   editando = false;
   loading = false;
@@ -26,7 +27,7 @@ export class ImagemFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private imagemService: ImagemService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -51,7 +52,7 @@ export class ImagemFormComponent implements OnInit {
         this.loading = false;
         alert('Erro ao carregar imagem');
         this.router.navigate(['/imagens']);
-      }
+      },
     });
   }
 
@@ -59,7 +60,7 @@ export class ImagemFormComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.arquivoSelecionado = file;
-      
+
       // Preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -100,7 +101,7 @@ export class ImagemFormComponent implements OnInit {
           console.error('Erro ao atualizar:', err);
           alert('Erro ao atualizar imagem');
           this.loading = false;
-        }
+        },
       });
     } else {
       this.imagemService.createImagem(this.imagem).subscribe({
@@ -112,7 +113,7 @@ export class ImagemFormComponent implements OnInit {
           console.error('Erro ao criar:', err);
           alert('Erro ao criar imagem');
           this.loading = false;
-        }
+        },
       });
     }
   }

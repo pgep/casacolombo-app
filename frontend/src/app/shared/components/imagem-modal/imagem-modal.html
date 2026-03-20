@@ -10,12 +10,12 @@
         <div class="spinner"></div>
         <p>Carregando imagem...</p>
       </div>
-      
+
       <!-- Imagem quando carregada -->
-      <img *ngIf="imagemUrl" [src]="imagemUrl" [alt]="imagem?.nome" class="modal-imagem">
+      <img *ngIf="imagemUrl" [src]="imagemUrl" [alt]="imagem?.nome" class="modal-imagem" />
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="fechar()">Fechar</button>
+      <button mat-raised-button color="gray" (click)="fechar()">Fechar</button>
     </div>
   </div>
 </div>

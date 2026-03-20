@@ -1,55 +1,85 @@
 <div class="container">
   <div class="card">
-    <!-- Cabeçalho responsivo -->
     <div class="flex justify-between items-center mb-4">
       <h2 class="card-titulo">📦 Tipos de Insumo</h2>
-      <a routerLink="/tipos-insumo/novo" class="btn btn-success btn-novo">➕ Novo Tipo</a>
+      <a mat-raised-button color="success" routerLink="/tipos-insumo/novo"> ➕ Novo Tipo </a>
     </div>
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading-spinner">
+    <!-- Loading state -->
+    <div *ngIf="!dataSource.data.length && !loading" class="loading-spinner">
       Carregando tipos de insumo...
     </div>
 
-    <!-- Tabela Responsiva -->
-    <div class="table-responsive" *ngIf="!loading && tipos.length > 0">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let t of tipos">
-            <td data-label="ID">{{ t.id }}</td>
-            <td data-label="Nome">{{ t.nome }}</td>
-            <td data-label="Status">
-              <span class="badge" [ngClass]="t.ativo ? 'badge-success' : 'badge-danger'">
-                {{ t.ativo ? 'Ativo' : 'Inativo' }}
+    <!-- Tabela Material -->
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <!-- Campo de filtro -->
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <!-- Coluna ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row" data-label="ID">{{ row.id }}</td>
+          </ng-container>
+
+          <!-- Coluna Nome -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+            <td mat-cell *matCellDef="let row" data-label="Nome">{{ row.nome }}</td>
+          </ng-container>
+
+          <!-- Coluna Status -->
+          <ng-container matColumnDef="ativo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let row" data-label="Status">
+              <span class="status-badge" [class.ativo]="row.ativo" [class.inativo]="!row.ativo">
+                {{ row.ativo ? 'Ativo' : 'Inativo' }}
               </span>
             </td>
-            <td data-label="Ações" class="acoes-cell">
-              <div class="acoes-container">
-                <button class="btn btn-md btn-primary" [routerLink]="['/tipos-insumo/editar', t.id]">
-                  ✏️
-                </button>
-                <button class="btn btn-md btn-danger" (click)="deletar(t.id!)">
-                  🗑️
-                </button>
-              </div>
+          </ng-container>
+
+          <!-- Coluna Ações -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let row" data-label="Ações">
+              <button
+                mat-icon-button
+                color="primary"
+                [routerLink]="['/tipos-insumo/editar', row.id]"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deletar(row.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Linha do cabeçalho -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <!-- Linhas de dados -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Linha quando não há dados -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">Nenhum tipo de insumo encontrado.</div>
             </td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Empty state -->
-    <div *ngIf="!loading && tipos.length === 0" class="empty-state">
-      <p>Nenhum tipo de insumo cadastrado.</p>
-      <a routerLink="/tipos-insumo/novo" class="btn btn-success">➕ Cadastrar Primeiro Tipo</a>
-    </div>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Paginador -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

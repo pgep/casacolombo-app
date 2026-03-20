@@ -10,7 +10,9 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   background: white;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .imagem-card:hover {
@@ -19,7 +21,7 @@
 }
 
 .imagem-preview {
-  height: 180px;
+  height: 250px;
   overflow: hidden;
   background: var(--light);
   display: flex;
@@ -52,8 +54,9 @@
 
 .imagem-actions {
   padding: 12px;
-  display: flex;
+  display: block !important;
   gap: 8px;
   border-top: 1px solid var(--border);
   align-items: center;
+  text-align: center;
 }

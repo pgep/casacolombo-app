@@ -3,37 +3,35 @@
     <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Imagem</h2>
 
     <!-- Loading state -->
-    <div *ngIf="loading" class="loading-spinner">
-      Carregando...
-    </div>
+    <div *ngIf="loading" class="loading-spinner">Carregando...</div>
 
     <!-- Formulário -->
     <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
       <div class="form-group">
         <label class="form-label">Nome *</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           class="form-control"
-          [(ngModel)]="imagem.nome" 
+          [(ngModel)]="imagem.nome"
           name="nome"
           required
-          placeholder="Ex: Foto do produto, Logo, etc.">
+          placeholder="Ex: Foto do produto, Logo, etc."
+        />
       </div>
 
       <!-- Área de upload de arquivo -->
       <div class="form-group">
         <label class="form-label">Arquivo de Imagem *</label>
         <div class="file-upload-wrapper">
-          <input 
-            type="file" 
+          <input
+            type="file"
             class="file-upload-input"
             (change)="onFileSelected($event)"
             accept="image/*"
             [disabled]="editando && !arquivoSelecionado"
-            id="fileInput">
-          <label for="fileInput" class="file-upload-button">
-            📁 Escolher arquivo
-          </label>
+            id="fileInput"
+          />
+          <label for="fileInput" class="file-upload-button"> 📁 Escolher arquivo </label>
           <span class="file-upload-name">
             {{ arquivoSelecionado?.name || 'Nenhum arquivo selecionado' }}
           </span>
@@ -44,15 +42,15 @@
       <!-- Preview da imagem -->
       <div *ngIf="previewUrl" class="preview-container">
         <h4>Preview:</h4>
-        <img [src]="previewUrl" class="preview-image">
+        <img [src]="previewUrl" class="preview-image" />
       </div>
 
       <!-- Ações responsivas -->
       <div class="form-actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading">
+        <button type="submit" mat-raised-button color="success" [disabled]="loading">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
         </button>
-        <button type="button" class="btn btn-secondary" routerLink="/imagens">
+        <button type="button" mat-raised-button color="gray" routerLink="/imagens">
           ❌ Cancelar
         </button>
       </div>

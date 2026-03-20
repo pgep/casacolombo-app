@@ -94,10 +94,8 @@
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
-
   .btn-sm {
     padding: 4px 6px;
     font-size: 12px;
   }
-  
 }

@@ -1,61 +1,99 @@
 <div class="container">
   <div class="card">
-    <!-- Cabeçalho responsivo -->
     <div class="flex justify-between items-center mb-4">
       <h2 class="card-titulo">📦 Lista de Produtos</h2>
-      <a routerLink="/produtos/novo" class="btn btn-success btn-novo">➕ Novo Produto</a>
+      <a mat-raised-button color="success" routerLink="/produtos/novo"> ➕ Novo Produto </a>
     </div>
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading-spinner">Carregando produtos...</div>
+    <!-- Loading state -->
+    <div *ngIf="!dataSource.data.length && !loading" class="loading-spinner">
+      Carregando produtos...
+    </div>
 
-    <!-- Tabela Responsiva -->
-    <div class="table-responsive" *ngIf="!loading && produtos.length > 0">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Tipo</th>
-            <th>Preço</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of produtos">
-            <td data-label="ID">{{ p.id }}</td>
-            <td data-label="Nome">{{ p.nome }}</td>
-            <td data-label="Tipo">{{ p.tipo_nome || '-' }}</td>
-            <td data-label="Preço">R$ {{ p.preco_venda | number:'1.2-2' }}</td>
-            <td data-label="Status">
-              <span class="badge" [ngClass]="p.ativo ? 'badge-success' : 'badge-danger'">
-                {{ p.ativo ? 'Ativo' : 'Inativo' }}
+    <!-- Tabela Material -->
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <!-- Campo de filtro (opcional) -->
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <!-- Coluna ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row" data-label="ID">{{ row.id }}</td>
+          </ng-container>
+
+          <!-- Coluna Nome -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+            <td mat-cell *matCellDef="let row" data-label="Nome">{{ row.nome }}</td>
+          </ng-container>
+
+          <!-- Coluna Tipo -->
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row" data-label="Tipo">{{ row.tipo_nome || '-' }}</td>
+          </ng-container>
+
+          <!-- Coluna Preço -->
+          <ng-container matColumnDef="preco">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço</th>
+            <td mat-cell *matCellDef="let row" data-label="Preço">
+              R$ {{ row.preco_venda | number: '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Status -->
+          <ng-container matColumnDef="ativo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let row" data-label="Status">
+              <span class="status-badge" [class.ativo]="row.ativo" [class.inativo]="!row.ativo">
+                {{ row.ativo ? 'Ativo' : 'Inativo' }}
               </span>
             </td>
-            <td data-label="Ações" class="acoes-cell">
-              <div class="acoes-container">
-                <button class="btn btn-md btn-primary" [routerLink]="['/produtos/editar', p.id]">
-                  ✏️
-                </button>
-                <button class="btn btn-md btn-danger" (click)="deletar(p.id!)">
-                  🗑️
-                </button>
-                <button *ngIf="p.imagem_id" class="btn btn-md btn-info" (click)="verImagem(p)">
-                  👁️
-                </button>
-                <span *ngIf="!p.imagem_id" class="text-muted btn-placeholder">-</span>
-              </div>
+          </ng-container>
+
+          <!-- Coluna Ações -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let row" data-label="Ações">
+              <button mat-icon-button color="primary" [routerLink]="['/produtos/editar', row.id]">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deletar(row.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button *ngIf="row.imagem_id" mat-icon-button color="accent" (click)="verImagem(row)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <span *ngIf="!row.imagem_id" class="text-muted btn-placeholder">-</span>
+            </td>
+          </ng-container>
+
+          <!-- Linha do cabeçalho -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <!-- Linhas de dados -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Linha quando não há dados -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">Nenhum produto encontrado.</div>
             </td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Empty state -->
-    <div *ngIf="!loading && produtos.length === 0" class="empty-state">
-      <p>Nenhum produto cadastrado.</p>
-      <a routerLink="/produtos/novo" class="btn btn-success">➕ Cadastrar Primeiro Produto</a>
-    </div>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Paginador -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

@@ -8,10 +8,10 @@
       <p>{{ data?.message || 'Tem certeza que deseja continuar?' }}</p>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="cancel()">
+      <button mat-raised-button color="gray" (click)="cancel()">
         {{ data?.cancelText || 'Cancelar' }}
       </button>
-      <button class="btn btn-danger" (click)="confirm()">
+      <button mat-raised-button color="warn" (click)="confirm()">
         {{ data?.confirmText || 'Confirmar' }}
       </button>
     </div>

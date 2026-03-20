@@ -5,19 +5,20 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FerramentaService, Ferramenta } from '../../services/ferramenta';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-ferramenta-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './ferramenta-form.html',
-  styleUrls: ['./ferramenta-form.css']
+  styleUrls: ['./ferramenta-form.css'],
 })
 export class FerramentaFormComponent implements OnInit {
   ferramenta: Ferramenta = {
     nome: '',
     unidadeMedida: '',
-    quantidadeEmEstoque: 0
+    quantidadeEmEstoque: 0,
   };
   editando = false;
   loading = false;
@@ -28,11 +29,11 @@ export class FerramentaFormComponent implements OnInit {
     private ferramentaService: FerramentaService,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');    
+    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editando = true;
       this.carregarFerramenta(Number(id));
@@ -40,30 +41,30 @@ export class FerramentaFormComponent implements OnInit {
   }
 
   carregarFerramenta(id: number) {
-    this.loading = true;  
+    this.loading = true;
     this.ferramentaService.getFerramenta(id).subscribe({
       next: (data: any) => {
         this.ferramenta = {
           id: data.id,
           nome: data.nome || '',
           unidadeMedida: data.unidademedida || '',
-          quantidadeEmEstoque: Number(data.quantidadeemestoque || 0)
+          quantidadeEmEstoque: Number(data.quantidadeemestoque || 0),
         };
         this.loading = false;
-        this.cdr.detectChanges();      
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
         this.cdr.detectChanges();
         this.toastService.error('Erro ao carregar Ferramenta');
         this.router.navigate(['/ferramentas']);
-      }
+      },
     });
   }
 
   salvar() {
     // ========== VALIDAÇÕES ==========
-    
+
     // Validar nome
     if (!this.ferramenta.nome || this.ferramenta.nome.trim() === '') {
       this.toastService.warning('Nome é obrigatório!');
@@ -87,10 +88,10 @@ export class FerramentaFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Erro ao atualizar:', err);
-          this.errorHandler.tratarErro(err,'Atualizar', 'Ferramenta');
+          this.errorHandler.tratarErro(err, 'Atualizar', 'Ferramenta');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       // ========== CRIAR ==========
@@ -101,12 +102,11 @@ export class FerramentaFormComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Erro ao criar:', err);
-          this.errorHandler.tratarErro(err,'Criar', 'Produto');
+          this.errorHandler.tratarErro(err, 'Criar', 'Produto');
           this.loading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
     }
   }
-
 }

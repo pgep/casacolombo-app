@@ -6,6 +6,7 @@ import { ProdutoService } from '../../services/produto';
 import { ImagemService } from '../../../imagens/services/imagem';
 import { Produto } from '../../models/produto.model';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface TipoProduto {
   id: number;
@@ -18,25 +19,24 @@ export interface ImagemSelect {
 }
 
 function validaDadosEmBranco(p: Produto): string | false {
-  if (p.custo_total == 0) return "Insira o valor do custo toral!";
-  if (p.preco_final == 0) return "Insira o valor do preço final!";
-  if (p.preco_venda == 0) return "Insira o valor do preço de venda!";
-  if (p.descricao == '') return "Insira uma descrição!";
-  if (p.nome == '') return "O nome é obrigatório!";
-  if (p.tipo_produto_id == 0) return "Tipo produto obrigatório!";
-  if (p.imagem_id == undefined) return "selecione uma imagem!";  
-  
+  if (p.custo_total == 0) return 'Insira o valor do custo toral!';
+  if (p.preco_final == 0) return 'Insira o valor do preço final!';
+  if (p.preco_venda == 0) return 'Insira o valor do preço de venda!';
+  if (p.descricao == '') return 'Insira uma descrição!';
+  if (p.nome == '') return 'O nome é obrigatório!';
+  if (p.tipo_produto_id == 0) return 'Tipo produto obrigatório!';
+  if (p.imagem_id == undefined) return 'selecione uma imagem!';
+
   return false;
 }
 
 @Component({
   selector: 'app-produto-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './produto-form.html',
-  styleUrls: ['./produto-form.css']
+  styleUrls: ['./produto-form.css'],
 })
-
 export class ProdutoFormComponent implements OnInit {
   produto: Produto = {
     nome: '',
@@ -46,14 +46,14 @@ export class ProdutoFormComponent implements OnInit {
     custo_total: 0,
     preco_venda: 0,
     preco_final: 0,
-    ativo: true
+    ativo: true,
   };
-  
+
   tipos: TipoProduto[] = [];
   imagensSelect: ImagemSelect[] = [];
   editando = false;
   loading = false;
-  
+
   imagemPreview: string | null = null;
 
   constructor(
@@ -62,13 +62,13 @@ export class ProdutoFormComponent implements OnInit {
     private produtoService: ProdutoService,
     private imagemService: ImagemService,
     private cdr: ChangeDetectorRef,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit() {
     this.carregarTipos();
     this.carregarImagensParaSelect();
-    
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editando = true;
@@ -83,7 +83,7 @@ export class ProdutoFormComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Erro ao carregar tipos:', err);
-      }
+      },
     });
   }
 
@@ -94,7 +94,7 @@ export class ProdutoFormComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Erro ao carregar imagens:', err);
-      }
+      },
     });
   }
 
@@ -102,11 +102,11 @@ export class ProdutoFormComponent implements OnInit {
     this.loading = true;
     this.produtoService.getProduto(id).subscribe({
       next: (data: Produto) => {
-        this.produto = data;        
+        this.produto = data;
         if (data.imagem_id) {
           this.carregarPreviewImagem(data.imagem_id);
         }
-        
+
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -115,7 +115,7 @@ export class ProdutoFormComponent implements OnInit {
         this.loading = false;
         this.toastService.error('Erro ao carregar produto');
         this.router.navigate(['/produtos']);
-      }
+      },
     });
   }
 
@@ -129,7 +129,7 @@ export class ProdutoFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar preview da imagem:', err);
-      }
+      },
     });
   }
 
@@ -144,9 +144,9 @@ export class ProdutoFormComponent implements OnInit {
 
   salvar() {
     let temMensagem = validaDadosEmBranco(this.produto);
-    
+
     if (temMensagem) {
-      this.toastService.error(temMensagem);      
+      this.toastService.error(temMensagem);
       return;
     }
 
@@ -162,7 +162,7 @@ export class ProdutoFormComponent implements OnInit {
           console.error('Erro ao atualizar:', err);
           this.toastService.error('Erro ao atualizar produto');
           this.loading = false;
-        }
+        },
       });
     } else {
       this.produtoService.createProduto(this.produto).subscribe({
@@ -174,7 +174,7 @@ export class ProdutoFormComponent implements OnInit {
           console.error('Erro ao criar:', err);
           this.toastService.error('Erro ao criar produto');
           this.loading = false;
-        }
+        },
       });
     }
   }

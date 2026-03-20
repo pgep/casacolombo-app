@@ -115,6 +115,30 @@
 .filter-field {
   width: 300px;
   max-width: 100%;
+  height: 50px !important;
+}
+
+/* Reduz a altura do formulário field */
+.filter-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.filter-field .mat-form-field-flex {
+  /* height: 40px; */
+  align-items: center;
+}
+
+.filter-field .mat-form-field-infix {
+  padding: 8px 0;
+  border-top: 0;
+}
+
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-form-field-bottom-align {
+  display: none !important;
+}
+
+.mat-mdc-card-header {
+  display: block !important;
 }
 
 /* ===== RESPONSIVIDADE - TRANSFORMA EM CARDS NO CELULAR ===== */
@@ -196,6 +220,10 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
+  }
+
+  .filter-field {
+    width: 100%;
   }
 }
 

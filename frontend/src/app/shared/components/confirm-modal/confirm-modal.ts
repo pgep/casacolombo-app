@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmService, ConfirmDialogData } from '../../services/confirm.service';
 import { Subscription } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-confirm-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './confirm-modal.html',
-  styleUrls: ['./confirm-modal.css']
+  styleUrls: ['./confirm-modal.css'],
 })
 export class ConfirmModalComponent implements OnInit, OnDestroy {
   data: ConfirmDialogData | null = null;

@@ -11,17 +11,33 @@
         <div class="form-grid-col">
           <div class="form-group">
             <label class="form-label">Nome *</label>
-            <input type="text" class="form-control" [(ngModel)]="produto.nome" name="nome" required>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="produto.nome"
+              name="nome"
+              required
+            />
           </div>
 
           <div class="form-group">
             <label class="form-label">Descrição</label>
-            <textarea class="form-control" [(ngModel)]="produto.descricao" name="descricao" rows="3"></textarea>
+            <textarea
+              class="form-control"
+              [(ngModel)]="produto.descricao"
+              name="descricao"
+              rows="3"
+            ></textarea>
           </div>
 
           <div class="form-group">
             <label class="form-label">Tipo de Produto *</label>
-            <select class="form-control" [(ngModel)]="produto.tipo_produto_id" name="tipo_produto_id" required>
+            <select
+              class="form-control"
+              [(ngModel)]="produto.tipo_produto_id"
+              name="tipo_produto_id"
+              required
+            >
               <option [value]="0">Selecione um tipo</option>
               <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
             </select>
@@ -32,11 +48,12 @@
         <div class="form-grid-col">
           <div class="form-group">
             <label class="form-label">Imagem</label>
-            <select 
-              class="form-control" 
-              [(ngModel)]="produto.imagem_id" 
+            <select
+              class="form-control"
+              [(ngModel)]="produto.imagem_id"
               name="imagem_id"
-              (change)="onImagemSelecionada($event)">
+              (change)="onImagemSelecionada($event)"
+            >
               <option [value]="null">Nenhuma imagem</option>
               <option *ngFor="let img of imagensSelect" [value]="img.id">
                 {{ img.nome }}
@@ -47,22 +64,44 @@
           <!-- Preview da imagem selecionada -->
           <div *ngIf="imagemPreview" class="preview-container">
             <h4>Preview:</h4>
-            <img [src]="imagemPreview" class="preview-image">
+            <img [src]="imagemPreview" class="preview-image" />
           </div>
 
           <div class="form-group">
             <label class="form-label">Custo Total (R$)</label>
-            <input type="number" class="form-control" [(ngModel)]="produto.custo_total" name="custo_total" step="0.01" min="0">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="produto.custo_total"
+              name="custo_total"
+              step="0.01"
+              min="0"
+            />
           </div>
 
           <div class="form-group">
             <label class="form-label">Preço de Venda (R$) *</label>
-            <input type="number" class="form-control" [(ngModel)]="produto.preco_venda" name="preco_venda" step="0.01" min="0" required>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="produto.preco_venda"
+              name="preco_venda"
+              step="0.01"
+              min="0"
+              required
+            />
           </div>
 
           <div class="form-group">
             <label class="form-label">Preço Final</label>
-            <input type="number" class="form-control" [(ngModel)]="produto.preco_final" name="preco_final" step="0.01" min="0">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="produto.preco_final"
+              name="preco_final"
+              step="0.01"
+              min="0"
+            />
             <small class="text-muted">Se diferente do preço de venda</small>
           </div>
         </div>
@@ -70,15 +109,17 @@
 
       <!-- Checkbox e ações -->
       <div class="form-checkbox mb-4">
-        <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo">
+        <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo" />
         <label for="ativo">Produto Ativo</label>
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading">
+        <button type="submit" mat-raised-button color="success" [disabled]="loading">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
         </button>
-        <button type="button" class="btn btn-secondary" routerLink="/produtos">❌ Cancelar</button>
+        <button type="button" mat-raised-button color="gray" routerLink="/produtos">
+          ❌ Cancelar
+        </button>
       </div>
     </form>
   </div>

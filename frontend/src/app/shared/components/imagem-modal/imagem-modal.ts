@@ -2,29 +2,29 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalService, ModalImagemData } from '../../services/modal.service';
 import { Subscription } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-imagem-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './imagem-modal.html',
-  styleUrls: ['./imagem-modal.css']
+  styleUrls: ['./imagem-modal.css'],
 })
 export class ImagemModalComponent implements OnInit, OnDestroy {
   imagem: ModalImagemData | null = null;
   imagemUrl: string = '';
   visible: boolean = false;
   loading: boolean = false;
-  
+
   private subscription: Subscription;
 
   constructor(
     private modalService: ModalService,
-    private cdr: ChangeDetectorRef
-  ) {    
+    private cdr: ChangeDetectorRef,
+  ) {
     this.subscription = this.modalService.modalState$.subscribe({
       next: (data) => {
-        
         if (data) {
           // ABRIR MODAL
           this.imagem = data;
@@ -44,17 +44,16 @@ export class ImagemModalComponent implements OnInit, OnDestroy {
             this.cdr.detectChanges();
           }, 300);
         }
-        
+
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('❌ Erro no modal subscription:', err);
-      }
+      },
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
