@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface Produto {
   id?: number;
   nome: string;
   descricao?: string;
   tipo_produto_id: number;
-  tipo_nome?: string;  // Para exibição na lista (vem do JOIN)
-  imagem_id?: number;  // ← NOVO
+  tipo_nome?: string; // Para exibição na lista (vem do JOIN)
+  imagem_id?: number; // ← NOVO
   imagem_nome?: string; // ← NOVO (para exibir)
   imagem_base64?: string; // ← NOVO (para preview)
   custo_total: number;
@@ -21,7 +22,7 @@ export interface Produto {
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  private apiUrl = 'http://localhost:3001/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -54,5 +55,4 @@ export class ProdutoService {
   getTiposProduto(apenasAtivos: boolean = true): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/tipo-produto?apenasAtivos=${apenasAtivos}`);
   }
-  
 }

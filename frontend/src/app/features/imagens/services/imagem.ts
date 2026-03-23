@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Imagem } from '../models/imagem.model';
-import { map } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 export interface ImagemSelect {
   id: number;
@@ -23,7 +23,7 @@ export interface ImagemThumbnail {
 
 @Injectable({ providedIn: 'root' })
 export class ImagemService {
-  private apiUrl = 'http://localhost:3001/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

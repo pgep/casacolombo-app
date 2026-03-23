@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface Ferramenta {
   id?: number;
@@ -12,12 +13,12 @@ export interface Ferramenta {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FerramentaService {
-  private apiUrl = 'http://localhost:3001/api';
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getFerramentas(): Observable<Ferramenta[]> {
     return this.http.get<Ferramenta[]>(`${this.apiUrl}/ferramentas`);
