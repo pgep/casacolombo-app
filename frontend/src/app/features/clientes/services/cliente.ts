@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface Cliente {
   id?: number;
@@ -9,17 +10,17 @@ export interface Cliente {
   telefone: string;
   ativo: boolean;
   data_cadastro?: string;
-  created_at: Date,
-  updated_at: Date
+  created_at: Date;
+  updated_at: Date;
 }
 
 @Injectable({
-  providedIn: 'root'  // Disponível em toda a aplicação
+  providedIn: 'root', // Disponível em toda a aplicação
 })
 export class ClienteService {
-  private apiUrl = 'http://localhost:3001/api';
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.apiUrl}/clientes`);
