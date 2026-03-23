@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Imagem } from '../models/imagem.model';
+import { map } from 'rxjs/operators';
 
 export interface ImagemSelect {
   id: number;
@@ -10,6 +11,14 @@ export interface ImagemSelect {
 
 export interface ImagemCompleta extends ImagemSelect {
   imagem_base64: string;
+}
+
+// ✅ ADICIONE ESTA INTERFACE
+export interface ImagemThumbnail {
+  id: number;
+  nome: string;
+  thumbnail: string; // Miniatura para listagem
+  created_at: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,7 +58,7 @@ export class ImagemService {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   }
 
@@ -63,4 +72,8 @@ export class ImagemService {
     return this.http.get<ImagemCompleta>(`${this.apiUrl}/imagens/${id}/completa`);
   }
 
+  getImagensThumbnail(): Observable<ImagemThumbnail[]> {
+    // ✅ USA A ROTA /thumbnails que retorna o campo thumbnail
+    return this.http.get<ImagemThumbnail[]>(`${this.apiUrl}/imagens/thumbnails`);
+  }
 }

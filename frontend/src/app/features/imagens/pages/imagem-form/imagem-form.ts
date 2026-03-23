@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ImagemService } from '../../services/imagem';
 import { Imagem } from '../../models/imagem.model';
 import { MatButtonModule } from '@angular/material/button';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-imagem-form',
@@ -28,6 +29,7 @@ export class ImagemFormComponent implements OnInit {
     private router: Router,
     private imagemService: ImagemService,
     private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit() {
@@ -48,9 +50,8 @@ export class ImagemFormComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erro ao carregar imagem:', err);
         this.loading = false;
-        alert('Erro ao carregar imagem');
+        this.toastService.error('Erro ao carregar imagem');
         this.router.navigate(['/imagens']);
       },
     });
@@ -72,7 +73,7 @@ export class ImagemFormComponent implements OnInit {
 
   async salvar() {
     if (!this.imagem.nome) {
-      alert('Nome é obrigatório!');
+      this.toastService.info('Nome é obrigatório!');
       return;
     }
 
@@ -81,11 +82,11 @@ export class ImagemFormComponent implements OnInit {
       try {
         this.imagem.imagem_base64 = await this.imagemService.fileToBase64(this.arquivoSelecionado);
       } catch (error) {
-        alert('Erro ao processar imagem');
+        this.toastService.error('Erro ao processar imagem');
         return;
       }
     } else if (!this.editando) {
-      alert('Selecione uma imagem!');
+      this.toastService.warning('Selecione uma imagem!');
       return;
     }
 
@@ -94,24 +95,22 @@ export class ImagemFormComponent implements OnInit {
     if (this.editando) {
       this.imagemService.updateImagem(this.imagem.id!, this.imagem).subscribe({
         next: () => {
-          alert('Imagem atualizada com sucesso!');
+          this.toastService.success('Imagem atualizada com sucesso!');
           this.router.navigate(['/imagens']);
         },
         error: (err) => {
-          console.error('Erro ao atualizar:', err);
-          alert('Erro ao atualizar imagem');
+          this.toastService.error('Erro ao atualizar imagem');
           this.loading = false;
         },
       });
     } else {
       this.imagemService.createImagem(this.imagem).subscribe({
         next: () => {
-          alert('Imagem criada com sucesso!');
+          this.toastService.success('Imagem criada com sucesso!');
           this.router.navigate(['/imagens']);
         },
         error: (err) => {
-          console.error('Erro ao criar:', err);
-          alert('Erro ao criar imagem');
+          this.toastService.error('Erro ao criar imagem');
           this.loading = false;
         },
       });

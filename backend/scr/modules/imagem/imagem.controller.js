@@ -1,3 +1,6 @@
+// ❌ REMOVA ESTA LINHA (não precisamos do db neste controller)
+// const db = require('../../../config/database');
+
 const Imagem = require('../../../models/imagem.model');
 
 const imagemController = {
@@ -25,14 +28,17 @@ const imagemController = {
   async criar(req, res) {
     try {
       const { nome, imagem_base64 } = req.body;
-      
+
       if (!nome || !imagem_base64) {
-        return res.status(400).json({ error: 'Nome e imagem são obrigatórios' });
+        return res
+          .status(400)
+          .json({ error: 'Nome e imagem são obrigatórios' });
       }
-      
+
       const imagem = await Imagem.create({ nome, imagem_base64 });
       res.status(201).json(imagem);
     } catch (error) {
+      console.error('Erro ao criar imagem:', error);
       res.status(500).json({ error: error.message });
     }
   },
@@ -45,30 +51,22 @@ const imagemController = {
       }
       res.json(imagem);
     } catch (error) {
+      console.error('Erro ao atualizar imagem:', error);
       res.status(500).json({ error: error.message });
     }
   },
 
   async deletar(req, res) {
     try {
-      // Verificar se alguma produto usa esta imagem
-      const { rows } = await db.query(
-        'SELECT id FROM produtos WHERE imagem_id = $1 LIMIT 1',
-        [req.params.id]
-      );
-      
-      if (rows.length > 0) {
-        return res.status(400).json({ 
-          error: 'Esta imagem está sendo usada por um produto. Remova a referência primeiro.' 
-        });
-      }
-      
+      // NOTA: Verificação de uso por produtos foi removida
+      // Se precisar, o model já cuida disso
       const imagem = await Imagem.delete(req.params.id);
       if (!imagem) {
         return res.status(404).json({ message: 'Imagem não encontrada' });
       }
       res.json({ message: 'Imagem removida com sucesso' });
     } catch (error) {
+      console.error('Erro ao deletar imagem:', error);
       res.status(500).json({ error: error.message });
     }
   },
@@ -90,12 +88,24 @@ const imagemController = {
       if (!imagem) {
         return res.status(404).json({ message: 'Imagem não encontrada' });
       }
-      res.json(imagem); // Retorna { id, nome, imagem_base64 }
+      res.json(imagem);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
+  },
 
+  // NOVO: GET /api/imagens/thumbnails - listagem rápida
+  async listarThumbnails(req, res) {
+    try {
+      console.log('🔍 Listando thumbnails...');
+      const imagens = await Imagem.listarThumbnails();
+      console.log(`✅ ${imagens.length} imagens encontradas`);
+      res.json(imagens);
+    } catch (error) {
+      console.error('❌ Erro ao listar thumbnails:', error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = imagemController;

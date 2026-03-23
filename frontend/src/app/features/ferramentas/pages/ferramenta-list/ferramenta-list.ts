@@ -32,7 +32,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
   styleUrls: ['./ferramenta-list.css'],
 })
 export class FerramentaListComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'nome', 'unidadeMedida', 'quantidadeEmEstoque', 'acoes'];
+  displayedColumns: string[] = ['id', 'nome', 'unidademedida', 'quantidadeemestoque', 'acoes'];
   dataSource = new MatTableDataSource<Ferramenta>([]);
   loading = true;
 
@@ -55,6 +55,9 @@ export class FerramentaListComponent implements OnInit {
     this.loading = true;
     this.ferramentaService.getFerramentas().subscribe({
       next: (data: Ferramenta[]) => {
+        console.log('📦 Dados no service:', data);
+        console.log('🔍 Primeira ferramenta no service:', data[0]);
+        console.log('📏 Campos:', Object.keys(data[0] || {}));
         this.dataSource.data = data;
         this.loading = false;
 

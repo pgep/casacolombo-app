@@ -5,40 +5,84 @@
       <a mat-raised-button color="success" routerLink="/imagens/novo"> ➕ Nova Imagem </a>
     </div>
 
-    <!-- Loading state -->
-    <div *ngIf="!dataSource.data.length && !loading" class="loading-spinner">
-      Carregando imagens...
-    </div>
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-spinner">Carregando imagens...</div>
 
-    <!-- Grid de imagens responsivo com Material Cards -->
-    <div *ngIf="!loading && dataSource.data.length > 0" class="imagens-grid">
-      <mat-card *ngFor="let img of dataSource.data" class="imagem-card">
-        <mat-card-header>
-          <h3>{{ img.nome }}</h3>
-          <!-- <small>{{ img.created_at | date: 'dd/MM/yyyy' }}</small> -->
-        </mat-card-header>
-        <mat-card-content class="imagem-info">
-          <div class="imagem-preview">
-            <img [src]="getBase64Image(img.imagem_base64)" [alt]="img.nome" />
-          </div>
-        </mat-card-content>
-        <mat-card-actions class="imagem-actions">
-          <button mat-icon-button color="primary" [routerLink]="['/imagens/editar', img.id]">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deletar(img.id!)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card-actions>
-      </mat-card>
+    <!-- Tabela Material com thumbnail -->
+    <div *ngIf="!loading && dataSource.data.length > 0" class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+        <!-- Coluna ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let row" data-label="ID">{{ row.id }}</td>
+        </ng-container>
+
+        <!-- Coluna Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+          <td mat-cell *matCellDef="let row" data-label="Nome">{{ row.nome }}</td>
+        </ng-container>
+
+        <!-- Coluna Data -->
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+          <td mat-cell *matCellDef="let row" data-label="Data">
+            {{ row.created_at | date: 'dd/MM/yyyy' }}
+          </td>
+        </ng-container>
+
+        <!-- Coluna Thumbnail (mini imagem) -->
+        <ng-container matColumnDef="thumbnail">
+          <th mat-header-cell *matHeaderCellDef>Imagem</th>
+          <td mat-cell *matCellDef="let row" data-label="Imagem">
+            <div class="thumbnail-container" *ngIf="row.thumbnail">
+              <img
+                [src]="row.thumbnail"
+                [alt]="row.nome"
+                class="thumbnail-img"
+                (click)="verImagemCompleta(row)"
+                title="Clique para ampliar"
+              />
+            </div>
+            <span *ngIf="!row.thumbnail" class="text-muted">-</span>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Ações -->
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row" data-label="Ações">
+            <button mat-icon-button color="primary" [routerLink]="['/imagens/editar', row.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deletar(row.id!)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Cabeçalho -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <!-- Dados -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <!-- Vazio -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            <div class="empty-state">Nenhuma imagem encontrada.</div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Paginador -->
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
 
     <!-- Empty state -->
     <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
       <p>Nenhuma imagem cadastrada.</p>
-      <a mat-raised-button color="primary" routerLink="/imagens/novo"
-        >➕ Cadastrar Primeira Imagem</a
-      >
+      <a mat-raised-button color="primary" routerLink="/imagens/novo">
+        ➕ Cadastrar Primeira Imagem
+      </a>
     </div>
   </div>
 </div>
