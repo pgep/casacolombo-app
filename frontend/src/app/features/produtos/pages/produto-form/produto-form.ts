@@ -19,13 +19,13 @@ export interface ImagemSelect {
 }
 
 function validaDadosEmBranco(p: Produto): string | false {
-  if (p.custo_total == 0) return 'Insira o valor do custo toral!';
+  if (p.custo_total == 0) return 'Insira o valor do custo total!';
   if (p.preco_final == 0) return 'Insira o valor do preço final!';
   if (p.preco_venda == 0) return 'Insira o valor do preço de venda!';
   if (p.descricao == '') return 'Insira uma descrição!';
   if (p.nome == '') return 'O nome é obrigatório!';
   if (p.tipo_produto_id == 0) return 'Tipo produto obrigatório!';
-  if (p.imagem_id == undefined) return 'selecione uma imagem!';
+  if (p.imagem_id == undefined) return 'Selecione uma imagem!';
 
   return false;
 }
@@ -54,6 +54,10 @@ export class ProdutoFormComponent implements OnInit {
   editando = false;
   loading = false;
 
+  // ✅ NOVAS PROPRIEDADES PARA LOADING DOS SELECTS
+  carregandoTipos = true;
+  carregandoImagens = true;
+
   imagemPreview: string | null = null;
 
   constructor(
@@ -66,8 +70,10 @@ export class ProdutoFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.carregarTipos();
-    this.carregarImagensParaSelect();
+    // Carregar tipos e imagens em paralelo
+    Promise.all([this.carregarTipos(), this.carregarImagensParaSelect()]).then(() => {
+      console.log('✅ Dados auxiliares carregados');
+    });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -76,25 +82,43 @@ export class ProdutoFormComponent implements OnInit {
     }
   }
 
-  carregarTipos() {
-    this.produtoService.getTiposProduto().subscribe({
-      next: (data: TipoProduto[]) => {
-        this.tipos = data;
-      },
-      error: (err: any) => {
-        console.error('Erro ao carregar tipos:', err);
-      },
+  carregarTipos(): Promise<void> {
+    this.carregandoTipos = true;
+    return new Promise((resolve) => {
+      this.produtoService.getTiposProduto().subscribe({
+        next: (data: TipoProduto[]) => {
+          this.tipos = data;
+          this.carregandoTipos = false;
+          this.cdr.detectChanges();
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Erro ao carregar tipos:', err);
+          this.toastService.error('Erro ao carregar tipos de produto');
+          this.carregandoTipos = false;
+          resolve();
+        },
+      });
     });
   }
 
-  carregarImagensParaSelect() {
-    this.imagemService.getImagensParaSelect().subscribe({
-      next: (data: ImagemSelect[]) => {
-        this.imagensSelect = data;
-      },
-      error: (err: any) => {
-        console.error('Erro ao carregar imagens:', err);
-      },
+  carregarImagensParaSelect(): Promise<void> {
+    this.carregandoImagens = true;
+    return new Promise((resolve) => {
+      this.imagemService.getImagensParaSelect().subscribe({
+        next: (data: ImagemSelect[]) => {
+          this.imagensSelect = data;
+          this.carregandoImagens = false;
+          this.cdr.detectChanges();
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Erro ao carregar imagens:', err);
+          this.toastService.error('Erro ao carregar imagens');
+          this.carregandoImagens = false;
+          resolve();
+        },
+      });
     });
   }
 
@@ -106,7 +130,6 @@ export class ProdutoFormComponent implements OnInit {
         if (data.imagem_id) {
           this.carregarPreviewImagem(data.imagem_id);
         }
-
         this.loading = false;
         this.cdr.detectChanges();
       },

@@ -2,10 +2,10 @@
   <div class="card">
     <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Novo' }} Produto</h2>
 
-    <div *ngIf="loading" class="loading-spinner">Carregando...</div>
+    <!-- Loading principal -->
+    <div *ngIf="loading" class="loading-spinner">Carregando produto...</div>
 
     <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
-      <!-- Grid responsivo para os campos -->
       <div class="form-grid">
         <!-- Coluna 1 -->
         <div class="form-grid-col">
@@ -32,15 +32,18 @@
 
           <div class="form-group">
             <label class="form-label">Tipo de Produto *</label>
-            <select
-              class="form-control"
-              [(ngModel)]="produto.tipo_produto_id"
-              name="tipo_produto_id"
-              required
-            >
-              <option [value]="0">Selecione um tipo</option>
-              <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
-            </select>
+            <div class="select-with-loading">
+              <select
+                class="form-control"
+                [(ngModel)]="produto.tipo_produto_id"
+                name="tipo_produto_id"
+                required
+              >
+                <option [value]="0">Selecione um tipo</option>
+                <option *ngFor="let t of tipos" [value]="t.id">{{ t.nome }}</option>
+              </select>
+              <span *ngIf="carregandoTipos" class="loading-badge">⏳ Carregando...</span>
+            </div>
           </div>
         </div>
 
@@ -48,20 +51,21 @@
         <div class="form-grid-col">
           <div class="form-group">
             <label class="form-label">Imagem</label>
-            <select
-              class="form-control"
-              [(ngModel)]="produto.imagem_id"
-              name="imagem_id"
-              (change)="onImagemSelecionada($event)"
-            >
-              <option [value]="null">Nenhuma imagem</option>
-              <option *ngFor="let img of imagensSelect" [value]="img.id">
-                {{ img.nome }}
-              </option>
-            </select>
+            <div class="select-with-loading">
+              <select
+                class="form-control"
+                [(ngModel)]="produto.imagem_id"
+                name="imagem_id"
+                (change)="onImagemSelecionada($event)"
+              >
+                <option [value]="null">Nenhuma imagem</option>
+                <option *ngFor="let img of imagensSelect" [value]="img.id">{{ img.nome }}</option>
+              </select>
+              <span *ngIf="carregandoImagens" class="loading-badge">⏳ Carregando...</span>
+            </div>
           </div>
 
-          <!-- Preview da imagem selecionada -->
+          <!-- Preview da imagem -->
           <div *ngIf="imagemPreview" class="preview-container">
             <h4>Preview:</h4>
             <img [src]="imagemPreview" class="preview-image" />
@@ -107,14 +111,18 @@
         </div>
       </div>
 
-      <!-- Checkbox e ações -->
       <div class="form-checkbox mb-4">
         <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo" />
         <label for="ativo">Produto Ativo</label>
       </div>
 
       <div class="form-actions">
-        <button type="submit" mat-raised-button color="success" [disabled]="loading">
+        <button
+          type="submit"
+          mat-raised-button
+          color="success"
+          [disabled]="loading || carregandoTipos || carregandoImagens"
+        >
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
         </button>
         <button type="button" mat-raised-button color="gray" routerLink="/produtos">
