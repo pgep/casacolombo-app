@@ -73,14 +73,12 @@ export class UsuarioForm {
     this.loading = true;
 
     if (this.editando) {
-      console.log(this.usuario);
       this.usuarioServico.updateUsuario(Number(this.usuario.id), this.usuario).subscribe({
         next: () => {
           this.toastService.success('Usuário atualizado com sucesso!');
           this.router.navigate(['/usuarios']);
         },
         error: (err) => {
-          console.log(err);
           this.toastService.error('Erro ao atualizar usuário !', err);
           this.loading = false;
         },

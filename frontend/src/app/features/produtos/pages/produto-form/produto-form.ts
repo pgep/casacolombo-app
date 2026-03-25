@@ -71,9 +71,7 @@ export class ProdutoFormComponent implements OnInit {
 
   ngOnInit() {
     // Carregar tipos e imagens em paralelo
-    Promise.all([this.carregarTipos(), this.carregarImagensParaSelect()]).then(() => {
-      console.log('✅ Dados auxiliares carregados');
-    });
+    Promise.all([this.carregarTipos(), this.carregarImagensParaSelect()]).then(() => {});
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

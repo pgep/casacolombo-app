@@ -23,7 +23,6 @@ export class UsuarioService {
   }
 
   updateUsuario(id: Number, usuario: Usuario): Observable<Usuario> {
-    console.log('usuario doserviço', usuario);
     return this.http.put<Usuario>(`${this.apiUrl}/usuarios/${id}`, usuario);
   }
 

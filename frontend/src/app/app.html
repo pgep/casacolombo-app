@@ -33,14 +33,54 @@
       </div>
     </header>
   </div>
+
+  <!-- ✅ MENU MOBILE COMPLETO (dentro do header-wrapper) -->
   <div class="mobile-menu" [class.show-menu]="isMenuOpen">
-    <!-- conteúdo do menu mobile... -->
+    <div class="mobile-menu-links">
+      <a routerLink="/clientes" routerLinkActive="active-link" (click)="toggleMenu()"
+        >👫🏻 Clientes</a
+      >
+
+      <!-- Submenu Cadastro no mobile -->
+      <div class="mobile-dropdown">
+        <button class="mobile-dropbtn" (click)="toggleCadastro()">📋 Cadastro ▾</button>
+        <div class="mobile-dropdown-content" [class.show]="isCadastroOpen">
+          <a routerLink="/produtos" routerLinkActive="active-link" (click)="toggleMenu()"
+            >📦 Produtos</a
+          >
+          <a routerLink="/ferramentas" routerLinkActive="active-link" (click)="toggleMenu()"
+            >🛠️ Ferramentas</a
+          >
+          <a routerLink="/imagens" routerLinkActive="active-link" (click)="toggleMenu()"
+            >🖼️ Imagens</a
+          >
+          <a routerLink="/usuarios" routerLinkActive="active-link" (click)="toggleMenu()"
+            >🧑‍💻 Usuários</a
+          >
+        </div>
+      </div>
+
+      <!-- Submenu Tipos no mobile -->
+      <div class="mobile-dropdown">
+        <button class="mobile-dropbtn" (click)="toggleTipos()">🏷️ Tipos ▾</button>
+        <div class="mobile-dropdown-content" [class.show]="isTiposOpen">
+          <a routerLink="/tipos-produto" routerLinkActive="active-link" (click)="toggleMenu()"
+            >Tipo Produto</a
+          >
+          <a routerLink="/tipos-insumo" routerLinkActive="active-link" (click)="toggleMenu()"
+            >Tipo Insumo</a
+          >
+        </div>
+      </div>
+    </div>
   </div>
+
   <main class="main-content">
     <div class="container">
       <router-outlet></router-outlet>
     </div>
   </main>
+
   <!-- ===== RODAPÉ ===== -->
   <div class="footer-wrapper">
     <footer class="main-footer">
