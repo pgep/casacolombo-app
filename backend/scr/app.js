@@ -10,6 +10,7 @@ const produtoRoutes = require('./modules/produto/produto.routes');
 const imagemRoutes = require('./modules/imagem/imagem.routes');
 const tipoInsumoRoutes = require('./modules/tipos-insumo/tipo-insumo.routes');
 const usuarioRoutes = require('./modules/usuarios/usuario.routes');
+const unidadeMedidaRoutes = require('./modules/unidade-medida/unidadeMedida.routes');
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -19,15 +20,16 @@ app.use('/api/ferramentas', ferramentaRoutes);
 app.use('/api/tipo-produto', tipoProdutoRoutes);
 app.use('/api/produtos', produtoRoutes);
 app.use('/api/imagens', imagemRoutes);
-app.use('/api/tipos-insumo',tipoInsumoRoutes)
+app.use('/api/tipos-insumo', tipoInsumoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/unidadeMedida', unidadeMedidaRoutes);
 
 // Rota de saúde
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: 'Servidor rodando!',
-    modules: ['clientes', 'ferramentas']
+    modules: ['clientes', 'ferramentas'],
   });
 });
 

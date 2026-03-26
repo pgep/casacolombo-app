@@ -9,6 +9,7 @@ const Produto = require('./models/produto.model');
 const Imagem = require('./models/imagem.model');
 const TipoInsumo = require('./scr/modules/tipos-insumo/tipo-insumo.model');
 const Usuario = require('./scr/modules/usuarios/usuario.model');
+const UnidadeMedida = require('./models/unidadeMedida.model');
 
 const PORT = process.env.PORT || 3001;
 
@@ -17,10 +18,11 @@ async function initTables() {
     await Cliente.initTable();
     await Ferramenta.initTable();
     await TipoProduto.initTable();
-    await Imagem.initTable(); 
+    await Imagem.initTable();
     await Produto.initTable();
     await TipoInsumo.initTable();
     await Usuario.initTable();
+    await UnidadeMedida.initTable();
     console.log('✅ Tabelas inicializadas');
   } catch (error) {
     console.error('❌ Erro:', error);

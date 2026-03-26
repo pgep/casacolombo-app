@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Unidade de medida</h2>
+
+    <!-- Loading principal -->
+    <div *ngIf="loading" class="loading-spinner">Carregando unidadesd de medida...</div>
+
+    <form *ngIf="!loading" (ngSubmit)="salvar()" class="form-responsive">
+      <div class="form-group">
+        <label class="form-label"
+          >Nome * <span class="text-muted">(obrigatório e único)</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="unidade.nome"
+          name="nome"
+          required
+          placeholder="Ex: Litro, Kilo, Unidade"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select class="form-control" [(ngModel)]="unidade.tipo" name="tipo" required>
+          <option value="">Selecione um tipo ...</option>
+          <option value="Líquido">Líquido</option>
+          <option value="Peso">Peso</option>
+          <option value="Unidade">Unidade</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Fator de Conversão</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="unidade.fator_conversao"
+          name="fator_conversao"
+          min="0"
+          step="1"
+          placeholder="0"
+          required
+        />
+      </div>
+      <div class="form-actions">
+        <button type="submit" mat-raised-button color="success">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" mat-raised-button color="gray" routerLink="/unidade-medida">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

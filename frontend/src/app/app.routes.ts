@@ -33,4 +33,9 @@ export const routes: Routes = [
     path: 'usuarios',
     loadChildren: () => import('./features/usuarios/usuario.routes').then((m) => m.usuarioRoutes),
   },
+  {
+    path: 'unidade-medida',
+    loadChildren: () =>
+      import('./features/unidade-medida/unidade-medida.routes').then((m) => m.unidadeMedidaRoutes),
+  },
 ];
