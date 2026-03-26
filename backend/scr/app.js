@@ -11,6 +11,7 @@ const imagemRoutes = require('./modules/imagem/imagem.routes');
 const tipoInsumoRoutes = require('./modules/tipos-insumo/tipo-insumo.routes');
 const usuarioRoutes = require('./modules/usuarios/usuario.routes');
 const unidadeMedidaRoutes = require('./modules/unidade-medida/unidadeMedida.routes');
+const insumoRoutes = require('./modules/insumo/insumo.routes');
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -23,6 +24,7 @@ app.use('/api/imagens', imagemRoutes);
 app.use('/api/tipos-insumo', tipoInsumoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/unidadeMedida', unidadeMedidaRoutes);
+app.use('/api/insumo', insumoRoutes);
 
 // Rota de saúde
 app.get('/api/health', (req, res) => {
