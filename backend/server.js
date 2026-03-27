@@ -11,7 +11,7 @@ const TipoInsumo = require('./scr/modules/tipos-insumo/tipo-insumo.model');
 const Usuario = require('./scr/modules/usuarios/usuario.model');
 const UnidadeMedida = require('./models/unidadeMedida.model');
 const Insumo = require('./models/insumo.model');
-
+const Configuracao = require('./models/configuracao.model');
 const PORT = process.env.PORT || 3001;
 
 async function initTables() {
@@ -25,6 +25,7 @@ async function initTables() {
     await Usuario.initTable();
     await UnidadeMedida.initTable();
     await Insumo.initTable();
+    await Configuracao.initTable();
     console.log('✅ Tabelas inicializadas');
   } catch (error) {
     console.error('❌ Erro:', error);

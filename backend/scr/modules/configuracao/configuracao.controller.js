@@ -1,7 +1,6 @@
 const Configuracao = require('../../../models/configuracao.model');
 
 const configuracaoController = {
-  // 🔍 LISTAR
   async listar(req, res) {
     try {
       const configuracoes = await Configuracao.findAll(
@@ -13,14 +12,12 @@ const configuracaoController = {
     }
   },
 
-  // 🔍 BUSCAR POR ID
   async buscarPorId(req, res) {
     try {
       const configuracao = await Configuracao.findById(req.params.id);
 
-      if (!configuracao) {
+      if (!configuracao)
         return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
 
       res.json(configuracao);
     } catch (error) {
@@ -28,14 +25,12 @@ const configuracaoController = {
     }
   },
 
-  // 🔍 BUSCAR POR CHAVE (IMPORTANTE PRA MARGEM)
   async buscarPorChave(req, res) {
     try {
       const configuracao = await Configuracao.findByChave(req.params.chave);
 
-      if (!configuracao) {
+      if (!configuracao)
         return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
 
       res.json(configuracao);
     } catch (error) {
@@ -43,29 +38,24 @@ const configuracaoController = {
     }
   },
 
-  // ➕ CRIAR
   async criar(req, res) {
     try {
       const configuracao = await Configuracao.create(req.body);
       res.status(201).json(configuracao);
     } catch (error) {
-      // 23505 = violação de chave única (chave duplicada)
       if (error.code === '23505') {
         return res.status(409).json({ error: 'Chave já cadastrada' });
       }
-
       res.status(500).json({ error: error.message });
     }
   },
 
-  // ✏️ ATUALIZAR
   async atualizar(req, res) {
     try {
       const configuracao = await Configuracao.update(req.params.id, req.body);
 
-      if (!configuracao) {
+      if (!configuracao)
         return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
 
       res.json(configuracao);
     } catch (error) {
@@ -73,14 +63,12 @@ const configuracaoController = {
     }
   },
 
-  // ❌ DELETAR
   async deletar(req, res) {
     try {
       const configuracao = await Configuracao.delete(req.params.id);
 
-      if (!configuracao) {
+      if (!configuracao)
         return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
 
       res.json({ message: 'Configuração removida com sucesso' });
     } catch (error) {
