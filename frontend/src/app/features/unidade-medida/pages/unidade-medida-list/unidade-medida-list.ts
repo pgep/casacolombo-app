@@ -51,7 +51,6 @@ export class UnidadeMedidaListComponent implements OnInit {
   carregar() {
     this.loading = true;
     this.unidadeMedidaService.getUnidades().subscribe((data) => {
-      console.log(data);
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
       this.loading = false;

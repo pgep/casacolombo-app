@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">🧪 Insumos</h2>
+      <a mat-raised-button color="success" routerLink="/insumos/novo"> ➕ Novo Insumo </a>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="!dataSource.data.length && !loading" class="loading-spinner">
+      Carregando ferramentas...
+    </div>
+
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <!-- Campo de filtro -->
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+            <td mat-cell *matCellDef="let row" data-label="Nome">{{ row.nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="unidade">
+            <th mat-header-cell *matHeaderCellDef>Unidade</th>
+            <td mat-cell *matCellDef="let row" data-label="Unidade">{{ row.unidade_nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estoque">
+            <th mat-header-cell *matHeaderCellDef>Estoque</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.quantidade_estoque | number: '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="custo">
+            <th mat-header-cell *matHeaderCellDef>Custo Base</th>
+            <td mat-cell *matCellDef="let row">
+              R$ {{ row.custo_unitario_base | number: '1.4-4' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="primary" [routerLink]="['/insumos/editar', row.id]">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button mat-icon-button color="warn" (click)="deletar(row.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">Nenhum insomo encontrado.</div>
+            </td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  </div>
+</div>

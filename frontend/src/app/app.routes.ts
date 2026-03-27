@@ -38,4 +38,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/unidade-medida/unidade-medida.routes').then((m) => m.unidadeMedidaRoutes),
   },
+  {
+    path: 'insumos',
+    loadChildren: () => import('./features/insumos/insumos.routes').then((m) => m.insumoRoutes),
+  },
 ];

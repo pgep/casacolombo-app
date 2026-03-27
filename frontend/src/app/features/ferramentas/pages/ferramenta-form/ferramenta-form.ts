@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ErrorHandler } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -87,7 +87,6 @@ export class FerramentaFormComponent implements OnInit {
           this.router.navigate(['/ferramentas']);
         },
         error: (err) => {
-          console.error('❌ Erro ao atualizar:', err);
           this.errorHandler.tratarErro(err, 'Atualizar', 'Ferramenta');
           this.loading = false;
           this.cdr.detectChanges();
