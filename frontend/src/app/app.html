@@ -8,26 +8,36 @@
             <h1 class="company-name">Casa Colombo Artesanal</h1>
           </div>
           <nav class="desktop-nav">
-            <a routerLink="/clientes" routerLinkActive="active-link" class="nav-item"
-              >👫🏻 Clientes</a
-            >
-            <a routerLink="/insumos" routerLinkActive="active-link" class="nav-item">🧪 Insumos</a>
+            <!-- ===== MENU CADASTRO ===== -->
             <div class="dropdown">
               <button class="dropbtn">📋 Cadastro ▾</button>
               <div class="dropdown-content">
-                <a routerLink="/produtos" routerLinkActive="active-link">📦 Produtos</a>
+                <a routerLink="/clientes" routerLinkActive="active-link">👫🏻 Clientes</a>
                 <a routerLink="/ferramentas" routerLinkActive="active-link">🛠️ Ferramentas</a>
                 <a routerLink="/imagens" routerLinkActive="active-link">🖼️ Imagens</a>
                 <a routerLink="/usuarios" routerLinkActive="active-link">🧑‍💻 Usuários</a>
-                <a routerLink="/unidade-medida" routerLinkActive="active-link">📏 Uni. de Medida</a>
-                <a routerLink="/configuracoes" routerLinkActive="active-link">⚙️ Configurações</a>
               </div>
             </div>
+
+            <!-- ===== MENU PRODUÇÃO ===== -->
             <div class="dropdown">
-              <button class="dropbtn">🏷️ Tipos ▾</button>
+              <button class="dropbtn">🏭 Produção ▾</button>
               <div class="dropdown-content">
-                <a routerLink="/tipos-produto" routerLinkActive="active-link">Tipo Produto</a>
-                <a routerLink="/tipos-insumo" routerLinkActive="active-link">Tipo Insumo</a>
+                <a routerLink="/produtos" routerLinkActive="active-link">📦 Produtos</a>
+                <a routerLink="/insumos" routerLinkActive="active-link">🧪 Insumos</a>
+              </div>
+            </div>
+
+            <!-- ===== MENU OPERACIONAL ===== -->
+            <div class="dropdown">
+              <button class="dropbtn">⚙️ Operacional ▾</button>
+              <div class="dropdown-content">
+                <a routerLink="/tipos-produto" routerLinkActive="active-link">🏷️ Tipo Produto</a>
+                <a routerLink="/tipos-insumo" routerLinkActive="active-link">🏷️ Tipo Insumo</a>
+                <a routerLink="/unidade-medida" routerLinkActive="active-link"
+                  >📏 Unidade de Medida</a
+                >
+                <a routerLink="/configuracoes" routerLinkActive="active-link">⚙️ Configurações</a>
               </div>
             </div>
           </nav>
@@ -37,19 +47,15 @@
     </header>
   </div>
 
-  <!-- ✅ MENU MOBILE COMPLETO (dentro do header-wrapper) -->
+  <!-- ✅ MENU MOBILE COMPLETO -->
   <div class="mobile-menu" [class.show-menu]="isMenuOpen">
     <div class="mobile-menu-links">
-      <a routerLink="/clientes" routerLinkActive="active-link" (click)="toggleMenu()"
-        >👫🏻 Clientes</a
-      >
-      <a routerLink="/insumos" routerLinkActive="active-link" (click)="toggleMenu()">🧪 Insumos</a>
-      <!-- Submenu Cadastro no mobile -->
+      <!-- ===== MENU CADASTRO (MOBILE) ===== -->
       <div class="mobile-dropdown">
         <button class="mobile-dropbtn" (click)="toggleCadastro()">📋 Cadastro ▾</button>
         <div class="mobile-dropdown-content" [class.show]="isCadastroOpen">
-          <a routerLink="/produtos" routerLinkActive="active-link" (click)="toggleMenu()"
-            >📦 Produtos</a
+          <a routerLink="/clientes" routerLinkActive="active-link" (click)="toggleMenu()"
+            >👫🏻 Clientes</a
           >
           <a routerLink="/ferramentas" routerLinkActive="active-link" (click)="toggleMenu()"
             >🛠️ Ferramentas</a
@@ -63,15 +69,34 @@
         </div>
       </div>
 
-      <!-- Submenu Tipos no mobile -->
+      <!-- ===== MENU PRODUÇÃO (MOBILE) ===== -->
       <div class="mobile-dropdown">
-        <button class="mobile-dropbtn" (click)="toggleTipos()">🏷️ Tipos ▾</button>
-        <div class="mobile-dropdown-content" [class.show]="isTiposOpen">
+        <button class="mobile-dropbtn" (click)="toggleProducao()">🏭 Produção ▾</button>
+        <div class="mobile-dropdown-content" [class.show]="isProducaoOpen">
+          <a routerLink="/produtos" routerLinkActive="active-link" (click)="toggleMenu()"
+            >📦 Produtos</a
+          >
+          <a routerLink="/insumos" routerLinkActive="active-link" (click)="toggleMenu()"
+            >🧪 Insumos</a
+          >
+        </div>
+      </div>
+
+      <!-- ===== MENU OPERACIONAL (MOBILE) ===== -->
+      <div class="mobile-dropdown">
+        <button class="mobile-dropbtn" (click)="toggleOperacional()">⚙️ Operacional ▾</button>
+        <div class="mobile-dropdown-content" [class.show]="isOperacionalOpen">
           <a routerLink="/tipos-produto" routerLinkActive="active-link" (click)="toggleMenu()"
-            >Tipo Produto</a
+            >🏷️ Tipo Produto</a
           >
           <a routerLink="/tipos-insumo" routerLinkActive="active-link" (click)="toggleMenu()"
-            >Tipo Insumo</a
+            >🏷️ Tipo Insumo</a
+          >
+          <a routerLink="/unidade-medida" routerLinkActive="active-link" (click)="toggleMenu()"
+            >📏 Unidade de Medida</a
+          >
+          <a routerLink="/configuracoes" routerLinkActive="active-link" (click)="toggleMenu()"
+            >⚙️ Configurações</a
           >
         </div>
       </div>
