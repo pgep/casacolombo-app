@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProdutoService } from '../../services/produto';
 import { ImagemService } from '../../../imagens/services/imagem';
-import { Produto, ProdutoInsumo } from '../../models/produto.model';
+import { Produto } from '../../models/produto.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { MatButtonModule } from '@angular/material/button';
 import { InsumoService } from '../../../insumos/services/insumos';

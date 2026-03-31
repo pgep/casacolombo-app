@@ -42,4 +42,9 @@ export const routes: Routes = [
     path: 'insumos',
     loadChildren: () => import('./features/insumos/insumos.routes').then((m) => m.insumoRoutes),
   },
+  {
+    path: 'configuracoes',
+    loadChildren: () =>
+      import('./features/configuracoes/configuracao.routes').then((m) => m.configuracaoRoutes),
+  },
 ];

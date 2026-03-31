@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Configuração</h2>
+
+    <div *ngIf="loading" class="loading-spinner">Carregando...</div>
+
+    <form *ngIf="!loading" (ngSubmit)="salvar()" #configForm="ngForm">
+      <div class="form-group">
+        <label class="form-label">Chave *</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="config.chave"
+          name="chave"
+          required
+          placeholder="Ex: margem_padrao, desconto_maximo"
+        />
+        <small class="text-muted">Identificador único usado pelo sistema</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Valor *</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="config.valor"
+          name="valor"
+          required
+          placeholder="Ex: 100 (para 100% de margem)"
+        />
+        <small class="text-muted">Valor numérico ou texto conforme a configuração</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descrição</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="config.descricao"
+          name="descricao"
+          rows="2"
+          placeholder="Descreva para que serve esta configuração"
+        ></textarea>
+      </div>
+
+      <div class="form-checkbox mb-4">
+        <input type="checkbox" [(ngModel)]="config.ativo" name="ativo" id="ativo" />
+        <label for="ativo">Configuração Ativa</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading || configForm.invalid">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/configuracoes">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
