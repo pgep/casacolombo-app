@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProdutoService } from '../../services/produto';
 import { ImagemService } from '../../../imagens/services/imagem';
-import { Produto } from '../../models/produto.model';
+import { Produto, ProdutoInsumo } from '../../models/produto.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { MatButtonModule } from '@angular/material/button';
+import { InsumoService } from '../../../insumos/services/insumos';
+import { Insumo } from '../../../insumos/models/insumos.model';
 
 export interface TipoProduto {
   id: number;
@@ -19,13 +21,26 @@ export interface ImagemSelect {
 }
 
 function validaDadosEmBranco(p: Produto): string | false {
-  if (p.custo_total == 0) return 'Insira o valor do custo total!';
-  if (p.preco_final == 0) return 'Insira o valor do preço final!';
-  if (p.preco_venda == 0) return 'Insira o valor do preço de venda!';
-  if (p.descricao == '') return 'Insira uma descrição!';
-  if (p.nome == '') return 'O nome é obrigatório!';
-  if (p.tipo_produto_id == 0) return 'Tipo produto obrigatório!';
-  if (p.imagem_id == undefined) return 'Selecione uma imagem!';
+  if (!p.nome?.trim()) return 'O nome é obrigatório!';
+  if (!p.descricao?.trim()) return 'Insira uma descrição!';
+  if (!p.tipo_produto_id) return 'Tipo produto obrigatório!';
+  if (!p.imagem_id) return 'Selecione uma imagem!';
+
+  // ✅ VERIFICAÇÃO SEGURA
+  if (!p.insumos || p.insumos.length === 0) {
+    return 'Adicione ao menos um insumo!';
+  }
+
+  // Validar cada insumo
+  for (let i = 0; i < p.insumos.length; i++) {
+    const item = p.insumos[i];
+    if (!item.insumo_id || item.insumo_id === 0) {
+      return `Insumo #${i + 1}: selecione um insumo válido!`;
+    }
+    if (!item.quantidade || item.quantidade <= 0) {
+      return `Insumo #${i + 1}: quantidade deve ser maior que zero!`;
+    }
+  }
 
   return false;
 }
@@ -47,37 +62,42 @@ export class ProdutoFormComponent implements OnInit {
     preco_venda: 0,
     preco_final: 0,
     ativo: true,
+    insumos: [], // ✅ JÁ COMO ARRAY VAZIO
   };
 
   tipos: TipoProduto[] = [];
   imagensSelect: ImagemSelect[] = [];
+  insumosLista: Insumo[] = [];
   editando = false;
   loading = false;
-
-  // ✅ NOVAS PROPRIEDADES PARA LOADING DOS SELECTS
   carregandoTipos = true;
   carregandoImagens = true;
-
+  carregandoInsumos = true;
   imagemPreview: string | null = null;
+  margemLucro = 2;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private produtoService: ProdutoService,
     private imagemService: ImagemService,
-    private cdr: ChangeDetectorRef,
+    private insumoService: InsumoService,
     private toastService: ToastService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
-    // Carregar tipos e imagens em paralelo
-    Promise.all([this.carregarTipos(), this.carregarImagensParaSelect()]).then(() => {});
-
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.editando = true;
-      this.carregarProduto(Number(id));
-    }
+    Promise.all([
+      this.carregarTipos(),
+      this.carregarImagensParaSelect(),
+      this.carregarInsumos(),
+    ]).then(() => {
+      const id = this.route.snapshot.paramMap.get('id');
+      if (id) {
+        this.editando = true;
+        this.carregarProduto(Number(id));
+      }
+    });
   }
 
   carregarTipos(): Promise<void> {
@@ -120,21 +140,56 @@ export class ProdutoFormComponent implements OnInit {
     });
   }
 
+  carregarInsumos(): Promise<void> {
+    this.carregandoInsumos = true;
+    return new Promise((resolve) => {
+      this.insumoService.getInsumos().subscribe({
+        next: (data: Insumo[]) => {
+          this.insumosLista = data;
+          this.carregandoInsumos = false;
+          this.cdr.detectChanges();
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Erro ao carregar insumos:', err);
+          this.toastService.error('Erro ao carregar insumos');
+          this.carregandoInsumos = false;
+          resolve();
+        },
+      });
+    });
+  }
+
   carregarProduto(id: number) {
     this.loading = true;
     this.produtoService.getProduto(id).subscribe({
-      next: (data: Produto) => {
-        this.produto = data;
+      next: (data: any) => {
+        this.produto = {
+          id: data.id,
+          nome: data.nome,
+          descricao: data.descricao || '',
+          tipo_produto_id: data.tipo_produto_id,
+          imagem_id: data.imagem_id,
+          custo_total: Number(data.custo_total) || 0,
+          preco_venda: Number(data.preco_venda) || 0,
+          preco_final: Number(data.preco_final) || 0,
+          ativo: data.ativo,
+          insumos: data.insumos || [], // ✅ GARANTE QUE É ARRAY
+        };
+
+        this.calcularCustosUnitarios();
+
         if (data.imagem_id) {
           this.carregarPreviewImagem(data.imagem_id);
         }
+
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Erro ao carregar produto:', err);
-        this.loading = false;
         this.toastService.error('Erro ao carregar produto');
+        this.loading = false;
         this.router.navigate(['/produtos']);
       },
     });
@@ -163,40 +218,114 @@ export class ProdutoFormComponent implements OnInit {
     }
   }
 
-  salvar() {
-    let temMensagem = validaDadosEmBranco(this.produto);
+  calcularCustosUnitarios() {
+    // ✅ VERIFICAÇÃO SEGURA
+    if (!this.produto.insumos) return;
 
-    if (temMensagem) {
-      this.toastService.error(temMensagem);
+    this.produto.insumos.forEach((item) => {
+      const insumo = this.insumosLista.find((i) => i.id === item.insumo_id);
+      if (insumo && insumo.custo_unitario_base) {
+        item.custo_unitario = Number(insumo.custo_unitario_base);
+      }
+    });
+    this.calcularCustoTotal();
+  }
+
+  calcularCustoTotal() {
+    let total = 0;
+
+    // ✅ VERIFICAÇÃO SEGURA
+    if (this.produto.insumos) {
+      this.produto.insumos.forEach((item) => {
+        const custoUnitario = item.custo_unitario || 0;
+        const quantidade = item.quantidade || 0;
+        total += custoUnitario * quantidade;
+      });
+    }
+
+    this.produto.custo_total = parseFloat(total.toFixed(2));
+    this.produto.preco_venda = parseFloat((this.produto.custo_total * this.margemLucro).toFixed(2));
+
+    if (!this.produto.preco_final || this.produto.preco_final === 0) {
+      // this.produto.preco_final = this.produto.preco_venda;
+    }
+  }
+
+  onInsumoSelecionado(index: number) {
+    if (!this.produto.insumos) return;
+
+    const item = this.produto.insumos[index];
+    const insumoId = Number(item.insumo_id);
+    const insumo = this.insumosLista.find((i) => i.id === insumoId);
+
+    if (insumo) {
+      item.custo_unitario = Number(insumo.custo_unitario_base);
+    } else {
+      item.custo_unitario = 0;
+    }
+
+    this.calcularCustoTotal();
+    this.cdr.detectChanges();
+  }
+
+  adicionarInsumo() {
+    if (!this.produto.insumos) {
+      this.produto.insumos = [];
+    }
+    this.produto.insumos.push({
+      insumo_id: 0,
+      quantidade: 1,
+      custo_unitario: 0,
+    });
+    this.cdr.detectChanges();
+  }
+
+  removerInsumo(index: number) {
+    if (this.produto.insumos) {
+      this.produto.insumos.splice(index, 1);
+      this.calcularCustoTotal();
+      this.cdr.detectChanges();
+    }
+  }
+
+  salvar() {
+    const erro = validaDadosEmBranco(this.produto);
+    if (erro) {
+      this.toastService.error(erro);
       return;
     }
 
+    this.calcularCustoTotal();
+
+    // ✅ GARANTE QUE INSUMOS ESTÁ DEFINIDO
+    const dadosParaEnvio = {
+      ...this.produto,
+      insumos:
+        this.produto.insumos?.map((item) => ({
+          insumo_id: item.insumo_id,
+          quantidade: item.quantidade,
+          custo_unitario: item.custo_unitario,
+        })) || [],
+    };
+
     this.loading = true;
 
-    if (this.editando) {
-      this.produtoService.updateProduto(this.produto.id!, this.produto).subscribe({
-        next: () => {
-          this.toastService.success('Produto atualizado com sucesso!');
-          this.router.navigate(['/produtos']);
-        },
-        error: (err: any) => {
-          console.error('Erro ao atualizar:', err);
-          this.toastService.error('Erro ao atualizar produto');
-          this.loading = false;
-        },
-      });
-    } else {
-      this.produtoService.createProduto(this.produto).subscribe({
-        next: () => {
-          this.toastService.success('Produto criado com sucesso!');
-          this.router.navigate(['/produtos']);
-        },
-        error: (err: any) => {
-          console.error('Erro ao criar:', err);
-          this.toastService.error('Erro ao criar produto');
-          this.loading = false;
-        },
-      });
-    }
+    const request = this.editando
+      ? this.produtoService.updateProduto(this.produto.id!, dadosParaEnvio)
+      : this.produtoService.createProduto(dadosParaEnvio);
+
+    request.subscribe({
+      next: () => {
+        this.toastService.success(
+          this.editando ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!',
+        );
+        this.router.navigate(['/produtos']);
+      },
+      error: (err: any) => {
+        console.error('Erro ao salvar produto:', err);
+        this.toastService.error('Erro ao salvar produto');
+        this.loading = false;
+      },
+    });
   }
 }

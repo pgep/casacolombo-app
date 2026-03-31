@@ -31,14 +31,13 @@ body {
 }
 
 .main-menu a:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .main-menu a.active {
   background: var(--primary);
   font-weight: bold;
 }
-
 
 /* CONTAINER DOS MODAIS - NÃO INTERFERE NO RESTO */
 .modal-container {
@@ -74,4 +73,51 @@ body {
   flex-direction: column;
   gap: 10px;
   max-width: 350px;
+}
+
+/* Forçar o diálogo do Material a ter altura */
+.mat-mdc-dialog-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 300px !important;
+  height: auto !important;
+  background: transparent !important;
+}
+
+.mat-mdc-dialog-surface {
+  display: block !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+.cdk-overlay-pane {
+  min-width: 400px !important;
+  max-width: 90vw !important;
+  width: auto !important;
+  height: auto !important;
+  position: relative !important;
+}
+
+/* Forçar o conteúdo do modal a aparecer */
+app-insumos-modal {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.modal-container {
+  background: white !important;
+  border-radius: 16px !important;
+  min-width: 500px !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  z-index: 1000 !important;
 }

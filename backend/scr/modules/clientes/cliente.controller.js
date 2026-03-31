@@ -1,92 +1,63 @@
-const Configuracao = require('../../../models/configuracao.model');
+const Cliente = require('../../../models/cliente.model');
 
-const configuracaoController = {
-  // 🔍 LISTAR
+const clienteController = {
   async listar(req, res) {
     try {
-      const configuracoes = await Configuracao.findAll(
+      const clientes = await Cliente.findAll(
         req.query.apenasAtivos !== 'false',
       );
-      res.json(configuracoes);
+      res.json(clientes);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // 🔍 BUSCAR POR ID
   async buscarPorId(req, res) {
     try {
-      const configuracao = await Configuracao.findById(req.params.id);
-
-      if (!configuracao) {
-        return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
-
-      res.json(configuracao);
+      const cliente = await Cliente.findById(req.params.id);
+      if (!cliente)
+        return res.status(404).json({ message: 'Cliente não encontrado' });
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // 🔍 BUSCAR POR CHAVE (IMPORTANTE PRA MARGEM)
-  async buscarPorChave(req, res) {
-    try {
-      const configuracao = await Configuracao.findByChave(req.params.chave);
-
-      if (!configuracao) {
-        return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
-
-      res.json(configuracao);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  },
-
-  // ➕ CRIAR
+  // POST criar novo cliente
   async criar(req, res) {
     try {
-      const configuracao = await Configuracao.create(req.body);
-      res.status(201).json(configuracao);
+      const cliente = await Cliente.create(req.body);
+      res.status(201).json(cliente);
     } catch (error) {
-      // 23505 = violação de chave única (chave duplicada)
+      // Código 23505 é violação de chave única no PostgreSQL
       if (error.code === '23505') {
-        return res.status(409).json({ error: 'Chave já cadastrada' });
+        return res.status(409).json({ error: 'Email já cadastrado' });
       }
-
       res.status(500).json({ error: error.message });
     }
   },
 
-  // ✏️ ATUALIZAR
   async atualizar(req, res) {
     try {
-      const configuracao = await Configuracao.update(req.params.id, req.body);
-
-      if (!configuracao) {
-        return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
-
-      res.json(configuracao);
+      const cliente = await Cliente.update(req.params.id, req.body);
+      if (!cliente)
+        return res.status(404).json({ message: 'Cliente não encontrado' });
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // ❌ DELETAR
   async deletar(req, res) {
     try {
-      const configuracao = await Configuracao.delete(req.params.id);
-
-      if (!configuracao) {
-        return res.status(404).json({ message: 'Configuração não encontrada' });
-      }
-
-      res.json({ message: 'Configuração removida com sucesso' });
+      const cliente = await Cliente.delete(req.params.id);
+      if (!cliente)
+        return res.status(404).json({ message: 'Cliente não encontrado' });
+      res.json({ message: 'Cliente removido com sucesso' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 };
 
-module.exports = configuracaoController;
+module.exports = clienteController;

@@ -78,8 +78,9 @@
               class="form-control"
               [(ngModel)]="produto.custo_total"
               name="custo_total"
-              step="0.01"
+              step="1"
               min="0"
+              disabled
             />
           </div>
 
@@ -90,8 +91,9 @@
               class="form-control"
               [(ngModel)]="produto.preco_venda"
               name="preco_venda"
-              step="0.01"
+              step="1"
               min="0"
+              disabled
               required
             />
           </div>
@@ -111,9 +113,58 @@
         </div>
       </div>
 
-      <div class="form-checkbox mb-4">
+      <div *ngIf="editando" class="form-checkbox mb-4">
         <input type="checkbox" [(ngModel)]="produto.ativo" name="ativo" id="ativo" />
         <label for="ativo">Produto Ativo</label>
+      </div>
+
+      <h3>Insumos</h3>
+
+      <!-- Loading dos insumos -->
+      <div *ngIf="carregandoInsumos" class="loading-spinner-small">
+        Carregando lista de insumos...
+      </div>
+
+      <!-- Lista de insumos -->
+      <div *ngIf="!carregandoInsumos">
+        <button type="button" class="btn btn-sm btn-primary mb-2" (click)="adicionarInsumo()">
+          + Adicionar Insumo
+        </button>
+
+        <div *ngFor="let item of produto.insumos; let i = index" class="insumo-row">
+          <select
+            [(ngModel)]="item.insumo_id"
+            name="insumo_id_{{ i }}"
+            (change)="onInsumoSelecionado(i)"
+            class="form-control"
+          >
+            <option [value]="0">Selecione um insumo</option>
+            <option *ngFor="let insumo of insumosLista" [value]="insumo.id">
+              {{ insumo.nome }} (R$ {{ insumo.custo_unitario_base | number: '1.2-2'
+              }}{{ insumo.unidade_medida_nome }})
+            </option>
+          </select>
+
+          <input
+            type="number"
+            [(ngModel)]="item.quantidade"
+            name="quantidade_{{ i }}"
+            (input)="calcularCustoTotal()"
+            step="1"
+            min="0"
+            placeholder="Quantidade"
+            class="form-control"
+          />
+
+          <span class="custo-item">
+            R$ {{ (item.custo_unitario ?? 0) * item.quantidade | number: '1.2-2' }}
+          </span>
+          >
+
+          <button type="button" class="btn btn-sm btn-danger" (click)="removerInsumo(i)">
+            Remover
+          </button>
+        </div>
       </div>
 
       <div class="form-actions">

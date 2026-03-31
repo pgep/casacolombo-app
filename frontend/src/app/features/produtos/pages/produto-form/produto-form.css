@@ -40,6 +40,32 @@
   white-space: nowrap;
 }
 
+.insumo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.insumo-row select {
+  flex: 2;
+  min-width: 200px;
+}
+
+.insumo-row input {
+  flex: 1;
+  min-width: 100px;
+}
+
+.custo-item {
+  flex: 0.5;
+  min-width: 80px;
+  text-align: right;
+  font-weight: 500;
+  color: #2c7da0;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .select-with-loading {
@@ -49,5 +75,17 @@
 
   .loading-badge {
     align-self: flex-start;
+  }
+
+  .insumo-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .insumo-row select,
+  .insumo-row input,
+  .custo-item {
+    width: 100%;
+    text-align: left;
   }
 }

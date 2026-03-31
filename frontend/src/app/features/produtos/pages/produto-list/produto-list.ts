@@ -9,11 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { ProdutoService, Produto } from '../../services/produto';
+import { ProdutoService } from '../../services/produto';
+import { Produto } from '../../models/produto.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
 import { ImagemService } from '../../../imagens/services/imagem';
 import { ModalService } from '../../../../shared/services/modal.service';
+import { MatDialog } from '@angular/material/dialog';
+import { InsumosModalComponent } from '../../../../shared/components/insumos-modal/insumos-modal';
 
 @Component({
   selector: 'app-produto-list',
@@ -34,7 +37,7 @@ import { ModalService } from '../../../../shared/services/modal.service';
   styleUrls: ['./produto-list.css'],
 })
 export class ProdutoListComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'nome', 'tipo', 'preco', 'ativo', 'acoes'];
+  displayedColumns: string[] = ['id', 'nome', 'tipo_nome', 'preco_final', 'ativo', 'acoes'];
   dataSource = new MatTableDataSource<Produto>([]);
   loading = true;
 
@@ -48,6 +51,7 @@ export class ProdutoListComponent implements OnInit {
     private toastService: ToastService,
     private confirmService: ConfirmService,
     private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -58,8 +62,23 @@ export class ProdutoListComponent implements OnInit {
   carregarProdutos() {
     this.loading = true;
     this.produtoService.getProdutos().subscribe({
-      next: (data: Produto[]) => {
-        this.dataSource.data = data;
+      next: (data: any) => {
+        // ✅ CONVERTER OBJETO PARA ARRAY
+        let produtosArray: Produto[] = [];
+
+        if (Array.isArray(data)) {
+          produtosArray = data;
+        } else if (data && typeof data === 'object') {
+          // Extrair apenas os produtos (ignorando 'insumos')
+          produtosArray = Object.keys(data)
+            .filter((key) => !isNaN(Number(key))) // só índices numéricos
+            .map((key) => ({
+              ...data[key],
+              insumos: [], // insumos vêm de outra rota
+            }));
+        }
+
+        this.dataSource.data = produtosArray;
         this.loading = false;
 
         setTimeout(() => {
@@ -124,6 +143,17 @@ export class ProdutoListComponent implements OnInit {
       error: (err) => {
         this.toastService.error('Erro ao deletar produto');
       },
+    });
+  }
+
+  verInsumos(produto: Produto) {
+    this.dialog.open(InsumosModalComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      data: { produtoId: produto.id },
+      panelClass: 'custom-dialog-panel',
+      hasBackdrop: true,
+      backdropClass: 'custom-backdrop',
     });
   }
 }
