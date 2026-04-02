@@ -72,6 +72,22 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Margem de Lucro</label>
+            <select
+              class="form-control"
+              [(ngModel)]="produto.margem_id"
+              name="margem_id"
+              (change)="onMargemSelecionada()"
+            >
+              <option [value]="null">Usar margem padrão</option>
+              <option *ngFor="let m of margensDisponiveis" [value]="m.id">
+                {{ m.descricao || m.chave }} ({{ formatarPercentual(m.valor) }}%)
+              </option>
+            </select>
+            <small class="text-muted">Selecione a margem específica para este produto</small>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Custo Total (R$)</label>
             <input
               type="number"
@@ -165,6 +181,25 @@
             Remover
           </button>
         </div>
+      </div>
+      <!-- Após o cálculo do custo total -->
+      <hr />
+
+      <!-- Informação da margem atual -->
+      <div class="margem-info">
+        <p>
+          <strong>💰 Margem de Lucro:</strong>
+          {{ margemPercentual }}%
+          <span class="text-muted">({{ margemAtual }}x sobre o custo)</span>
+        </p>
+        <p>
+          <strong>💵 Preço de Venda Calculado:</strong>
+          R$ {{ produto.preco_venda | number: '1.2-2' }}
+        </p>
+        <p *ngIf="produto.preco_final !== produto.preco_venda" class="text-info">
+          <strong>🏷️ Preço Final (manual):</strong>
+          R$ {{ produto.preco_final | number: '1.2-2' }}
+        </p>
       </div>
 
       <div class="form-actions">

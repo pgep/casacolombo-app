@@ -11,6 +11,7 @@ class Produto {
           descricao TEXT,
           tipo_produto_id INTEGER REFERENCES tipoproduto(id),
           imagem_id INTEGER REFERENCES imagens(id) ON DELETE SET NULL,
+          margem_id INTEGER REFERENCES configuracoes(id),
           custo_total DECIMAL(10,2) DEFAULT 0,
           preco_venda DECIMAL(10,2) DEFAULT 0,
           preco_final DECIMAL(10,2) DEFAULT 0,
@@ -19,7 +20,7 @@ class Produto {
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `;
-      
+
       await db.query(query);
       console.log('✅ Tabela "produtos" verificada/criada');
 
@@ -33,7 +34,7 @@ class Produto {
       } catch (error) {
         console.log('Campo imagem não existia ou já foi removido');
       }
-      
+
       // 3. ➕ GARANTIR que imagem_id existe (se não existir)
       try {
         await db.query(`
@@ -44,7 +45,7 @@ class Produto {
       } catch (error) {
         console.log('Erro ao adicionar imagem_id:', error.message);
       }
-      
+
       // 4. 🔗 GARANTIR FK (se não existir)
       try {
         await db.query(`
@@ -58,7 +59,6 @@ class Produto {
       } catch (error) {
         console.log('FK já existe:', error.message);
       }
-
     } catch (error) {
       console.error('❌ Erro ao criar tabela produtos:', error);
     }
@@ -73,13 +73,13 @@ class Produto {
       LEFT JOIN tipoproduto tp ON p.tipo_produto_id = tp.id
       LEFT JOIN imagens i ON p.imagem_id = i.id
     `;
-    
+
     if (apenasAtivos) {
       query += ' WHERE p.ativo = true';
     }
-    
+
     query += ' ORDER BY p.id DESC';
-    
+
     const result = await db.query(query);
     return result.rows;
   }
@@ -100,42 +100,52 @@ class Produto {
 
   // Criar novo (SEM imagem, COM imagem_id)
   static async create(data) {
-    const { 
-      nome, descricao, tipo_produto_id, imagem_id,
-      custo_total, preco_venda, preco_final, 
-      ativo = true 
+    const {
+      nome,
+      descricao,
+      tipo_produto_id,
+      imagem_id,
+      custo_total,
+      preco_venda,
+      preco_final,
+      ativo = true,
     } = data;
-    
+
     const query = `
       INSERT INTO produtos 
         (nome, descricao, tipo_produto_id, imagem_id, custo_total, preco_venda, preco_final, ativo)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
-    
+
     const values = [
-      nome, 
-      descricao || null, 
-      tipo_produto_id, 
-      imagem_id || null,  // Se não veio, coloca null
-      custo_total || 0, 
-      preco_venda || 0, 
-      preco_final || preco_venda || 0, 
-      ativo
+      nome,
+      descricao || null,
+      tipo_produto_id,
+      imagem_id || null, // Se não veio, coloca null
+      custo_total || 0,
+      preco_venda || 0,
+      preco_final || preco_venda || 0,
+      ativo,
     ];
-    
+
     const result = await db.query(query, values);
     return result.rows[0];
   }
 
   // Atualizar (SEM imagem, COM imagem_id)
   static async update(id, data) {
-    const { 
-      nome, descricao, tipo_produto_id, imagem_id,
-      custo_total, preco_venda, preco_final, 
-      ativo 
+    const {
+      nome,
+      descricao,
+      tipo_produto_id,
+      imagem_id,
+      custo_total,
+      preco_venda,
+      preco_final,
+      ativo,
     } = data;
-    
+
     const query = `
       UPDATE produtos 
       SET nome = $1, descricao = $2, tipo_produto_id = $3, 
@@ -144,19 +154,19 @@ class Produto {
       WHERE id = $9
       RETURNING *
     `;
-    
+
     const values = [
-      nome, 
-      descricao || null, 
-      tipo_produto_id, 
-      imagem_id || null,  // Se não veio, coloca null
-      custo_total || 0, 
-      preco_venda || 0, 
-      preco_final || preco_venda || 0, 
-      ativo, 
-      id
+      nome,
+      descricao || null,
+      tipo_produto_id,
+      imagem_id || null, // Se não veio, coloca null
+      custo_total || 0,
+      preco_venda || 0,
+      preco_final || preco_venda || 0,
+      ativo,
+      id,
     ];
-    
+
     const result = await db.query(query, values);
     return result.rows[0];
   }

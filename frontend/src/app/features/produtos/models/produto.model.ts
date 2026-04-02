@@ -16,6 +16,8 @@ export interface Produto {
   created_at?: string;
   updated_at?: string;
   insumos?: ProdutoInsumo[];
+  margem_id?: number; // ← NOVO
+  margem_valor?: number; // ← para exibição
 }
 
 export interface Imagem {

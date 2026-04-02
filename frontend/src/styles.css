@@ -63,6 +63,26 @@ body {
   pointer-events: auto;
 }
 
+/* ===== MODAL DE INSUMOS - ISOLADO ===== */
+/* Garantir que o overlay funcione */
+/* Apenas para posicionamento do overlay */
+.insumos-dialog .mat-mdc-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.insumos-backdrop {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.cdk-overlay-pane {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: transparent !important;
+}
+
 /* TOAST - posicionamento */
 .toast-container {
   position: fixed;
@@ -92,32 +112,4 @@ body {
   height: auto !important;
   min-height: auto !important;
   overflow: visible !important;
-}
-
-.cdk-overlay-pane {
-  min-width: 400px !important;
-  max-width: 90vw !important;
-  width: auto !important;
-  height: auto !important;
-  position: relative !important;
-}
-
-/* Forçar o conteúdo do modal a aparecer */
-app-insumos-modal {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
-}
-
-.modal-container {
-  background: white !important;
-  border-radius: 16px !important;
-  min-width: 500px !important;
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2) !important;
-  position: relative !important;
-  z-index: 1000 !important;
 }

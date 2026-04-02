@@ -16,6 +16,7 @@ export interface InsumoItem {
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule],
   templateUrl: './insumos-modal.html',
+  styleUrls: ['./insumos-modal.css'],
 })
 export class InsumosModalComponent implements OnInit {
   insumos: InsumoItem[] = [];
@@ -27,14 +28,20 @@ export class InsumosModalComponent implements OnInit {
     private produtoService: ProdutoService,
     private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { produtoId: number },
-  ) {}
+  ) {
+    console.log('🏗️ Construtor do InsumosModalComponent chamado!');
+    console.log('📦 Data recebida:', this.data);
+  }
 
   ngOnInit() {
-    // ✅ DESANEXAR O CHANGE DETECTOR PARA EVITAR O ERRO
+    console.log('🔄 ngOnInit do InsumosModalComponent');
     this.cdr.detach();
 
     if (this.data?.produtoId) {
+      console.log('🔍 Carregando insumos para produto:', this.data.produtoId);
       this.carregarInsumos(this.data.produtoId);
+    } else {
+      console.warn('⚠️ Nenhum produtoId recebido!');
     }
   }
 

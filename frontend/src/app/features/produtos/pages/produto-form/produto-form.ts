@@ -9,6 +9,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { MatButtonModule } from '@angular/material/button';
 import { InsumoService } from '../../../insumos/services/insumos';
 import { Insumo } from '../../../insumos/models/insumos.model';
+import { ConfiguracaoService } from '../../../configuracoes/services/configuracao';
 
 export interface TipoProduto {
   id: number;
@@ -26,12 +27,10 @@ function validaDadosEmBranco(p: Produto): string | false {
   if (!p.tipo_produto_id) return 'Tipo produto obrigatório!';
   if (!p.imagem_id) return 'Selecione uma imagem!';
 
-  // ✅ VERIFICAÇÃO SEGURA
   if (!p.insumos || p.insumos.length === 0) {
     return 'Adicione ao menos um insumo!';
   }
 
-  // Validar cada insumo
   for (let i = 0; i < p.insumos.length; i++) {
     const item = p.insumos[i];
     if (!item.insumo_id || item.insumo_id === 0) {
@@ -58,11 +57,12 @@ export class ProdutoFormComponent implements OnInit {
     descricao: '',
     tipo_produto_id: 0,
     imagem_id: undefined,
+    margem_id: undefined, // ← ADICIONADO!
     custo_total: 0,
     preco_venda: 0,
     preco_final: 0,
     ativo: true,
-    insumos: [], // ✅ JÁ COMO ARRAY VAZIO
+    insumos: [],
   };
 
   tipos: TipoProduto[] = [];
@@ -74,7 +74,9 @@ export class ProdutoFormComponent implements OnInit {
   carregandoImagens = true;
   carregandoInsumos = true;
   imagemPreview: string | null = null;
-  margemLucro = 2;
+  margemAtual: number = 2;
+  margemPercentual: number = 100;
+  margensDisponiveis: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -84,20 +86,22 @@ export class ProdutoFormComponent implements OnInit {
     private insumoService: InsumoService,
     private toastService: ToastService,
     private cdr: ChangeDetectorRef,
+    private configuracaoService: ConfiguracaoService,
   ) {}
 
-  ngOnInit() {
-    Promise.all([
+  async ngOnInit() {
+    await this.carregarMargens();
+    await Promise.all([
       this.carregarTipos(),
       this.carregarImagensParaSelect(),
       this.carregarInsumos(),
-    ]).then(() => {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.editando = true;
-        this.carregarProduto(Number(id));
-      }
-    });
+    ]);
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.editando = true;
+      this.carregarProduto(Number(id));
+    }
   }
 
   carregarTipos(): Promise<void> {
@@ -110,8 +114,7 @@ export class ProdutoFormComponent implements OnInit {
           this.cdr.detectChanges();
           resolve();
         },
-        error: (err: any) => {
-          console.error('Erro ao carregar tipos:', err);
+        error: () => {
           this.toastService.error('Erro ao carregar tipos de produto');
           this.carregandoTipos = false;
           resolve();
@@ -130,8 +133,7 @@ export class ProdutoFormComponent implements OnInit {
           this.cdr.detectChanges();
           resolve();
         },
-        error: (err: any) => {
-          console.error('Erro ao carregar imagens:', err);
+        error: () => {
           this.toastService.error('Erro ao carregar imagens');
           this.carregandoImagens = false;
           resolve();
@@ -150,10 +152,24 @@ export class ProdutoFormComponent implements OnInit {
           this.cdr.detectChanges();
           resolve();
         },
-        error: (err: any) => {
-          console.error('Erro ao carregar insumos:', err);
+        error: () => {
           this.toastService.error('Erro ao carregar insumos');
           this.carregandoInsumos = false;
+          resolve();
+        },
+      });
+    });
+  }
+
+  carregarMargens(): Promise<void> {
+    return new Promise((resolve) => {
+      this.configuracaoService.getConfiguracoes().subscribe({
+        next: (data) => {
+          this.margensDisponiveis = data.filter((c) => c.chave.includes('margem'));
+          resolve();
+        },
+        error: (err) => {
+          console.error('❌ Erro ao carregar margens:', err);
           resolve();
         },
       });
@@ -170,12 +186,22 @@ export class ProdutoFormComponent implements OnInit {
           descricao: data.descricao || '',
           tipo_produto_id: data.tipo_produto_id,
           imagem_id: data.imagem_id,
+          margem_id: data.margem_id, // ← CARREGAR MARGEM DO PRODUTO
           custo_total: Number(data.custo_total) || 0,
           preco_venda: Number(data.preco_venda) || 0,
           preco_final: Number(data.preco_final) || 0,
           ativo: data.ativo,
-          insumos: data.insumos || [], // ✅ GARANTE QUE É ARRAY
+          insumos: data.insumos || [],
         };
+
+        // ✅ ATUALIZAR MARGEM ATUAL COM A DO PRODUTO
+        if (this.produto.margem_id) {
+          const margem = this.margensDisponiveis.find((m) => m.id === this.produto.margem_id);
+          if (margem) {
+            this.margemAtual = Number(margem.valor);
+            this.margemPercentual = (this.margemAtual - 1) * 100;
+          }
+        }
 
         this.calcularCustosUnitarios();
 
@@ -203,9 +229,7 @@ export class ProdutoFormComponent implements OnInit {
           : `data:image/jpeg;base64,${imagem.imagem_base64}`;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erro ao carregar preview da imagem:', err);
-      },
+      error: (err) => console.error('Erro ao carregar preview:', err),
     });
   }
 
@@ -219,7 +243,6 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   calcularCustosUnitarios() {
-    // ✅ VERIFICAÇÃO SEGURA
     if (!this.produto.insumos) return;
 
     this.produto.insumos.forEach((item) => {
@@ -234,7 +257,6 @@ export class ProdutoFormComponent implements OnInit {
   calcularCustoTotal() {
     let total = 0;
 
-    // ✅ VERIFICAÇÃO SEGURA
     if (this.produto.insumos) {
       this.produto.insumos.forEach((item) => {
         const custoUnitario = item.custo_unitario || 0;
@@ -244,10 +266,10 @@ export class ProdutoFormComponent implements OnInit {
     }
 
     this.produto.custo_total = parseFloat(total.toFixed(2));
-    this.produto.preco_venda = parseFloat((this.produto.custo_total * this.margemLucro).toFixed(2));
+    this.produto.preco_venda = parseFloat((this.produto.custo_total * this.margemAtual).toFixed(2));
 
     if (!this.produto.preco_final || this.produto.preco_final === 0) {
-      // this.produto.preco_final = this.produto.preco_venda;
+      this.produto.preco_final = this.produto.preco_venda;
     }
   }
 
@@ -255,8 +277,7 @@ export class ProdutoFormComponent implements OnInit {
     if (!this.produto.insumos) return;
 
     const item = this.produto.insumos[index];
-    const insumoId = Number(item.insumo_id);
-    const insumo = this.insumosLista.find((i) => i.id === insumoId);
+    const insumo = this.insumosLista.find((i) => i.id === Number(item.insumo_id));
 
     if (insumo) {
       item.custo_unitario = Number(insumo.custo_unitario_base);
@@ -288,6 +309,22 @@ export class ProdutoFormComponent implements OnInit {
     }
   }
 
+  formatarPercentual(valor: string): number {
+    return (Number(valor) - 1) * 100;
+  }
+
+  onMargemSelecionada() {
+    const margemId = Number(this.produto.margem_id);
+    const margem = this.margensDisponiveis.find((m) => m.id === margemId);
+    if (margem) {
+      this.margemAtual = Number(margem.valor);
+      this.margemPercentual = this.formatarPercentual(margem.valor);
+    } else {
+    }
+    this.calcularCustoTotal();
+    this.cdr.detectChanges();
+  }
+
   salvar() {
     const erro = validaDadosEmBranco(this.produto);
     if (erro) {
@@ -297,7 +334,6 @@ export class ProdutoFormComponent implements OnInit {
 
     this.calcularCustoTotal();
 
-    // ✅ GARANTE QUE INSUMOS ESTÁ DEFINIDO
     const dadosParaEnvio = {
       ...this.produto,
       insumos:

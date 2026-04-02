@@ -1,18 +1,18 @@
-<div class="modal-container">
-  <div class="modal-header">
+<div class="insumos-modal-container">
+  <div class="insumos-modal-header">
     <h2>🧪 Insumos do Produto</h2>
-    <button class="close-btn" (click)="fechar()">×</button>
+    <button class="insumos-close-btn" (click)="fechar()">×</button>
   </div>
 
-  <div class="modal-body">
+  <div class="insumos-modal-body">
     <!-- Loading -->
-    <div *ngIf="carregando" class="loading">
-      <div class="spinner"></div>
+    <div *ngIf="carregando" class="insumos-loading">
+      <div class="insumos-spinner"></div>
       <p>Carregando insumos...</p>
     </div>
 
     <!-- Vazio -->
-    <div *ngIf="!carregando && insumos.length === 0" class="empty-state">
+    <div *ngIf="!carregando && insumos.length === 0" class="insumos-empty-state">
       <p>📭 Nenhum insumo cadastrado para este produto.</p>
       <small>Adicione insumos ao editar o produto.</small>
     </div>
@@ -38,7 +38,7 @@
         </tr>
       </tbody>
       <tfoot>
-        <tr class="total-row">
+        <tr class="insumos-total-row">
           <td colspan="3">Custo Total</td>
           <td class="text-right">R$ {{ custoTotal | number: '1.2-2' }}</td>
         </tr>
@@ -46,7 +46,7 @@
     </table>
   </div>
 
-  <div class="modal-footer">
-    <button class="btn-fechar" (click)="fechar()">Fechar</button>
+  <div class="insumos-modal-footer">
+    <button class="insumos-btn-fechar" (click)="fechar()">Fechar</button>
   </div>
 </div>

@@ -66,6 +66,23 @@
   color: #2c7da0;
 }
 
+.margem-info {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border-left: 4px solid #28a745;
+}
+
+.text-info {
+  color: #17a2b8;
+}
+
+.text-muted {
+  color: #6c757d;
+  font-size: 12px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .select-with-loading {

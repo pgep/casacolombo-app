@@ -1,14 +1,18 @@
-.modal-container {
+/* Classe única e exclusiva para o modal de insumos */
+.insumos-modal-container {
   background: white;
   border-radius: 16px;
-  min-width: 500px;
-  max-width: 90vw;
-  padding: 0;
   overflow: hidden;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  min-width: 500px;
+  max-width: 600px;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-.modal-header {
+.insumos-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,12 +21,12 @@
   color: white;
 }
 
-.modal-header h2 {
+.insumos-modal-header h2 {
   margin: 0;
   font-size: 1.25rem;
 }
 
-.close-btn {
+.insumos-close-btn {
   background: rgba(255, 255, 255, 0.2);
   border: none;
   font-size: 24px;
@@ -36,18 +40,58 @@
   justify-content: center;
 }
 
-.modal-body {
+.insumos-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.insumos-modal-body {
   padding: 20px 24px;
   max-height: 60vh;
   overflow-y: auto;
 }
 
-.loading {
+.insumos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.insumos-table th {
+  background: #2c3e50;
+  color: white;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.insumos-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.insumos-table .text-right {
+  text-align: right;
+}
+
+.insumos-table .subtotal {
+  font-weight: 600;
+  color: #27ae60;
+}
+
+.insumos-total-row {
+  background: #f1f3f5;
+  font-weight: bold;
+}
+
+.insumos-total-row td {
+  padding: 12px 16px;
+  border-top: 2px solid #dee2e6;
+}
+
+.insumos-loading {
   text-align: center;
   padding: 40px;
 }
 
-.spinner {
+.insumos-spinner {
   width: 40px;
   height: 40px;
   border: 4px solid #e9ecef;
@@ -63,77 +107,21 @@
   }
 }
 
-.empty-state {
+.insumos-empty-state {
   text-align: center;
   padding: 40px;
   color: #6c757d;
 }
 
-.empty-state p {
-  margin: 0 0 8px;
-}
-
-.empty-state small {
-  font-size: 12px;
-}
-
-/* Tabela */
-.insumos-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.insumos-table thead tr {
-  background: #2c3e50;
-  color: white;
-}
-
-.insumos-table th {
-  padding: 12px 16px;
-  text-align: left;
-}
-
-.insumos-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.insumos-table tbody tr:hover {
-  background: #f8f9fa;
-}
-
-.insumo-nome {
-  font-weight: 500;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.subtotal {
-  font-weight: 600;
-  color: #27ae60;
-}
-
-.total-row {
-  background: #f1f3f5;
-  font-weight: bold;
-}
-
-.total-row td {
-  padding: 12px 16px;
-  border-top: 2px solid #dee2e6;
-}
-
-/* Rodapé */
-.modal-footer {
+.insumos-modal-footer {
   padding: 16px 24px;
   border-top: 1px solid #e9ecef;
   display: flex;
   justify-content: flex-end;
+  background: white;
 }
 
-.btn-fechar {
+.insumos-btn-fechar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -142,29 +130,8 @@
   cursor: pointer;
 }
 
-.btn-fechar:hover {
-  opacity: 0.9;
-}
-
-/* Responsividade */
 @media (max-width: 600px) {
-  .modal-container {
+  .insumos-modal-container {
     min-width: 90vw;
-  }
-
-  .insumos-table th,
-  .insumos-table td {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .modal-header h2 {
-    font-size: 1.1rem;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }

@@ -17,6 +17,7 @@ import { ImagemService } from '../../../imagens/services/imagem';
 import { ModalService } from '../../../../shared/services/modal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { InsumosModalComponent } from '../../../../shared/components/insumos-modal/insumos-modal';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-produto-list',
@@ -32,6 +33,8 @@ import { InsumosModalComponent } from '../../../../shared/components/insumos-mod
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatDialogModule,
+    InsumosModalComponent,
   ],
   templateUrl: './produto-list.html',
   styleUrls: ['./produto-list.css'],
@@ -151,9 +154,8 @@ export class ProdutoListComponent implements OnInit {
       width: '600px',
       maxWidth: '90vw',
       data: { produtoId: produto.id },
-      panelClass: 'custom-dialog-panel',
-      hasBackdrop: true,
-      backdropClass: 'custom-backdrop',
+      panelClass: 'insumos-dialog',
+      backdropClass: 'insumos-backdrop',
     });
   }
 }

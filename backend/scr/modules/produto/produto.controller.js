@@ -53,11 +53,20 @@ const produtoController = {
 
   async criar(req, res) {
     try {
-      const { insumos = [], ...produtoData } = req.body;
+      const { insumos = [], margem_id, ...produtoData } = req.body;
 
       const custo_total = await calcularCusto(insumos);
-      const config = await Configuracao.findByChave('margem_padrao');
-      const margem = config ? Number(config.valor) : 2;
+
+      // ✅ BUSCAR A MARGEM ESPECÍFICA DO PRODUTO
+      let margem = 2; // valor padrão
+      if (margem_id) {
+        const config = await Configuracao.findById(margem_id);
+        if (config) margem = Number(config.valor);
+      } else {
+        const config = await Configuracao.findByChave('margem_padrao');
+        if (config) margem = Number(config.valor);
+      }
+
       const preco_venda = custo_total * margem;
 
       const produto = await Produto.create({

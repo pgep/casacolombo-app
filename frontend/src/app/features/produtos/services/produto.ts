@@ -40,4 +40,8 @@ export class ProdutoService {
   getInsumosByProduto(produtoId: number): Observable<ProdutoInsumo[]> {
     return this.http.get<ProdutoInsumo[]>(`${this.apiUrl}/produtos/${produtoId}/insumos`);
   }
+
+  getMargens(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/configuracoes?apenasAtivos=true`);
+  }
 }
