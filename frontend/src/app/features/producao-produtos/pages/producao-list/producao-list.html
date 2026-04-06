@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">🏭 Lista de Produções</h2>
+      <a mat-raised-button color="success" routerLink="/producao-produtos/novo">
+        ➕ Nova Produção
+      </a>
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner">Carregando produções...</div>
+
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="produto_nome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Produto</th>
+            <td mat-cell *matCellDef="let row">{{ row.produto_nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantidade_produzida">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Produzido</th>
+            <td mat-cell *matCellDef="let row">{{ row.quantidade_produzida }} un</td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantidade_disponivel">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Disponível</th>
+            <td mat-cell *matCellDef="let row">{{ row.quantidade_disponivel }} un</td>
+          </ng-container>
+
+          <ng-container matColumnDef="custo_total_producao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Custo Total</th>
+            <td mat-cell *matCellDef="let row">
+              R$ {{ row.custo_total_producao | number: '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="custo_unitario_producao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Custo Unitário</th>
+            <td mat-cell *matCellDef="let row">
+              R$ {{ row.custo_unitario_producao | number: '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="data_producao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+            <td mat-cell *matCellDef="let row">{{ row.data_producao | date: 'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let row">
+              <button
+                mat-icon-button
+                color="primary"
+                [routerLink]="['/producao-produtos/editar', row.id]"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deletar(row.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">Nenhuma produção encontrada.</div>
+            </td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

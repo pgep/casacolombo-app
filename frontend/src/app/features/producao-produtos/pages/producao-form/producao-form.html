@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Produção</h2>
+
+    <div *ngIf="loading" class="loading-spinner">Carregando...</div>
+
+    <form *ngIf="!loading" (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label class="form-label">Produto *</label>
+        <div class="select-with-loading">
+          <select class="form-control" [(ngModel)]="producao.produto_id" name="produto_id" required>
+            <option [value]="0">Selecione um produto</option>
+            <option *ngFor="let p of produtos" [value]="p.id">
+              {{ p.nome }} (R$ {{ p.preco_final | number: '1.2-2' }})
+            </option>
+          </select>
+          <span *ngIf="carregandoProdutos" class="loading-badge">⏳ Carregando...</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Quantidade Produzida *</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="producao.quantidade_produzida"
+          name="quantidade_produzida"
+          (input)="recalcular()"
+          min="1"
+          step="1"
+          required
+        />
+        <small class="text-muted">Número de unidades fabricadas</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observação</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="producao.observacao"
+          name="observacao"
+          rows="3"
+          placeholder="Ex: Lote produzido em 10/04/2026, com ajuste na fórmula"
+        ></textarea>
+      </div>
+
+      <!-- Informações calculadas (somente leitura) -->
+      <div
+        class="info-card"
+        *ngIf="producao.quantidade_produzida > 0 && producao.custo_total_producao > 0"
+      >
+        <div class="info-row">
+          <span class="info-label">💰 Custo Total da Produção:</span>
+          <span class="info-value">R$ {{ producao.custo_total_producao | number: '1.2-2' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">📊 Custo Unitário:</span>
+          <span class="info-value"
+            >R$ {{ producao.custo_unitario_producao | number: '1.2-2' }}</span
+          >
+        </div>
+        <div class="info-row">
+          <span class="info-label">📦 Disponível para Venda:</span>
+          <span class="info-value">{{ producao.quantidade_disponivel }} unidades</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ editando ? '💾 Atualizar' : '💾 Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" routerLink="/producao-produtos">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

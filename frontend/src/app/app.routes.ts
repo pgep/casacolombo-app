@@ -47,4 +47,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/configuracoes/configuracao.routes').then((m) => m.configuracaoRoutes),
   },
+  {
+    path: 'producao-produtos',
+    loadChildren: () =>
+      import('./features/producao-produtos/producao.routes').then((m) => m.producaoRoutes),
+  },
 ];

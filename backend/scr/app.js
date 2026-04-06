@@ -13,6 +13,7 @@ const usuarioRoutes = require('./modules/usuarios/usuario.routes');
 const unidadeMedidaRoutes = require('./modules/unidade-medida/unidadeMedida.routes');
 const insumoRoutes = require('./modules/insumo/insumo.routes');
 const configuracaoRoutes = require('./modules/configuracao/configuracao.routes');
+const producaoProduto = require('./modules/producaoProduto/producaoProduto.routes');
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -27,7 +28,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/unidadeMedida', unidadeMedidaRoutes);
 app.use('/api/insumo', insumoRoutes);
 app.use('/api/configuracoes', configuracaoRoutes);
-
+app.use('/api/producao-produtos', producaoProduto);
 // Rota de saúde
 app.get('/api/health', (req, res) => {
   res.json({
