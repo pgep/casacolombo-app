@@ -1,4 +1,28 @@
 require('dotenv').config();
+
+// ========== CONFIGURAÇÃO DE AMBIENTE ==========
+const isProduction = process.env.NODE_ENV === 'production';
+console.log(
+  `🌍 Ambiente: ${isProduction ? '🚀 PRODUÇÃO' : '🧪 DESENVOLVIMENTO'}`,
+);
+
+// Seleciona a string de conexão correta baseada no ambiente
+const DATABASE_URL = isProduction
+  ? process.env.DATABASE_URL_PROD
+  : process.env.DATABASE_URL_DEV;
+
+if (!DATABASE_URL) {
+  console.error('❌ DATABASE_URL não configurada! Verifique seu arquivo .env');
+  process.exit(1);
+}
+
+// Seta a variável de ambiente para o pool de conexões
+process.env.DATABASE_URL = DATABASE_URL;
+
+console.log(
+  `🔗 Conectando ao banco: ${isProduction ? '🏭 PRODUÇÃO' : '🧪 DESENVOLVIMENTO'}`,
+);
+
 const app = require('./scr/app');
 
 // Importar models para inicializar tabelas
@@ -12,10 +36,12 @@ const Usuario = require('./scr/modules/usuarios/usuario.model');
 const UnidadeMedida = require('./models/unidadeMedida.model');
 const Insumo = require('./models/insumo.model');
 const Configuracao = require('./models/configuracao.model');
+
 const PORT = process.env.PORT || 3001;
 
 async function initTables() {
   try {
+    console.log('📦 Inicializando tabelas...');
     await Cliente.initTable();
     await Ferramenta.initTable();
     await TipoProduto.initTable();
@@ -26,14 +52,17 @@ async function initTables() {
     await UnidadeMedida.initTable();
     await Insumo.initTable();
     await Configuracao.initTable();
-    console.log('✅ Tabelas inicializadas');
+    console.log('✅ Todas as tabelas inicializadas com sucesso');
   } catch (error) {
-    console.error('❌ Erro:', error);
+    console.error('❌ Erro ao inicializar tabelas:', error);
+    process.exit(1);
   }
 }
 
 initTables().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`📝 Health: http://localhost:${PORT}/api/health`);
+    console.log(`🌍 Banco: ${isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO'}`);
   });
 });

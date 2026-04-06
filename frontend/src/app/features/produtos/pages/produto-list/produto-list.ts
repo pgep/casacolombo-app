@@ -34,7 +34,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatCardModule,
     MatDialogModule,
-    InsumosModalComponent,
   ],
   templateUrl: './produto-list.html',
   styleUrls: ['./produto-list.css'],
