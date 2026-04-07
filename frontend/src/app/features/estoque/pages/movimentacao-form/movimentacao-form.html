@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="card">
+    <h2 class="mb-4">📝 Registrar Movimentação de Estoque</h2>
+
+    <form (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label class="form-label">Insumo *</label>
+        <div class="select-with-loading">
+          <select
+            class="form-control"
+            [(ngModel)]="movimentacao.insumo_id"
+            name="insumo_id"
+            required
+          >
+            <option [value]="0">Selecione um insumo</option>
+            <option *ngFor="let insumo of insumos" [value]="insumo.id">
+              {{ insumo.nome }} (Estoque: {{ insumo.estoque_atual }})
+            </option>
+          </select>
+          <span *ngIf="carregandoInsumos" class="loading-badge">⏳ Carregando...</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tipo de Movimentação *</label>
+        <select class="form-control" [(ngModel)]="movimentacao.tipo" name="tipo" required>
+          <option *ngFor="let t of tipos" [value]="t.valor">{{ t.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Quantidade *</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="movimentacao.quantidade"
+          name="quantidade"
+          step="0.001"
+          min="0.001"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Motivo</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="movimentacao.motivo"
+          name="motivo"
+          rows="3"
+          placeholder="Ex: Compra de insumo, Produção de produtos, Ajuste de inventário"
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" mat-raised-button color="success" [disabled]="loading">
+          💾 Registrar Movimentação
+        </button>
+        <button type="button" mat-raised-button color="gray" routerLink="/estoque/movimentacoes">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

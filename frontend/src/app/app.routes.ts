@@ -52,4 +52,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/producao-produtos/producao.routes').then((m) => m.producaoRoutes),
   },
+  {
+    path: 'estoque',
+    loadChildren: () => import('./features/estoque/estoque.routes').then((m) => m.estoqueRoutes),
+  },
 ];

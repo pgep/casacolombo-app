@@ -66,6 +66,35 @@
           required
         />
       </div>
+      <!-- Estoque Atual (apenas para edição) -->
+      <div *ngIf="editando" class="form-group">
+        <label class="form-label">Estoque Atual</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="insumo.estoque_atual"
+          name="estoque_atual"
+          step="0.001"
+          min="0"
+          readonly
+          disabled
+        />
+        <small class="text-muted">Controlado pelo sistema</small>
+      </div>
+
+      <!-- Estoque Mínimo -->
+      <div class="form-group">
+        <label class="form-label">Estoque Mínimo (Alerta)</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="insumo.estoque_minimo"
+          name="estoque_minimo"
+          step="0.001"
+          min="0"
+        />
+        <small class="text-muted">Receber alerta quando estoque atingir este valor</small>
+      </div>
       <div class="form-actions">
         <button mat-raised-button color="success" [disabled]="loading" type="submit">
           {{ editando ? '💾 Atualizar' : '💾 Salvar' }}

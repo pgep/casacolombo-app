@@ -130,6 +130,14 @@ class Insumo {
     );
     return result.rows[0];
   }
+
+  static async getEstoqueBaixo() {
+    const result = await db.query(`
+    SELECT * FROM insumos 
+    WHERE estoque_atual <= estoque_minimo AND estoque_minimo > 0
+  `);
+    return result.rows;
+  }
 }
 
 module.exports = Insumo;

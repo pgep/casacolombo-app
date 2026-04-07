@@ -37,6 +37,7 @@ const UnidadeMedida = require('./models/unidadeMedida.model');
 const Insumo = require('./models/insumo.model');
 const Configuracao = require('./models/configuracao.model');
 const ProducaoProduto = require('./models/producaoProduto.model');
+const EstoqueMovimentacao = require('./models/estoqueMovimentacao.model');
 
 const PORT = process.env.PORT || 3001;
 
@@ -54,6 +55,7 @@ async function initTables() {
     await Insumo.initTable();
     await Configuracao.initTable();
     await ProducaoProduto.initTable();
+    await EstoqueMovimentacao.initTable();
     console.log('✅ Todas as tabelas inicializadas com sucesso');
   } catch (error) {
     console.error('❌ Erro ao inicializar tabelas:', error);

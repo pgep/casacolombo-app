@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="card">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="card-titulo">
+        📜 Histórico de Movimentações
+        <span *ngIf="insumoNome" class="subtitle"> - {{ insumoNome }}</span>
+      </h2>
+      <div class="form-actions">
+        <a mat-raised-button color="primary" routerLink="/estoque"> 📦 Estoque </a>
+        <a mat-raised-button color="success" routerLink="/estoque/movimentacoes/novo">
+          ➕ Nova Movimentação
+        </a>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-spinner">Carregando movimentações...</div>
+
+    <!-- Tabela Material -->
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <!-- Campo de filtro -->
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <!-- Coluna ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          </ng-container>
+
+          <!-- Coluna Data -->
+          <ng-container matColumnDef="created_at">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+            <td mat-cell *matCellDef="let row">{{ row.created_at | date: 'dd/MM/yyyy HH:mm' }}</td>
+          </ng-container>
+
+          <!-- Coluna Insumo -->
+          <ng-container matColumnDef="insumo_nome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Insumo</th>
+            <td mat-cell *matCellDef="let row">{{ row.insumo_nome }}</td>
+          </ng-container>
+
+          <!-- Coluna Tipo -->
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row">
+              <span
+                class="status-badge"
+                [class.ativo]="row.tipo === 'entrada'"
+                [class.inativo]="row.tipo !== 'entrada'"
+              >
+                {{ row.tipo === 'entrada' ? 'Entrada' : row.tipo === 'saida' ? 'Saída' : 'Ajuste' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Coluna Quantidade -->
+          <ng-container matColumnDef="quantidade">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantidade</th>
+            <td mat-cell *matCellDef="let row">{{ row.quantidade | number: '1.2-2' }}</td>
+          </ng-container>
+
+          <!-- Coluna Antes -->
+          <ng-container matColumnDef="quantidade_antes">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Antes</th>
+            <td mat-cell *matCellDef="let row">{{ row.quantidade_antes | number: '1.2-2' }}</td>
+          </ng-container>
+
+          <!-- Coluna Depois -->
+          <ng-container matColumnDef="quantidade_depois">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Depois</th>
+            <td mat-cell *matCellDef="let row">{{ row.quantidade_depois | number: '1.2-2' }}</td>
+          </ng-container>
+
+          <!-- Coluna Motivo -->
+          <ng-container matColumnDef="motivo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Motivo</th>
+            <td mat-cell *matCellDef="let row">{{ row.motivo || '-' }}</td>
+          </ng-container>
+
+          <!-- Linha do cabeçalho -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <!-- Linhas de dados -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Linha quando não há dados -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">Nenhuma movimentação encontrada.</div>
+            </td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+    <!-- Paginador -->
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

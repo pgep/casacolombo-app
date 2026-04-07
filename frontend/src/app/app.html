@@ -10,7 +10,7 @@
           <nav class="desktop-nav">
             <!-- ===== MENU CADASTRO ===== -->
             <div class="dropdown">
-              <button class="dropbtn">📋 Cadastro ▾</button>
+              <button class="dropbtn">Cadastro ▾</button>
               <div class="dropdown-content">
                 <a routerLink="/clientes" routerLinkActive="active-link">👫🏻 Clientes</a>
                 <a routerLink="/ferramentas" routerLinkActive="active-link">🛠️ Ferramentas</a>
@@ -21,17 +21,18 @@
 
             <!-- ===== MENU PRODUÇÃO ===== -->
             <div class="dropdown">
-              <button class="dropbtn">🏭 Produção ▾</button>
+              <button class="dropbtn">Produção ▾</button>
               <div class="dropdown-content">
                 <a routerLink="/produtos" routerLinkActive="active-link">📦 Produtos</a>
                 <a routerLink="/insumos" routerLinkActive="active-link">🧪 Insumos</a>
-                <a routerLink="/producao-produtos" routerLinkActive="active-link">📦 Produção</a>
+                <a routerLink="/producao-produtos" routerLinkActive="active-link">🏭 Produção</a>
+                <a routerLink="/estoque" routerLinkActive="active-link">📦 Estoque</a>
               </div>
             </div>
 
             <!-- ===== MENU OPERACIONAL ===== -->
             <div class="dropdown">
-              <button class="dropbtn">⚙️ Operacional ▾</button>
+              <button class="dropbtn">Operacional ▾</button>
               <div class="dropdown-content">
                 <a routerLink="/tipos-produto" routerLinkActive="active-link">🏷️ Tipo Produto</a>
                 <a routerLink="/tipos-insumo" routerLinkActive="active-link">🏷️ Tipo Insumo</a>
@@ -83,6 +84,9 @@
           <a routerLink="/producao" routerLinkActive="active-link" (click)="toggleMenu()"
             >📦 Produção
           </a>
+          <a routerLink="/estoque" routerLinkActive="active-link" (click)="toggleMenu()"
+            >📦 Estoque</a
+          >
         </div>
       </div>
 

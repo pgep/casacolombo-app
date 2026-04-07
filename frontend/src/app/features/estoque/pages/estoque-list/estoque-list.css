@@ -1,0 +1,67 @@
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.alert-warning {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.estoque-valor {
+  font-weight: 500;
+}
+
+.estoque-valor.critico {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.estoque-valor.baixo {
+  color: #ffc107;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-ok {
+  background: #28a745;
+  color: white;
+}
+
+.status-baixo {
+  background: #ffc107;
+  color: #333;
+}
+
+.status-critico {
+  background: #cc3f4d;
+  color: white;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
