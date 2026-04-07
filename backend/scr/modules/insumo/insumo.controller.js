@@ -1,4 +1,5 @@
 const Insumo = require('../../../models/insumo.model');
+const EstoqueMovimentacao = require('../../../models/estoqueMovimentacao.model');
 
 const controller = {
   async listar(req, res) {
@@ -17,18 +18,53 @@ const controller = {
   },
 
   async criar(req, res) {
-    const item = await Insumo.create(req.body);
-    res.status(201).json(item);
+    try {
+      // 1. Criar o insumo
+      const insumo = await Insumo.create(req.body);
+
+      // 2. ✅ Registrar movimentação de entrada automática
+      if (insumo && insumo.quantidade_base && insumo.quantidade_base > 0) {
+        try {
+          await EstoqueMovimentacao.registrarEntrada(
+            insumo.id,
+            insumo.quantidade_base,
+            `Compra inicial - Cadastro do insumo ${insumo.nome} (${insumo.quantidade_compra} ${insumo.unidade_nome || 'un'})`,
+          );
+          console.log(
+            `✅ Movimentação de entrada registrada para insumo ${insumo.id}`,
+          );
+        } catch (movimentoError) {
+          console.error(
+            '❌ Erro ao registrar movimentação automática:',
+            movimentoError,
+          );
+          // Não impede o cadastro do insumo, só loga o erro
+        }
+      }
+
+      res.status(201).json(insumo);
+    } catch (e) {
+      console.error('Erro ao criar insumo:', e);
+      res.status(500).json({ error: e.message });
+    }
   },
 
   async atualizar(req, res) {
-    const item = await Insumo.update(req.params.id, req.body);
-    res.json(item);
+    try {
+      const item = await Insumo.update(req.params.id, req.body);
+      res.json(item);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   },
 
   async deletar(req, res) {
-    await Insumo.delete(req.params.id);
-    res.json({ message: 'Removido' });
+    try {
+      await Insumo.delete(req.params.id);
+      res.json({ message: 'Removido' });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   },
 };
 

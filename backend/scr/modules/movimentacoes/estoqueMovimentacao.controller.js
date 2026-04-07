@@ -5,6 +5,7 @@ const controller = {
   async listarInsumosComEstoque(req, res) {
     try {
       const insumos = await EstoqueMovimentacao.listarInsumosComEstoque();
+      console.log(insumos);
       res.json(insumos);
     } catch (error) {
       console.error('Erro ao listar insumos:', error);

@@ -77,13 +77,13 @@ const EstoqueMovimentacao = {
     }
   },
 
-  // ✅ CORRIGIR método listarInsumosComEstoque (linhas 75-92)
+  // ✅ CORRIGIR método listarInsumosComEstoque
   async listarInsumosComEstoque() {
     const query = `
     SELECT 
       i.id, 
       i.nome, 
-      COALESCE(i.estoque_atual, 0) as estoque_atual,
+      COALESCE(i.quantidade_estoque, 0) as estoque_atual,
       COALESCE(i.estoque_minimo, 0) as estoque_minimo,
       COALESCE(um.nome, 'un') as unidade_medida_sigla
     FROM insumos i
@@ -94,19 +94,20 @@ const EstoqueMovimentacao = {
     return result.rows;
   },
 
-  // ✅ CORRIGIR método alertasEstoqueBaixo (linhas 95-112)
+  // ✅ CORRIGIR método alertasEstoqueBaixo
   async alertasEstoqueBaixo() {
     const query = `
     SELECT 
       i.id, 
       i.nome, 
-      COALESCE(i.estoque_atual, 0) as estoque_atual,
+      COALESCE(i.quantidade_estoque, 0) as estoque_atual,
       COALESCE(i.estoque_minimo, 0) as estoque_minimo,
       COALESCE(um.nome, 'un') as unidade_medida_sigla
     FROM insumos i
     LEFT JOIN unidades_medida um ON i.unidade_medida_id = um.id
-    WHERE  COALESCE(i.estoque_atual, 0) <= COALESCE(i.estoque_minimo, 0)
-    ORDER BY (COALESCE(i.estoque_atual, 0) / NULLIF(COALESCE(i.estoque_minimo, 0), 0)) ASC
+    WHERE COALESCE(i.quantidade_estoque, 0) <= COALESCE(i.estoque_minimo, 0)
+      AND COALESCE(i.estoque_minimo, 0) > 0
+    ORDER BY (COALESCE(i.quantidade_estoque, 0) / NULLIF(COALESCE(i.estoque_minimo, 0), 0)) ASC
   `;
     const result = await db.query(query);
     return result.rows;

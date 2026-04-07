@@ -20,6 +20,7 @@ export class InsumoFormComponent implements OnInit {
     unidade_medida_id: null,
     quantidade_compra: 0,
     valor_compra: 0,
+    estoque_minimo: 0, // ✅ Adicionar esta linha
   };
 
   unidades: any[] = [];

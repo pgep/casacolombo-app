@@ -72,6 +72,7 @@ export class EstoqueListComponent implements OnInit, AfterViewInit {
 
     this.estoqueService.getInsumosEstoque().subscribe({
       next: (data) => {
+        console.log('dados de retorno: ', data);
         this.dataSource.data = data.map((item) => ({
           ...item,
           status: this.calcularStatus(item.estoque_atual, item.estoque_minimo),

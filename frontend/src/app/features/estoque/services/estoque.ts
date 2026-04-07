@@ -20,6 +20,7 @@ export class EstoqueService {
    * GET /api/estoque-movimentacoes/insumos
    */
   getInsumosEstoque(): Observable<InsumoEstoque[]> {
+    console.log(this.apiUrl);
     return this.http.get<InsumoEstoque[]>(`${this.apiUrl}/insumos`);
   }
 
