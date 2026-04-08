@@ -13,6 +13,7 @@ import { ConfiguracaoService } from '../../services/configuracao';
 import { Configuracao } from '../../models/configuracao.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-configuracao-list',
@@ -28,6 +29,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './configuracao-list.html',
   styleUrls: ['./configuracao-list.css'],

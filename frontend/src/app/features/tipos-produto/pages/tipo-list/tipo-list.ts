@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { TipoProdutoService, TipoProduto } from '../../services/tipo-produto';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tipo-list',
@@ -27,6 +28,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './tipo-list.html',
   styleUrls: ['./tipo-list.css'],

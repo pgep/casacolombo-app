@@ -65,13 +65,20 @@
             <td mat-cell *matCellDef="let row">
               <button
                 mat-icon-button
-                color="primary"
+                matTooltip="Editar Peodução"
+                matTooltipPosition="above"
                 [routerLink]="['/producao-produtos/editar', row.id]"
               >
-                <mat-icon>edit</mat-icon>
+                <mat-icon color="primary">edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deletar(row.id!)">
-                <mat-icon>delete</mat-icon>
+              <button
+                mat-icon-button
+                matTooltip="Excluir Produção"
+                matTooltipPosition="above"
+                color="warn"
+                (click)="deletar(row.id!)"
+              >
+                <mat-icon color="warm">delete</mat-icon>
               </button>
             </td>
           </ng-container>

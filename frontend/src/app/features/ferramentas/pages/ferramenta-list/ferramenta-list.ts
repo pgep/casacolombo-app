@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FerramentaService, Ferramenta } from '../../services/ferramenta';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-ferramenta-list',
@@ -27,6 +28,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './ferramenta-list.html',
   styleUrls: ['./ferramenta-list.css'],

@@ -13,6 +13,7 @@ import { InsumoService } from '../../services/insumos';
 import { Insumo } from '../../models/insumos.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-insumo-list',
@@ -28,6 +29,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule,
   ],
   templateUrl: './insumos-list.html',
 })

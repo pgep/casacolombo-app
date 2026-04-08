@@ -35,7 +35,17 @@ $theme: mat.define-theme(
 }
 
 .mat-mdc-raised-button.mat-gray {
-  background-color: #6c757d !important;
+  background-color: #9ca3af !important;
+  color: white !important;
+}
+
+.mat-mdc-raised-button.mat-alert {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+.mat-mdc-icon-button.mat-warm {
+  background-color: #f44336 !important;
   color: white !important;
 }
 
@@ -43,4 +53,20 @@ $theme: mat.define-theme(
   opacity: 0.5 !important; /* Ajuste de 0 a 1 (0.5 = 50% de transparência) */
   cursor: not-allowed !important; /* Muda o cursor para indicar bloqueio */
   filter: grayscale(0.5); /* Opcional: tira um pouco da cor para parecer mais "morto" */
+}
+
+.mat-icon.mat-warm {
+  color: rgb(158, 17, 17) !important;
+}
+
+.mat-icon.mat-primary {
+  color: #0a5aaf !important;
+}
+
+.mat-icon.mat-success {
+  color: #175f27 !important;
+}
+
+.mat-icon.mat-alert {
+  color: #a17a36 !important;
 }

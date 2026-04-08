@@ -13,6 +13,7 @@ import { TipoInsumoService } from '../../services/tipo-insumo';
 import { TipoInsumo } from '../../models/tipo-insumo.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tipo-insumo-list',
@@ -28,6 +29,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './tipo-insumo-list.html',
   styleUrls: ['./tipo-insumo-list.css'],

@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { EstoqueService } from '../../services/estoque';
 import { InsumoEstoque } from '../../models/estoque.model';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-estoque-list',
@@ -31,6 +32,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
     MatFormFieldModule,
     MatCardModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './estoque-list.html',
   styleUrls: ['./estoque-list.css'],

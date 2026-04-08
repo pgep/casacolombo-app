@@ -66,11 +66,21 @@
           <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef>Ações</th>
             <td mat-cell *matCellDef="let row" data-label="Ações">
-              <button mat-icon-button color="primary" [routerLink]="['/usuarios/editar', row.id]">
-                <mat-icon>edit</mat-icon>
+              <button
+                mat-icon-button
+                matTooltip="Editar Usuário"
+                matTooltipPosition="above"
+                [routerLink]="['/usuarios/editar', row.id]"
+              >
+                <mat-icon color="primary">edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deletarUsuario(row.id!)">
-                <mat-icon>delete</mat-icon>
+              <button
+                mat-icon-button
+                matTooltip="Excluir Usuário"
+                matTooltipPosition="above"
+                (click)="deletarUsuario(row.id!)"
+              >
+                <mat-icon color="warm">delete</mat-icon>
               </button>
             </td>
           </ng-container>

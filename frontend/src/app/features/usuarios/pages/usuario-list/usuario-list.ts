@@ -13,6 +13,7 @@ import { UsuarioService } from '../../services/usuario';
 import { Usuario } from '../../models/usuario.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-usuario-list',
@@ -28,6 +29,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './usuario-list.html',
   styleUrls: ['./usuario-list.css'],

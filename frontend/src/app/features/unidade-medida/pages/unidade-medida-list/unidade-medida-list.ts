@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
 import { ErrorHandlerService } from '../../../../shared/services/error-handler.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-unidade-medida-list',
@@ -26,6 +27,7 @@ import { ErrorHandlerService } from '../../../../shared/services/error-handler.s
     MatButtonModule,
     MatInputModule,
     RouterModule,
+    MatTooltipModule,
   ],
   templateUrl: './unidade-medida-list.html',
 })

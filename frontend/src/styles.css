@@ -1,12 +1,7 @@
 /* Importa o tema padrão */
+@import '@angular/cdk/overlay-prebuilt.css';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import './assets/themes/default.css';
-
-/* Estilos globais adicionais */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -73,14 +68,6 @@ body {
 
 .insumos-backdrop {
   background: rgba(0, 0, 0, 0.5) !important;
-}
-
-.cdk-overlay-pane {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  background: transparent !important;
 }
 
 /* TOAST - posicionamento */

@@ -16,6 +16,7 @@ import { ProducaoService } from '../../services/producao-produto';
 import { Producao } from '../../models/producao.model';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-producao-list',
@@ -32,6 +33,7 @@ import { ConfirmService } from '../../../../shared/services/confirm.service';
     MatFormFieldModule,
     MatCardModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './producao-list.html',
   styleUrls: ['./producao-list.css'],

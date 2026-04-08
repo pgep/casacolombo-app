@@ -52,11 +52,22 @@
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef>Ações</th>
           <td mat-cell *matCellDef="let row" data-label="Ações">
-            <button mat-icon-button color="primary" [routerLink]="['/imagens/editar', row.id]">
-              <mat-icon>edit</mat-icon>
+            <button
+              mat-icon-button
+              matTooltip="Editar Imagem"
+              matTooltipPosition="above"
+              [routerLink]="['/imagens/editar', row.id]"
+            >
+              <mat-icon color="primary">edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="deletar(row.id!)">
-              <mat-icon>delete</mat-icon>
+            <button
+              mat-icon-button
+              matTooltip="Excluir imagem"
+              matTooltipPosition="above"
+              color="warn"
+              (click)="deletar(row.id!)"
+            >
+              <mat-icon color="warm">delete</mat-icon>
             </button>
           </td>
         </ng-container>

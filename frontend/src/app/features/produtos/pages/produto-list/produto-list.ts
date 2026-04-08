@@ -18,6 +18,7 @@ import { ModalService } from '../../../../shared/services/modal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { InsumosModalComponent } from '../../../../shared/components/insumos-modal/insumos-modal';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-produto-list',
@@ -34,6 +35,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatCardModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './produto-list.html',
   styleUrls: ['./produto-list.css'],

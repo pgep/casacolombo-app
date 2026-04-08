@@ -11,6 +11,7 @@ import { ImagemService, ImagemThumbnail } from '../../services/imagem';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmService } from '../../../../shared/services/confirm.service';
 import { ModalService } from '../../../../shared/services/modal.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-imagem-list',
@@ -24,6 +25,7 @@ import { ModalService } from '../../../../shared/services/modal.service';
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    MatTooltipModule,
   ],
   templateUrl: './imagem-list.html',
   styleUrls: ['./imagem-list.css'],

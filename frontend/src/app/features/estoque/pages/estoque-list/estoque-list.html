@@ -2,9 +2,14 @@
   <div class="card">
     <div class="flex justify-between items-center mb-4">
       <h2 class="card-titulo">📦 Controle de Estoque</h2>
-      <a mat-raised-button color="success" routerLink="/estoque/movimentacoes/novo">
-        ➕ Nova Movimentação
-      </a>
+      <div class="form-actions">
+        <a mat-raised-button color="primary" routerLink="/estoque/movimentacoes">
+          📝 Movimentações
+        </a>
+        <a mat-raised-button color="success" routerLink="/estoque/movimentacoes/novo">
+          ➕ Nova Movimentação
+        </a>
+      </div>
     </div>
 
     <!-- Loading state -->
@@ -88,15 +93,21 @@
           <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef>Ações</th>
             <td mat-cell *matCellDef="let row">
-              <button mat-icon-button color="primary" (click)="verMovimentacoes(row.id)">
-                <mat-icon>history</mat-icon>
+              <button
+                mat-icon-button
+                matTooltip="Histórico de Movimentação"
+                matTooltipPosition="above"
+                (click)="verMovimentacoes(row.id)"
+              >
+                <mat-icon color="primary">history</mat-icon>
               </button>
               <button
                 mat-icon-button
-                color="accent"
+                matTooltip="Registrar Movimentação"
+                matTooltipPosition="above"
                 [routerLink]="['/estoque/movimentacoes/novo', row.id]"
               >
-                <mat-icon>swap_horiz</mat-icon>
+                <mat-icon color="warm">swap_horiz</mat-icon>
               </button>
             </td>
           </ng-container>
