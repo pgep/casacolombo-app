@@ -164,12 +164,14 @@ const EstoqueMovimentacao = {
 
       // Buscar estoque atual
       const estoqueAtual = await client.query(
-        'SELECT COALESCE(estoque_atual, 0) as estoque_atual FROM insumos WHERE id = $1',
+        'SELECT COALESCE(quantidade_estoque, 0) as estoque_atual FROM insumos WHERE id = $1',
         [insumo_id],
       );
-
+      console.log('Estoque atual da tabela INSUMO: ', estoqueAtual);
       const quantidadeAntes = parseFloat(estoqueAtual.rows[0].estoque_atual);
+      console.log('Quantidade antes, vinda do select: ', quantidadeAntes);
       const quantidadeDepois = quantidadeAntes + quantidade;
+      console.log('Quantidade depois, calculada: ', quantidadeDepois);
 
       // Registrar movimentação
       const movimentacao = await client.query(
@@ -188,7 +190,7 @@ const EstoqueMovimentacao = {
 
       // Atualizar estoque do insumo
       await client.query(
-        'UPDATE insumos SET estoque_atual = $1 WHERE id = $2',
+        'UPDATE insumos SET quantidade_estoque = $1 WHERE id = $2',
         [quantidadeDepois, insumo_id],
       );
 
@@ -210,7 +212,7 @@ const EstoqueMovimentacao = {
 
       // Buscar estoque atual
       const estoqueAtual = await client.query(
-        'SELECT COALESCE(estoque_atual, 0) as estoque_atual FROM insumos WHERE id = $1',
+        'SELECT COALESCE(quantidade_estoque, 0) as estoque_atual FROM insumos WHERE id = $1',
         [insumo_id],
       );
 
@@ -241,7 +243,7 @@ const EstoqueMovimentacao = {
 
       // Atualizar estoque do insumo
       await client.query(
-        'UPDATE insumos SET estoque_atual = $1 WHERE id = $2',
+        'UPDATE insumos SET quantidade_estoque = $1 WHERE id = $2',
         [quantidadeDepois, insumo_id],
       );
 
@@ -263,7 +265,7 @@ const EstoqueMovimentacao = {
 
       // Buscar estoque atual
       const estoqueAtual = await client.query(
-        'SELECT COALESCE(estoque_atual, 0) as estoque_atual FROM insumos WHERE id = $1',
+        'SELECT COALESCE(quantidade_estoque, 0) as estoque_atual FROM insumos WHERE id = $1',
         [insumo_id],
       );
 
@@ -291,7 +293,7 @@ const EstoqueMovimentacao = {
 
       // Atualizar estoque do insumo
       await client.query(
-        'UPDATE insumos SET estoque_atual = $1 WHERE id = $2',
+        'UPDATE insumos SET quantidade_estoque = $1 WHERE id = $2',
         [quantidadeDepois, insumo_id],
       );
 

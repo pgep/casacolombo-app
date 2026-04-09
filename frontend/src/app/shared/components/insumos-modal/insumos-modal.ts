@@ -28,17 +28,12 @@ export class InsumosModalComponent implements OnInit {
     private produtoService: ProdutoService,
     private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { produtoId: number },
-  ) {
-    console.log('🏗️ Construtor do InsumosModalComponent chamado!');
-    console.log('📦 Data recebida:', this.data);
-  }
+  ) {}
 
   ngOnInit() {
-    console.log('🔄 ngOnInit do InsumosModalComponent');
     this.cdr.detach();
 
     if (this.data?.produtoId) {
-      console.log('🔍 Carregando insumos para produto:', this.data.produtoId);
       this.carregarInsumos(this.data.produtoId);
     } else {
       console.warn('⚠️ Nenhum produtoId recebido!');

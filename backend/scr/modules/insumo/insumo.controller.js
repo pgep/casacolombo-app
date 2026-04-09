@@ -30,9 +30,6 @@ const controller = {
             insumo.quantidade_base,
             `Compra inicial - Cadastro do insumo ${insumo.nome} (${insumo.quantidade_compra} ${insumo.unidade_nome || 'un'})`,
           );
-          console.log(
-            `✅ Movimentação de entrada registrada para insumo ${insumo.id}`,
-          );
         } catch (movimentoError) {
           console.error(
             '❌ Erro ao registrar movimentação automática:',

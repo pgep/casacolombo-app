@@ -97,9 +97,7 @@ const imagemController = {
   // NOVO: GET /api/imagens/thumbnails - listagem rápida
   async listarThumbnails(req, res) {
     try {
-      console.log('🔍 Listando thumbnails...');
       const imagens = await Imagem.listarThumbnails();
-      console.log(`✅ ${imagens.length} imagens encontradas`);
       res.json(imagens);
     } catch (error) {
       console.error('❌ Erro ao listar thumbnails:', error);

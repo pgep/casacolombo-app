@@ -150,11 +150,8 @@ class Imagem {
 
   // Método utilitário para regenerar thumbnails de imagens existentes
   static async regenerarTodasThumbnails() {
-    console.log('🔄 Regenerando thumbnails de todas as imagens...');
-
     const imagens = await this.findAll();
     let atualizadas = 0;
-
     for (const img of imagens) {
       try {
         const novaThumbnail = await this.gerarThumbnail(img.imagem_base64);
@@ -164,16 +161,12 @@ class Imagem {
             img.id,
           ]);
           atualizadas++;
-          console.log(`✅ Imagem ${img.id} (${img.nome}) atualizada`);
         }
       } catch (error) {
         console.error(`❌ Erro ao atualizar imagem ${img.id}:`, error.message);
       }
     }
 
-    console.log(
-      `✅ ${atualizadas} de ${imagens.length} thumbnails regeneradas`,
-    );
     return atualizadas;
   }
 }

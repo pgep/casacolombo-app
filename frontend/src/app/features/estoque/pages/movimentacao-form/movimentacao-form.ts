@@ -115,14 +115,10 @@ export class MovimentacaoFormComponent implements OnInit {
       motivo: this.movimentacao.motivo || '',
     };
 
-    console.log('Enviando para:', `${this.estoqueService['apiUrl']}/${this.movimentacao.tipo}`);
-    console.log('Dados:', dados);
-
     // ✅ Chamada correta baseada no tipo
     if (this.movimentacao.tipo === 'entrada') {
       this.estoqueService.registrarEntrada(dados).subscribe({
         next: (response) => {
-          console.log('Resposta:', response);
           this.toastService.success('Entrada registrada com sucesso!');
           this.router.navigate(['/estoque/movimentacoes']);
         },

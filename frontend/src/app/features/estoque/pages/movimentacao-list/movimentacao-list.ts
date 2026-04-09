@@ -106,15 +106,12 @@ export class MovimentacaoListComponent implements OnInit, AfterViewInit, OnDestr
       .getMovimentacoes(this.insumoId || undefined)
       .pipe(
         finalize(() => {
-          console.log('🔚 finalize executado - loading = false');
           this.loading = false;
           this.cdr.detectChanges();
         }),
       )
       .subscribe({
         next: (data) => {
-          console.log('📊 Dados recebidos:', data?.length || 0, 'registros');
-
           // Garantir que data é um array
           const dados = data || [];
           this.dataSource.data = dados;
