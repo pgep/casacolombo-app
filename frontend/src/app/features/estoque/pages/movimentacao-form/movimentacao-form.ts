@@ -1,5 +1,3 @@
-// frontend/src/app/features/estoque/pages/movimentacao-form/movimentacao-form.component.ts
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +28,6 @@ import { ToastService } from '../../../../shared/services/toast.service';
 export class MovimentacaoFormComponent implements OnInit {
   insumos: InsumoEstoque[] = [];
 
-  // ✅ TIPO EXPLÍCITO
   movimentacao: AjusteEstoque = {
     insumo_id: 0,
     tipo: 'entrada',
@@ -43,9 +40,11 @@ export class MovimentacaoFormComponent implements OnInit {
 
   tipos: { valor: AjusteEstoque['tipo']; label: string }[] = [
     { valor: 'entrada', label: '➕ Entrada (Compra)' },
-    { valor: 'saida', label: '➖ Saída (Uso)' },
     { valor: 'ajuste', label: '🔄 Ajuste Manual' },
   ];
+
+  subtipoAjuste: 'entrada' | 'saida' = 'entrada';
+  mostrarSubtipoAjuste: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,8 +56,6 @@ export class MovimentacaoFormComponent implements OnInit {
 
   ngOnInit() {
     this.carregarInsumos();
-
-    // ✅ Capturar de diferentes formas (insumoId ou id)
     const insumoId = this.route.snapshot.paramMap.get('insumoId');
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -86,7 +83,7 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   salvar() {
-    // Validações
+    // 1. VALIDAÇÕES BÁSICAS
     if (!this.movimentacao.insumo_id || this.movimentacao.insumo_id === 0) {
       this.toastService.warning('Selecione um insumo!');
       return;
@@ -97,67 +94,60 @@ export class MovimentacaoFormComponent implements OnInit {
       return;
     }
 
-    // ✅ Garantir que quantidade é número e não string
     const quantidade = Number(this.movimentacao.quantidade);
-
     if (isNaN(quantidade) || quantidade <= 0) {
       this.toastService.warning('Quantidade inválida!');
       return;
     }
 
+    // 2. PREPARAR DADOS
     this.loading = true;
-    this.cdr.detectChanges(); // ✅ Forçar detecção de mudanças
+    this.cdr.detectChanges();
 
-    // ✅ Preparar o objeto para enviar ao backend
+    // Determina o tipo final da movimentação
+    let tipoFinal: 'entrada' | 'saida' | 'ajuste' = this.movimentacao.tipo;
+
+    // Se for ajuste, usa o subtipo escolhido (entrada ou saida)
+    if (tipoFinal === 'ajuste') {
+      tipoFinal = this.subtipoAjuste; // 'entrada' ou 'saida'
+    }
+
     const dados = {
       insumo_id: Number(this.movimentacao.insumo_id),
+      tipo: tipoFinal,
       quantidade: quantidade,
-      motivo: this.movimentacao.motivo || '',
+      motivo: this.movimentacao.motivo || this.getMotivoPadrao(tipoFinal),
     };
 
-    // ✅ Chamada correta baseada no tipo
-    if (this.movimentacao.tipo === 'entrada') {
-      this.estoqueService.registrarEntrada(dados).subscribe({
-        next: (response) => {
-          this.toastService.success('Entrada registrada com sucesso!');
-          this.router.navigate(['/estoque/movimentacoes']);
-        },
-        error: (err) => {
-          console.error('Erro ao registrar entrada:', err);
-          this.toastService.error(err.error?.error || 'Erro ao registrar entrada');
-          this.loading = false;
-          this.cdr.detectChanges(); // ✅ Forçar detecção
-        },
-      });
-    } else if (this.movimentacao.tipo === 'saida') {
-      this.estoqueService.registrarSaida(dados).subscribe({
-        next: () => {
-          this.toastService.success('Saída registrada com sucesso!');
-          this.router.navigate(['/estoque/movimentacoes']);
-        },
-        error: (err) => {
-          console.error('Erro ao registrar saída:', err);
-          this.toastService.error(err.error?.error || 'Erro ao registrar saída');
-          this.loading = false;
-        },
-      });
-    } else {
-      this.estoqueService
-        .registrarAjuste({
-          ...dados,
-          tipo: this.movimentacao.tipo,
-        })
-        .subscribe({
-          next: () => {
-            this.toastService.success('Ajuste registrado com sucesso!');
-            this.router.navigate(['/estoque/movimentacoes']);
-          },
-          error: (err) => {
-            console.error('Erro ao registrar ajuste:', err);
-            this.toastService.error(err.error?.error || 'Erro ao registrar ajuste');
-            this.loading = false;
-          },
-        });
-    }
+    // 3. ENVIAR
+    this.estoqueService.registrarMovimentacao(dados).subscribe({
+      next: () => {
+        const mensagem = this.getMensagemSucesso(tipoFinal, quantidade);
+        this.toastService.success(mensagem);
+        this.router.navigate(['/estoque/movimentacoes']);
+      },
+      error: (err) => {
+        console.error('Erro ao registrar movimentação:', err);
+        this.toastService.error(err.error?.error || 'Erro ao registrar movimentação');
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  private getMotivoPadrao(tipo: string): string {
+    const motivos = {
+      entrada: 'Entrada registrada manualmente',
+      saida: 'Saída registrada manualmente',
+    };
+    return motivos[tipo as keyof typeof motivos] || 'Movimentação registrada';
+  }
+
+  private getMensagemSucesso(tipo: string, quantidade: number): string {
+    const mensagens = {
+      entrada: `✅ Entrada de ${quantidade} unidades registrada com sucesso!`,
+      saida: `➖ Saída de ${quantidade} unidades registrada com sucesso!`,
+    };
+    return mensagens[tipo as keyof typeof mensagens] || 'Movimentação registrada!';
   }
 }

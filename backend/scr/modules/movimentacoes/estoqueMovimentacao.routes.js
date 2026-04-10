@@ -22,4 +22,12 @@ router.post('/ajuste', controller.registrarAjuste);
 // DELETE
 router.delete('/:id', controller.deletar);
 
+// Rota unificada para todas movimentações
+router.post('/movimentar', controller.registrarMovimentacao);
+
+// As rotas específicas podem ser mantidas para compatibilidade
+router.post('/entrada', controller.registrarEntrada);
+router.post('/saida', controller.registrarSaida);
+router.post('/ajuste', controller.registrarAjuste);
+
 module.exports = router;

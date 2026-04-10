@@ -3,7 +3,7 @@
     <h2 class="mb-4">{{ editando ? '✏️ Editar' : '➕ Nova' }} Insumo</h2>
 
     <!-- Loading state -->
-    <div *ngIf="loading" class="loading-spinner">Carregando dados da ferramenta...</div>
+    <div *ngIf="loading" class="loading-spinner">Carregando dados de Insumo...</div>
 
     <form *ngIf="!loading" (ngSubmit)="salvar()" #form="ngForm">
       <div class="form-group">
@@ -62,6 +62,8 @@
           type="number"
           [(ngModel)]="insumo.valor_compra"
           name="valor"
+          step="0.01"
+          min="0"
           placeholder="Valor da compra"
           required
         />
@@ -72,9 +74,9 @@
         <input
           type="number"
           class="form-control"
-          [(ngModel)]="insumo.estoque_atual"
-          name="estoque_atual"
-          step="0.001"
+          [(ngModel)]="insumo.quantidade_estoque"
+          name="quantidade_estoque"
+          step="0"
           min="0"
           readonly
           disabled
@@ -90,7 +92,7 @@
           class="form-control"
           [(ngModel)]="insumo.estoque_minimo"
           name="estoque_minimo"
-          step="0.001"
+          step="0"
           min="0"
           placeholder="Quantidade mínima para alerta"
         />

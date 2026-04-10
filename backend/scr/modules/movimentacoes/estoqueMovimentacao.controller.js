@@ -136,6 +136,45 @@ const controller = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  // Método unificado que substitui os três
+  async registrarMovimentacao(req, res) {
+    try {
+      const { insumo_id, tipo, quantidade, motivo } = req.body;
+
+      // Validações
+      if (!insumo_id || !tipo || !quantidade || quantidade <= 0) {
+        return res.status(400).json({ error: 'Dados inválidos' });
+      }
+
+      if (!['entrada', 'saida'].includes(tipo)) {
+        return res
+          .status(400)
+          .json({ error: 'Tipo inválido. Use "entrada" ou "saida"' });
+      }
+
+      // Chama o método correto baseado no tipo
+      let movimentacao;
+      if (tipo === 'entrada') {
+        movimentacao = await EstoqueMovimentacao.registrarEntrada(
+          insumo_id,
+          quantidade,
+          motivo,
+        );
+      } else {
+        movimentacao = await EstoqueMovimentacao.registrarSaida(
+          insumo_id,
+          quantidade,
+          motivo,
+        );
+      }
+
+      res.status(201).json(movimentacao);
+    } catch (error) {
+      console.error('Erro ao registrar movimentação:', error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = controller;

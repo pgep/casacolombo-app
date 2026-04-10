@@ -20,7 +20,7 @@ export class InsumoFormComponent implements OnInit {
     unidade_medida_id: null,
     quantidade_compra: 0,
     valor_compra: 0,
-    estoque_minimo: 0, // ✅ Adicionar esta linha
+    estoque_minimo: 0,
   };
 
   unidades: any[] = [];
@@ -65,12 +65,15 @@ export class InsumoFormComponent implements OnInit {
   carregarInsumos(id: number) {
     this.insumoService.getInsumo(id).subscribe({
       next: (data: any) => {
+        console.log('Dados do Insumo a ser editado: ', data);
         this.insumo = {
           id: data.id,
           nome: data.nome,
           unidade_medida_id: data.unidade_medida_id,
           quantidade_compra: data.quantidade_compra,
           valor_compra: data.valor_compra,
+          quantidade_estoque: data.quantidade_estoque,
+          estoque_minimo: data.estoque_minimo,
         };
 
         this.stopLoading();

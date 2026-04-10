@@ -3,7 +3,7 @@
 export interface InsumoEstoque {
   id: number;
   nome: string;
-  estoque_atual: number;
+  quantidade_estoque: number;
   estoque_minimo: number;
   unidade_medida_sigla: string;
   status: 'ok' | 'baixo' | 'critico';

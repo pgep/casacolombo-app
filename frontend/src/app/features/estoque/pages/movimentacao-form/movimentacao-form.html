@@ -14,7 +14,7 @@
           >
             <option [value]="0">Selecione um insumo</option>
             <option *ngFor="let insumo of insumos" [value]="insumo.id">
-              {{ insumo.nome }} (Estoque: {{ insumo.estoque_atual }})
+              {{ insumo.nome }} (Estoque: {{ insumo.quantidade_estoque }})
             </option>
           </select>
           <span *ngIf="carregandoInsumos" class="loading-badge">⏳ Carregando...</span>
@@ -26,6 +26,17 @@
         <select class="form-control" [(ngModel)]="movimentacao.tipo" name="tipo" required>
           <option *ngFor="let t of tipos" [value]="t.valor">{{ t.label }}</option>
         </select>
+      </div>
+
+      <div class="form-group" *ngIf="movimentacao.tipo === 'ajuste'">
+        <label class="form-label">Tipo de Ajuste *</label>
+        <select class="form-control" [(ngModel)]="subtipoAjuste" name="subtipoAjuste" required>
+          <option value="entrada">➕ Entrada (Devolução, Achado, Correção +)</option>
+          <option value="saida">➖ Saída (Perda, Quebra, Roubo, Correção -)</option>
+        </select>
+        <small class="form-text text-muted">
+          Entrada aumenta o estoque | Saída diminui o estoque
+        </small>
       </div>
 
       <div class="form-group">

@@ -1,5 +1,3 @@
-// frontend/src/app/features/estoque/pages/estoque-list/estoque-list.ts
-
 import { Component, OnInit, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -38,7 +36,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrls: ['./estoque-list.css'],
 })
 export class EstoqueListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'nome', 'estoque_atual', 'estoque_minimo', 'status', 'acoes'];
+  displayedColumns: string[] = [
+    'id',
+    'nome',
+    'quantidade_estoque',
+    'estoque_minimo',
+    'status',
+    'acoes',
+  ];
   dataSource = new MatTableDataSource<InsumoEstoque>([]);
   loading = true;
   alertas: InsumoEstoque[] = [];
@@ -59,7 +64,6 @@ export class EstoqueListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Configurar sort e paginator após a view ser inicializada
     setTimeout(() => {
       if (this.dataSource) {
         this.dataSource.sort = this.sort;
@@ -70,29 +74,28 @@ export class EstoqueListComponent implements OnInit, AfterViewInit {
 
   carregarEstoque() {
     this.loading = true;
-    this.cdr.detectChanges(); // ✅ Forçar detecção imediatamente
+    this.cdr.detectChanges();
 
     this.estoqueService.getInsumosEstoque().subscribe({
       next: (data) => {
         this.dataSource.data = data.map((item) => ({
           ...item,
-          status: this.calcularStatus(item.estoque_atual, item.estoque_minimo),
+          status: this.calcularStatus(item.quantidade_estoque, item.estoque_minimo),
         }));
         this.loading = false;
 
-        // ✅ Configurar sort e paginator depois que os dados chegaram
         if (this.sort && this.paginator) {
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         }
 
-        this.cdr.detectChanges(); // ✅ Forçar detecção após mudanças
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao carregar estoque:', err);
         this.toastService.error('Erro ao carregar estoque');
         this.loading = false;
-        this.cdr.detectChanges(); // ✅ Forçar detecção após erro
+        this.cdr.detectChanges();
       },
     });
   }
@@ -114,8 +117,10 @@ export class EstoqueListComponent implements OnInit, AfterViewInit {
   }
 
   calcularStatus(estoque: number, minimo: number): 'ok' | 'baixo' | 'critico' {
-    if (estoque <= 0) return 'critico';
-    if (estoque <= minimo) return 'baixo';
+    const e = Number(estoque);
+    const m = Number(minimo);
+    if (e <= 0) return 'critico';
+    if (e <= m) return 'baixo';
     return 'ok';
   }
 

@@ -83,7 +83,7 @@ const EstoqueMovimentacao = {
     SELECT 
       i.id, 
       i.nome, 
-      COALESCE(i.quantidade_estoque, 0) as estoque_atual,
+      COALESCE(i.quantidade_estoque, 0) as quantidade_estoque,
       COALESCE(i.estoque_minimo, 0) as estoque_minimo,
       COALESCE(um.nome, 'un') as unidade_medida_sigla
     FROM insumos i

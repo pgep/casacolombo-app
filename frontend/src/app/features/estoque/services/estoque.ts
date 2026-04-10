@@ -53,36 +53,24 @@ export class EstoqueService {
 
   // ========== MOVIMENTAÇÕES (REGISTRO) ==========
 
+  // ADICIONAR este método único:
   /**
-   * Registra uma entrada de insumo no estoque
-   * POST /api/estoque-movimentacoes/entrada
+   * Registra qualquer movimentação de estoque (entrada, saída ou ajuste)
+   * POST /api/estoque-movimentacoes/movimentar
+   *
+   * @param dados - Objeto com os dados da movimentação
+   * @param dados.insumo_id - ID do insumo
+   * @param dados.tipo - 'entrada' | 'saida' | 'ajuste'
+   * @param dados.quantidade - Quantidade (sempre positiva)
+   * @param dados.motivo - Motivo da movimentação
    */
-  registrarEntrada(dados: {
+  registrarMovimentacao(dados: {
     insumo_id: number;
+    tipo: 'entrada' | 'saida' | 'ajuste';
     quantidade: number;
     motivo: string;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/entrada`, dados);
-  }
-
-  /**
-   * Registra uma saída de insumo do estoque
-   * POST /api/estoque-movimentacoes/saida
-   */
-  registrarSaida(dados: {
-    insumo_id: number;
-    quantidade: number;
-    motivo: string;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/saida`, dados);
-  }
-
-  /**
-   * Registra um ajuste manual no estoque
-   * POST /api/estoque-movimentacoes/ajuste
-   */
-  registrarAjuste(ajuste: AjusteEstoque & { quantidade: number; motivo: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/ajuste`, ajuste);
+    return this.http.post(`${this.apiUrl}/movimentar`, dados);
   }
 
   // ========== DELETE ==========
