@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="card-titulo">
         📜 Histórico de Movimentações
-        <span *ngIf="insumoNome" class="subtitle"> - {{ insumoNome }}</span>
+        <span *ngIf="insumoNome" class="subtitle"> {{ insumoNome }}</span>
       </h2>
       <div class="form-actions">
         <a mat-raised-button color="primary" routerLink="/estoque"> 📦 Estoque </a>
@@ -102,6 +102,6 @@
       </mat-card-content>
     </mat-card>
     <!-- Paginador -->
-    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
