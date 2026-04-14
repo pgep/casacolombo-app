@@ -27,6 +27,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 })
 export class MovimentacaoFormComponent implements OnInit {
   insumos: InsumoEstoque[] = [];
+  unidadeSelecionada: string = '';
+  unidadePlaceholder: string = '';
 
   movimentacao: AjusteEstoque = {
     insumo_id: 0,
@@ -70,6 +72,7 @@ export class MovimentacaoFormComponent implements OnInit {
     this.carregandoInsumos = true;
     this.estoqueService.getInsumosEstoque().subscribe({
       next: (data) => {
+        console.log(data);
         this.insumos = data;
         this.carregandoInsumos = false;
         this.cdr.detectChanges();
@@ -100,6 +103,17 @@ export class MovimentacaoFormComponent implements OnInit {
       return;
     }
 
+    // ✅ OBTER O FATOR DE CONVERSÃO DO INSUMO SELECIONADO
+    const insumo = this.insumos.find((i) => i.id === this.movimentacao.insumo_id);
+    const fatorConversao = insumo?.fator_conversao || 1;
+
+    // ✅ CONVERTER PARA UNIDADE BASE (ml, g, un)
+    const quantidadeBase = quantidade * fatorConversao;
+
+    console.log(
+      `🔄 Conversão: ${quantidade} ${insumo?.unidade_medida_nome} = ${quantidadeBase} (unidade base)`,
+    );
+
     // 2. PREPARAR DADOS
     this.loading = true;
     this.cdr.detectChanges();
@@ -115,7 +129,7 @@ export class MovimentacaoFormComponent implements OnInit {
     const dados = {
       insumo_id: Number(this.movimentacao.insumo_id),
       tipo: tipoFinal,
-      quantidade: quantidade,
+      quantidade: quantidadeBase,
       motivo: this.movimentacao.motivo || this.getMotivoPadrao(tipoFinal),
     };
 
@@ -149,5 +163,42 @@ export class MovimentacaoFormComponent implements OnInit {
       saida: `➖ Saída de ${quantidade} unidades registrada com sucesso!`,
     };
     return mensagens[tipo as keyof typeof mensagens] || 'Movimentação registrada!';
+  }
+
+  onInsumoChange(insumoId: number | string) {
+    // ✅ Converter para número (forçar tipo correto)
+    const id = Number(insumoId);
+
+    console.log('ID original:', insumoId, 'Tipo:', typeof insumoId);
+    console.log('ID convertido:', id, 'Tipo:', typeof id);
+    console.log('Insumos disponíveis:', this.insumos);
+
+    // Validar se ID é válido
+    if (!id || id === 0) {
+      this.unidadeSelecionada = '';
+      this.unidadePlaceholder = 'Digite a quantidade';
+      return;
+    }
+
+    // Aguardar insumos carregarem
+    if (!this.insumos || this.insumos.length === 0) {
+      console.warn('Insumos ainda não carregados');
+      return;
+    }
+
+    // ✅ Buscar comparando como número
+    const insumo = this.insumos.find((i) => Number(i.id) === id);
+
+    if (insumo) {
+      this.unidadeSelecionada = insumo.unidade_medida_nome || '';
+      this.unidadePlaceholder = `Digite a quantidade em ${this.unidadeSelecionada}`;
+      console.log('✅ Insumo encontrado:', insumo.nome, 'Unidade:', this.unidadeSelecionada);
+    } else {
+      console.error('❌ Insumo não encontrado para ID:', id);
+      console.log(
+        'IDs disponíveis:',
+        this.insumos.map((i) => ({ id: i.id, tipo: typeof i.id })),
+      );
+    }
   }
 }

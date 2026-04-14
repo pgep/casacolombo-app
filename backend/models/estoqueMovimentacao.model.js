@@ -77,18 +77,26 @@ const EstoqueMovimentacao = {
     }
   },
 
-  // ✅ CORRIGIR método listarInsumosComEstoque
   async listarInsumosComEstoque() {
     const query = `
-    SELECT 
-      i.id, 
-      i.nome, 
-      COALESCE(i.quantidade_estoque, 0) as quantidade_estoque,
-      COALESCE(i.estoque_minimo, 0) as estoque_minimo,
-      COALESCE(um.nome, 'un') as unidade_medida_sigla
-    FROM insumos i
-    LEFT JOIN unidades_medida um ON i.unidade_medida_id = um.id
-    ORDER BY i.nome
+    SELECT
+    i.id,
+    i.nome,
+    ROUND(
+        COALESCE(i.quantidade_estoque, 0) / 
+        CASE 
+            WHEN LOWER(COALESCE(um.nome, '')) IN ('kilo', 'kg', 'l', 'litro', 'liro') 
+            THEN 1000.0 
+            ELSE 1.0 
+        END, 
+    1) AS quantidade_estoque,          -- ← apenas 1 casa decimal
+    
+    COALESCE(i.estoque_minimo, 0) as estoque_minimo,
+    COALESCE(um.nome, 'un') as unidade_medida_nome,
+      um.fator_conversao
+      FROM insumos i
+      LEFT JOIN unidades_medida um ON i.unidade_medida_id = um.id
+        ORDER BY i.nome
   `;
     const result = await db.query(query);
     return result.rows;

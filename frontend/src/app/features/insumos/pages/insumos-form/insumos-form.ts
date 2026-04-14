@@ -65,7 +65,6 @@ export class InsumoFormComponent implements OnInit {
   carregarInsumos(id: number) {
     this.insumoService.getInsumo(id).subscribe({
       next: (data: any) => {
-        console.log('Dados do Insumo a ser editado: ', data);
         this.insumo = {
           id: data.id,
           nome: data.nome,

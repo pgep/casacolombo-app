@@ -46,27 +46,24 @@
           <!-- Coluna Insumo -->
           <ng-container matColumnDef="nome">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Insumo</th>
-            <td mat-cell *matCellDef="let row">{{ row.nome }} ({{ row.unidade_medida_sigla }})</td>
+            <td mat-cell *matCellDef="let row">
+              {{ row.nome }}
+              <span class="text-muted">({{ row.unidade_medida_nome }})</span>
+            </td>
           </ng-container>
 
           <!-- Coluna Estoque Atual -->
           <ng-container matColumnDef="quantidade_estoque">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Estoque Atual</th>
             <td mat-cell *matCellDef="let row">
-              <span
-                class="estoque-valor"
-                [class.critico]="row.status === 'critico'"
-                [class.baixo]="row.status === 'baixo'"
-              >
-                {{ row.quantidade_estoque | number: '1.0-0' }}
-              </span>
+              {{ row.quantidade_estoque | number: '1.1-1' }}
             </td>
           </ng-container>
 
           <!-- Coluna Estoque Mínimo -->
           <ng-container matColumnDef="estoque_minimo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Estoque Mínimo</th>
-            <td mat-cell *matCellDef="let row">{{ row.estoque_minimo | number: '1.2-2' }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.estoque_minimo | number: '1.1-1' }}</td>
           </ng-container>
 
           <!-- Coluna Status -->

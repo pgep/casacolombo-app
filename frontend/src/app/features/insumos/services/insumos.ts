@@ -12,10 +12,6 @@ export class InsumoService {
 
   constructor(private http: HttpClient) {}
 
-  getInsumos(): Observable<Insumo[]> {
-    return this.http.get<Insumo[]>(`${this.apiUrl}/insumo`);
-  }
-
   getInsumo(id: number): Observable<Insumo> {
     return this.http.get<Insumo>(`${this.apiUrl}/insumo/${id}`);
   }
@@ -30,5 +26,26 @@ export class InsumoService {
 
   deleteInsumo(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/insumo/${id}`);
+  }
+
+  // ✅ NOVOS MÉTODOS
+  reativar(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/reativar`, {});
+  }
+
+  // ✅ MÉTODO ALTERADO - Aceitar parâmetro incluirInativos
+  getInsumos(incluirInativos: boolean = false): Observable<Insumo[]> {
+    const params = incluirInativos ? '?incluirInativos=true' : '';
+    return this.http.get<Insumo[]>(`${this.apiUrl}/insumo/${params}`);
+  }
+
+  // ✅ MÉTODO NOVO - Reativar insumo
+  reativarInsumo(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/insumo/${id}/reativar`, {});
+  }
+
+  // ✅ MÉTODO NOVO - Verificar exclusão (opcional, para validação prévia)
+  verificarExclusao(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/insumo/${id}/verificar-exclusao`);
   }
 }

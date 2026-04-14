@@ -2,13 +2,21 @@
   <div class="card">
     <div class="flex justify-between items-center mb-4">
       <h2 class="card-titulo">🧪 Insumos</h2>
-      <a mat-raised-button color="success" routerLink="/insumos/novo"> ➕ Novo Insumo </a>
+      <div class="form-actions">
+        <!-- ✅ Toggle para incluir inativos -->
+        <mat-slide-toggle
+          color="primary"
+          [(ngModel)]="incluirInativos"
+          (change)="toggleIncluirInativos($event)"
+        >
+          Incluir inativos
+        </mat-slide-toggle>
+        <a mat-raised-button color="success" routerLink="/insumos/novo"> ➕ Novo Insumo </a>
+      </div>
     </div>
 
     <!-- Loading state -->
-    <div *ngIf="!dataSource.data.length && !loading" class="loading-spinner">
-      Carregando ferramentas...
-    </div>
+    <div *ngIf="loading" class="loading-spinner">Carregando insumos...</div>
 
     <mat-card class="example-card" appearance="outlined">
       <mat-card-header>
@@ -25,7 +33,10 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
           <ng-container matColumnDef="nome">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-            <td mat-cell *matCellDef="let row" data-label="Nome">{{ row.nome }}</td>
+            <td mat-cell *matCellDef="let row" data-label="Nome">
+              {{ row.nome }}
+              <span *ngIf="!row.ativo" class="badge-inativo">Inativo</span>
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="unidade">
@@ -35,21 +46,31 @@
 
           <ng-container matColumnDef="estoque">
             <th mat-header-cell *matHeaderCellDef>Estoque</th>
-            <td mat-cell *matCellDef="let row">
-              {{ row.quantidade_estoque | number: '1.0-0' }}
+            <td mat-cell *matCellDef="let row" data-label="Estoque">
+              {{ row.quantidade_estoque | number: '1.2-2' }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="custo">
             <th mat-header-cell *matHeaderCellDef>Custo Base</th>
-            <td mat-cell *matCellDef="let row">
+            <td mat-cell *matCellDef="let row" data-label="Custo Base">
               R$ {{ row.custo_unitario_base | number: '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let row" data-label="Status">
+              <span class="status-badge" [class.ativo]="row.ativo" [class.inativo]="!row.ativo">
+                {{ row.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef>Ações</th>
             <td mat-cell *matCellDef="let row">
+              <!-- Botão Editar -->
               <button
                 mat-icon-button
                 matTooltip="Editar Insumo"
@@ -59,13 +80,31 @@
                 <mat-icon color="primary">edit</mat-icon>
               </button>
 
+              <!-- Botão Reativar (só aparece se inativo) -->
+              <button
+                *ngIf="!row.ativo"
+                mat-icon-button
+                matTooltip="Reativar Insumo"
+                matTooltipPosition="above"
+                (click)="reativar(row.id!, row.nome)"
+              >
+                <mat-icon color="accent">restore</mat-icon>
+              </button>
+
+              <!-- Botão Excluir/Inativar -->
               <button
                 mat-icon-button
-                matTooltip="Excluir Insumo"
+                matTooltip="{{
+                  row.ativo
+                    ? row.quantidade_estoque > 0
+                      ? 'Zere o estoque primeiro'
+                      : 'Inativar insumo'
+                    : 'Excluir permanentemente'
+                }}"
                 matTooltipPosition="above"
-                (click)="deletar(row.id!)"
+                (click)="deletar(row.id!, row.nome, row.quantidade_estoque, row.ativo)"
               >
-                <mat-icon color="warm">delete</mat-icon>
+                <mat-icon color="warn">delete</mat-icon>
               </button>
             </td>
           </ng-container>
@@ -74,7 +113,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-              <div class="empty-state">Nenhum insomo encontrado.</div>
+              <div class="empty-state">Nenhum insumo encontrado.</div>
             </td>
           </tr>
         </table>

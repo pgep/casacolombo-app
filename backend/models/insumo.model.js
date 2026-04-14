@@ -31,26 +31,32 @@ class Insumo {
     console.log('✅ Tabela "insumos" verificada/criada');
   }
 
-  static async findAll() {
-    const result = await db.query(`
-      SELECT i.*, u.nome as unidade_nome, u.tipo, u.fator_conversao
-      FROM insumos i
-      JOIN unidades_medida u ON u.id = i.unidade_medida_id
-      ORDER BY i.id DESC
-    `);
+  // MÉTODO ALTERADO - findAll (apenas ativos ou todos)
+  static async findAll(mostrarInativos = false) {
+    let query = `
+    SELECT i.*, u.nome as unidade_nome, u.tipo, u.fator_conversao
+    FROM insumos i
+    JOIN unidades_medida u ON u.id = i.unidade_medida_id
+  `;
+
+    if (!mostrarInativos) {
+      query += ` WHERE i.ativo = true`;
+    }
+
+    query += ` ORDER BY i.id DESC`;
+
+    const result = await db.query(query);
     return result.rows;
   }
 
+  // MÉTODO NOVO - Buscar todos (inclusive inativos)
+  static async findAllWithInativos() {
+    return this.findAll(true);
+  }
+
+  // MÉTODO ALTERADO - findById
   static async findById(id) {
-    const result = await db.query(
-      `
-      SELECT i.*, u.nome as unidade_nome, u.tipo, u.fator_conversao
-      FROM insumos i
-      JOIN unidades_medida u ON u.id = i.unidade_medida_id
-      WHERE i.id = $1
-    `,
-      [id],
-    );
+    const result = await db.query('SELECT * FROM insumos WHERE id = $1', [id]);
     return result.rows[0];
   }
 
@@ -159,12 +165,66 @@ class Insumo {
     return result.rows[0];
   }
 
-  static async delete(id) {
-    const result = await db.query(
-      'DELETE FROM insumos WHERE id = $1 RETURNING id',
+  // MÉTODO ALTERADO - delete (agora decide entre excluir ou inativar)
+  static async deleteOrInactivate(id) {
+    // 1. Buscar o insumo
+    const insumo = await db.query(
+      'SELECT id, nome, quantidade_estoque, ativo FROM insumos WHERE id = $1',
       [id],
     );
-    return result.rows[0];
+
+    if (insumo.rows.length === 0) {
+      throw new Error('Insumo não encontrado');
+    }
+
+    const insumoData = insumo.rows[0];
+    const estoqueAtual = parseFloat(insumoData.quantidade_estoque);
+    const nomeInsumo = insumoData.nome;
+
+    // 2. Verificar se tem histórico (movimentações)
+    const temHistorico = await db.query(
+      `
+    SELECT EXISTS (
+      SELECT 1 FROM estoque_movimentacoes WHERE insumo_id = $1
+      UNION ALL
+      SELECT 1 FROM produtos_insumos WHERE insumo_id = $1
+    ) as tem_historico
+  `,
+      [id],
+    );
+
+    const possuiHistorico = temHistorico.rows[0].tem_historico;
+
+    // 3. Decidir ação baseada nas regras
+    if (!possuiHistorico && estoqueAtual === 0) {
+      // ✅ Caso 1: Sem histórico e estoque zerado → EXCLUIR FISICAMENTE
+      await db.query('DELETE FROM insumos WHERE id = $1', [id]);
+      return {
+        acao: 'excluido',
+        mensagem: `Insumo "${nomeInsumo}" foi excluído permanentemente.`,
+      };
+    } else if (!possuiHistorico && estoqueAtual > 0) {
+      // ⚠️ Caso 2: Sem histórico mas com estoque → BLOQUEAR (exigir zerar)
+      throw new Error(
+        `Não é possível excluir "${nomeInsumo}". Estoque atual é ${estoqueAtual} unidades. ` +
+          `Registre uma saída para zerar o estoque primeiro.`,
+      );
+    } else {
+      // ✅ Caso 3: Com histórico → INATIVAR LOGICAMENTE
+      await db.query(
+        `
+      UPDATE insumos 
+      SET ativo = false, updated_at = CURRENT_TIMESTAMP 
+      WHERE id = $1
+    `,
+        [id],
+      );
+
+      return {
+        acao: 'inativado',
+        mensagem: `Insumo "${nomeInsumo}" foi inativado. Ele permanece no histórico mas não pode mais ser utilizado em novas produções.`,
+      };
+    }
   }
 
   static async getEstoqueBaixo() {
@@ -173,6 +233,65 @@ class Insumo {
       WHERE quantidade_estoque <= estoque_minimo AND estoque_minimo > 0
     `);
     return result.rows;
+  }
+
+  // MÉTODO NOVO - Reativar insumo
+  static async reativar(id) {
+    const result = await db.query(
+      `
+    UPDATE insumos 
+    SET ativo = true, updated_at = CURRENT_TIMESTAMP 
+    WHERE id = $1 AND ativo = false
+    RETURNING *
+  `,
+      [id],
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error('Insumo não encontrado ou já está ativo');
+    }
+
+    return result.rows[0];
+  }
+
+  // MÉTODO NOVO - Verificar se pode ser excluído fisicamente
+  static async podeExcluirFisicamente(id) {
+    const result = await db.query(
+      `
+    SELECT 
+      i.id,
+      i.nome,
+      i.quantidade_estoque,
+      EXISTS (SELECT 1 FROM estoque_movimentacoes WHERE insumo_id = i.id) as tem_movimentacoes,
+      EXISTS (SELECT 1 FROM produtos_insumos WHERE insumo_id = i.id) as tem_composicoes
+    FROM insumos i
+    WHERE i.id = $1
+  `,
+      [id],
+    );
+
+    if (result.rows.length === 0)
+      return { pode: false, motivo: 'Insumo não encontrado' };
+
+    const insumo = result.rows[0];
+
+    if (insumo.tem_movimentacoes || insumo.tem_composicoes) {
+      return {
+        pode: false,
+        motivo: 'Insumo possui histórico de movimentações ou composições',
+        acao: 'inativar',
+      };
+    }
+
+    if (insumo.quantidade_estoque > 0) {
+      return {
+        pode: false,
+        motivo: `Estoque atual é ${insumo.quantidade_estoque} unidades`,
+        acao: 'zerar_estoque',
+      };
+    }
+
+    return { pode: true, motivo: null, acao: 'excluir' };
   }
 }
 

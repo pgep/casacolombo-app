@@ -1,12 +1,12 @@
-// frontend/src/app/features/estoque/models/estoque.model.ts
-
 export interface InsumoEstoque {
   id: number;
   nome: string;
   quantidade_estoque: number;
   estoque_minimo: number;
-  unidade_medida_sigla: string;
-  status: 'ok' | 'baixo' | 'critico';
+  unidade_medida_nome: string;
+  unidade_medida_sigla?: string;
+  fator_conversao: number;
+  status?: 'ok' | 'baixo' | 'critico';
 }
 
 export interface MovimentacaoEstoque {
